@@ -21,50 +21,53 @@
               <span class="fs-4">Necs</span>
             </a>
               <hr>
-                  <ul class="nav nav-pills flex-column mb-auto" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <a href="<?php echo BASEURL; ?>/home" class="nav-link text-white active">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                  <ul>
+                    <li>
+                      <a href="<?php echo BASEURL; ?>/home">
                         Home
                       </a>
                     </li>
                     <li>
-                      <a href="<?php echo BASEURL; ?>/barang" class="nav-link text-white" id="menuBarang">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                      <a href="<?php echo BASEURL; ?>/barang">
                         Data Barang
                       </a>
                     </li>
                     <li>
-                      <a href="<?php echo BASEURL; ?>/barang_masuk" class="nav-link text-white" id="menuBarang">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                      <a href="<?php echo BASEURL; ?>/barang_masuk">
                         Barang Masuk
                       </a>
                     </li>
                     <li>
-                      <a href="<?php echo BASEURL; ?>/barang_keluar" class="nav-link text-white" id="menuBarang">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                      <a href="<?php echo BASEURL; ?>/barang_keluar">
                         Barang Keluar
                       </a>
                     </li>
                     <li>
-                      <a href="<?php echo BASEURL; ?>/purchased_order" class="nav-link text-white">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                      <a href="<?php echo BASEURL; ?>/purchased_order">
                         Purchased Order
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="nav-link text-white" data-bs-toggle="pill" data-bs-target="#supplier" role="tab" aria-controls="supplier" aria-selected="false">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                      <a href="<?php echo BASEURL; ?>/supplier">
                         Supplier
                       </a>
                     </li>
                     <li>
-                      <a href="#" class="nav-link text-white" data-bs-toggle="pill" data-bs-target="#account" role="tab" aria-controls="account" aria-selected="false">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+                      <a href="#">
                         Account
                       </a>
                     </li>
                   </ul>
+                  <script type="text/javascript">
+                    const currentLocation = location.href;
+                    const menuItem = document.querySelectorAll('a');
+                    const menuLength = menuItem.length
+                    for (let i = 0; i<menuLength; i++){
+                      if(menuItem[i].href === currentLocation){
+                        menuItem[i].className = "active"
+                      }
+                    }
+                  </script>
               <hr>
             <div class="dropdown">
               <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">

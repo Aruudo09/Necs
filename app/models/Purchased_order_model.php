@@ -61,7 +61,7 @@ class Purchased_order_model {
     $query = "INSERT INTO purchased_order
                 VALUES
                 ('', :Tanggal_keluar, :Pemesan, '')";
-    // var_dump($query);
+    var_dump($query);
     // echo $query;
     $this->db->query($query);
     $this->db->bind('Tanggal_keluar', $data['Tanggal_keluar']);
