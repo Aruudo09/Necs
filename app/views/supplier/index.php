@@ -1,15 +1,16 @@
 <div class="container-fluid px-4">
 
-  <!--FLASHER-->
+  <!--MENAMPILKAN FLASH MESSAGE-->
     <div class="row">
         <div class="col-lg-6">
           <?php FLASHER::flash(); ?>
         </div>
     </div>
 
+<div class="border border-dark rounded-3 bg-gradient mt-3 p-3">
   <!-- Button trigger modal -->
   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-barang">
-  <div class="row mb-3 mt-4">
+  <div class="row mb-3 mt-2">
     <div class="col-lg-6">
       <button type="button" class="btn btn-primary" id="tambahSpl" data-bs-toggle="modal" data-bs-target="#modalSpl">
           Input Data Supplier
@@ -17,89 +18,150 @@
     </div>
   </div>
 
-  <!-- Modal -->
-        <div class="modal fade" id="modalSpl" tabindex="-1" role="dialog" aria-labelledby="modalSpl" aria-hidden="true">
-        <div class="modal-dialog" >
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalLabelSpl">Input Supplier</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form class="" action="<?php echo BASEURL; ?>/Supplier/tambah" method="post">
-                  <div class="row mb-3">
-                      <div class="form-group">
-                          <label for="inputNoSpl">No Supplier :</label>
-                          <input type="number" name="inputNoSpl" id="inputNoSpl" class="form-control">
-                      </div>
-                  </div>
-                  <div class="row mb-3">
-                      <div class="form-group">
-                          <label for="inputNmSpl">Nama Supplier :</label>
-                          <input type="text" name="inputNmSpl" id="inputNmSpl" class="form-control">
-                      </div>
-                  </div>
-                  <div class="row mb-3">
-                      <div class="form-group">
-                          <label for="alamatSpl">Alamat Supplier :</label>
-                          <textarea name="alamatSpl" id="alamatSpl" rows="8" cols="60"></textarea>
-                      </div>
-                  </div>
-                  <div class="row mb-3">
-                      <div class="form-group col">
-                          <label for="tanggalInput">Tanggal Input :</label>
-                          <input type="date" name="tanggalInput" id="tanggalInput" class="form-control">
-                      </div>
-                  </div>
-                  <div class="row mb-3">
-                      <div class="form-group">
-                          <label for="keterangan">Keterangan :</label>
-                          <input type="text" name="keterangan" id="keterangan" class="form-control">
-                      </div>
-                  </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save changes</button>
-            </div>
-            </form>
-          </div>
-        </div>
-        </div>
 
-        
   <!--TABLE VIEW SUPPLIER-->
     <h3 class="fs-4 mb-3">Daftar Supplier</h3>
+    <div class="row mb-2">
+        <div class="col-lg-6">
+          <form class="" action="<?php echo BASEURL; ?>/supplier/cari" method="post">
+          <div class="input-group mb-2">
+          <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
+              <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
+          </div>
+          </form>
+        </div>
+      </div>
       <div class="table_wrapper">
           <table class="table table-hover text-center">
-              <thead>
+              <thead class="table-info">
                 <tr>
-                  <th scope="col">No Supplier</th>
                   <th scope="col">Nama Supplier</th>
-                  <th scope="col">Alamat Supplier</th>
+                  <th scope="col">Alamat</th>
+                  <th scope="col">No Telp</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Contact Person</th>
+                  <th scope="col">NPWP</th>
                   <th scope="col">Tanggal Input</th>
                   <th scope="col">Tanggal Update</th>
-                  <th scope="col">Keterangan</th>
+                  <th scope="col">Qty Bulan</th>
                   <th scope="col">Fitur</th>
                 </tr>
               </thead>
               <tbody>
                 <?php foreach ( $data['supplier'] as $spl) : ?>
                 <tr>
-                  <td><?php echo $spl['No_supplier']; ?></td>
-                  <td><?php echo $spl['Nama_spl']; ?></td>
-                  <td><?php echo $spl['Alamat_spl']; ?></td>
+                  <td><?php echo $spl['NAMA_SP']; ?></td>
+                  <td><?php echo $spl['ALAMAT_SP']; ?></td>
+                  <td><?php echo $spl['TELEPON']; ?></td>
+                  <td><?php echo $spl['email']; ?></td>
+                  <td><?php echo $spl['HUBUNGAN']; ?></td>
+                  <td><?php echo $spl['npwp']; ?></td>
                   <td><?php echo $spl['Tanggal_input']; ?></td>
                   <td><?php echo $spl['Tanggal_update']; ?></td>
-                  <td><?php echo $spl['Keterangan']; ?></td>
-                  <td>
-                      <a href="<?php echo BASEURL; ?>/Supplier/hapus" class="btn btn-danger" onclick="return confirm('apa anda yakin?')">Hapus</a>
-                      <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['No_supplier']; ?>">Edit</a>
+                  <td><?php echo $spl['quantity_perbulan']; ?></td>
+                  <td class="d-flex justify-content-center">
+                    <!--HAPUS SUPPLIER-->
+                      <a href="<?php echo BASEURL; ?>/Supplier/hapus/<?php echo $spl['KODE_SP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                    <!--EDIT SUPPLIER-->
+                      <a href="<?php echo BASEURL; ?>/Supplier/ubah" class="btn btn-success editSpl" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['KODE_SP']; ?>"><i class="fa fa-pen"></i></a>
                   </td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
           </table>
       </div>
+    </div>
+
+      <!-- Modal -->
+            <div class="modal fade" id="modalSpl" tabindex="-1" role="dialog" aria-labelledby="modalSpl" aria-hidden="true">
+            <div class="modal-dialog" >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalLabelSpl">Input Supplier</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form class="" action="<?php echo BASEURL; ?>/Supplier/tambah" method="post">
+                  <!--HIDDEN INPUT NOMOR SUPPLIER-->
+                    <input type="hidden" name="No_spl" id="No_spl" value="">
+                    <!--INPUT NOMOR SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="inputNoSpl">No Supplier :</label>
+                              <input type="number" name="inputNoSpl" id="inputNoSpl" class="form-control" >
+                          </div>
+                      </div>
+                    <!--INPUT NAMA SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="inputNmSpl">Nama Supplier :</label>
+                              <input type="text" name="inputNmSpl" id="inputNmSpl" class="form-control" required>
+                          </div>
+                      </div>
+                    <!--INPUT ALAMAT SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="alamatSpl">Alamat Supplier :</label>
+                              <textarea name="alamatSpl" id="alamatSpl" rows="8" cols="60"></textarea>
+                          </div>
+                      </div>
+                    <!--INPUT TELEPON SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="telepon">No Telepon :</label>
+                              <input type="text" name="telepon" id="telepon" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT EMAIL SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="email">Email :</label>
+                              <input type="email" name="email" id="email" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT CONTACT PERSON SUPPLIER-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="hubungan">Nama :</label>
+                              <input type="text" name="hubungan" id="hubungan" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT NPWP-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="npwp">NPWP :</label>
+                              <input type="text" name="npwp" id="npwp" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT TANGGAL INPUT-->
+                      <div class="row mb-3">
+                          <div class="form-group col">
+                              <label for="tanggalInput">Tanggal Input :</label>
+                              <input type="date" name="tanggalInput" id="tanggalInput" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT TANGGAL UPDATE-->
+                      <div class="row mb-3">
+                          <div class="form-group col">
+                              <label for="tanggalUpdate">Tanggal Update :</label>
+                              <input type="date" name="tanggalUpdate" id="tanggalUpdate" class="form-control">
+                          </div>
+                      </div>
+                    <!--INPUT QUANTITY-->
+                      <div class="row mb-3">
+                          <div class="form-group">
+                              <label for="qtyBln">Quantity :</label>
+                              <input type="text" name="qtyBln" id="qtyBln" class="form-control">
+                          </div>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                </form>
+              </div>
+            </div>
+            </div>
 
 </div>

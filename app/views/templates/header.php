@@ -15,7 +15,7 @@
 
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-      <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 230px;" id="sidebar-wrapper">
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px;" id="sidebar-wrapper">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
               <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
               <span class="fs-4">Necs</span>
@@ -63,7 +63,7 @@
                     const menuItem = document.querySelectorAll('a');
                     const menuLength = menuItem.length
                     for (let i = 0; i<menuLength; i++){
-                      if(menuItem[i].href === currentLocation){
+                      if(menuItem[i].href == currentLocation){
                         menuItem[i].className = "active"
                       }
                     }
@@ -91,9 +91,9 @@
                     <h2 class="fs-2 m-0">Dashboard</h2>
                 </div>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
+                </button> -->
             </nav>

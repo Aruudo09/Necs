@@ -10,7 +10,7 @@ class Barang_model {
   }
 
   public function getAllBarang() {
-    $this->db->query('SELECT * FROM tampil_brg');
+    $this->db->query('SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY KODE_BRG ASC');
     return $this->db->resultSet();
 
   }
@@ -23,11 +23,9 @@ class Barang_model {
   public function tambahBrg($data) {
     $query = "INSERT INTO barang
                 VALUES
-                (:Kode_brg, :inputSpl, :inputNamaBrg, :inputJnsBrg, :stockBrg, :satuan, :tanggalInput, :harga)";
+                ('', :inputSpl, :inputNamaBrg, :inputJnsBrg, :stockBrg, :satuan, :tanggalInput, :harga)";
 
               $this->db->query($query);
-              var_dump($query);
-              $this->db->bind('Kode_brg', $data['Kode_brg']);
               $this->db->bind('inputSpl', $data['inputSpl']);
               $this->db->bind('inputNamaBrg', $data['inputNamaBrg']);
               $this->db->bind('inputJnsBrg', $data['inputJnsBrg']);
@@ -42,7 +40,7 @@ class Barang_model {
   }
 
   public function hapusDataBrg($Kode_brg) {
-    $query = "DELETE FROM barang WHERE Kode_brg=:Kode_brg";
+    $query = "DELETE FROM barang WHERE KODE_BRG=:Kode_brg";
     $this->db->query($query);
     $this->db->bind('Kode_brg', $Kode_brg);
 
@@ -51,9 +49,41 @@ class Barang_model {
   }
 
   public function getBrgUbah($Kode_brg) {
-    $this->db->query('SELECT * FROM barang WHERE Kode_brg=:Kode_brg');
+    $this->db->query('SELECT * FROM barang WHERE KODE_BRG=:Kode_brg');
     $this->db->bind('Kode_brg', $Kode_brg);
     return $this->db->single();
+  }
+
+  public function ubahBrg($data) {
+    $query = "UPDATE barang SET
+                KODE_SP = :inputSpl,
+                NAMA_BRG = :inputNamaBrg,
+                Jenis_brg = :inputJnsBrg,
+                Stock_brg = :stockBrg,
+                Satuan = :satuan,
+                Harga = :harga
+                WHERE KODE_BRG = :kodeBrg";
+
+    $this->db->query($query);
+    $this->db->bind('inputSpl', $data['inputSpl']);
+    $this->db->bind('inputNamaBrg', $data['inputNamaBrg']);
+    $this->db->bind('inputJnsBrg', $data['inputJnsBrg']);
+    $this->db->bind('stockBrg', $data['stockBrg']);
+    $this->db->bind('satuan', $data['satuan']);
+    $this->db->bind('harga', $data['harga']);
+    $this->db->bind('kodeBrg', $data['kodeBrg']);
+
+    $this->db->execute();
+
+    return $this->db->rowCount();
+  }
+
+  public function cariData() {
+    $keyword = $_POST['keyword'];
+    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :keyword";
+    $this->db->query($query);
+    $this->db->bind('keyword', "%$keyword%");
+    return $this->db->resultSet();
   }
 
   // public function getMahasiswaById($No_po) {

@@ -15,12 +15,12 @@
       public function tambah() {
         var_dump($_POST);
         if ( $this->model('Barang_model')->tambahBrg($_POST) > 0) {
-          Flasher::setFlash('berhasil', 'ditambahkan', 'success');
-            header('Location: ' . BASEURL . '/Barang');
+          Flasher::setFlash('Barang', 'berhasil', 'ditambahkan', 'success');
+            header('Location: ' . BASEURL . '/barang');
             exit;
         } else {
-          Flasher::setFlash('gagal', 'ditambahkan', 'danger');
-            header('Location: ' . BASEURL . '/Barang');
+          Flasher::setFlash('Barang', 'gagal', 'ditambahkan', 'danger');
+            header('Location: ' . BASEURL . '/barang');
             exit;
         }
       }
@@ -28,12 +28,12 @@
       public function hapus($Kode_brg) {
         // var_dump($Kode_brg);
         if ( $this->model('Barang_model')->hapusDataBrg($Kode_brg) > 0) {
-          Flasher::setFlash('berhasil', 'dihapus', 'success');
-          header('Location: ' . BASEURL . '/Barang');
+          Flasher::setFlash('Barang', 'berhasil', 'dihapus', 'success');
+          header('Location: ' . BASEURL . '/barang');
           exit;
         } else {
-          Flasher::setFlash('gagal', 'dihapus', 'danger');
-          header('Location: ' . BASEURL . '/Barang');
+          Flasher::setFlash('Barang', 'gagal', 'dihapus', 'danger');
+          header('Location: ' . BASEURL . '/barang');
           exit;
         }
       }
@@ -41,6 +41,26 @@
       public function getUbah() {
         echo json_encode($this->model('Barang_model')->getBrgUbah($_POST['Kode_brg']));
 
+      }
+
+      public function ubah() {
+        if ( $this->model('Barang_model')->ubahBrg($_POST) > 0) {
+            Flasher::setFlash('Barang', 'berhasil', 'diubah', 'success');
+            header('Location: ' . BASEURL . '/barang');
+            exit;
+        } else {
+          Flasher::setFlash('Barang', 'gagal', 'diubah', 'danger');
+          header('Location: ' . BASEURL . '/barang');
+          exit;
+        }
+      }
+
+      public function cari() {
+        $data['judul'] = 'Daftar Mahasiswa';
+        $data['barang'] = $this->model('Barang_model')->cariData();
+        $this->view('templates/header', $data);
+        $this->view('barang/index', $data);
+        $this->view('templates/footer');
       }
 
     }
