@@ -160,8 +160,10 @@
                               </div>
                           <!--TANGGAL INPUT-->
                               <div class="mb-3">
+                                <?php $date = date("Y/m/d");
+                                $newDate = date("Y-m-d", strtotime($date)); ?>
                                   <label for="tanggal_po" class="form-label">Tanggal PO :</label>
-                                  <input type="date" class="form-control" id="tanggal_po" name="tanggal_po" required>
+                                  <input type="date" class="form-control" id="tanggal_po" name="tanggal_po" value="<?php echo $newDate; ?>">
                               </div>
                           <!--INPUT SUPPLIER-->
                               <div class="mb-3">

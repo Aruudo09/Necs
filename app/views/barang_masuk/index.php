@@ -217,9 +217,11 @@
                            </div>
                        </div>
                        <div class="row mb-3">
+                         <?php $date = date("Y/m/d");
+                         $newDate = date("Y-m-d", strtotime($date)); ?>
                            <div class="form-group">
                                <label for="tanggalTerima">Tanggal Terima :</label>
-                               <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control">
+                               <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control" value="<?php echo $newDate; ?>">
                            </div>
                        </div>
                        <div class="row mb-3">
@@ -264,7 +266,7 @@
                                 <div class="form-group col">
                                   <label for="opsiBrg">Barang</label>
                                   <select class="form-select" name="opsiBrg" id="opsiBrg">
-
+                                    <option value=""></option>
                                   </select>
                                 </div>
                               </div>

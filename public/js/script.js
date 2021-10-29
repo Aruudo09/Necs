@@ -12,7 +12,6 @@ $(function() {
 
       $('#noPo').val();
       $('#pemesan').val('');
-      $('#tanggal_po').val('');
       $('#sp').val('');
 
   });
@@ -180,7 +179,7 @@ $(function() {
         dataType: 'json',
         success: function(data) {
           // console.log(data);
-            $('#tanggalTerima').val('');
+
             $('#opsiSpl').val(data.KODE_SP);
             $('#ord').val(data.QTY_ORDER);
             $('#noSRJLN').val('');
@@ -300,7 +299,7 @@ $(function() {
     $('#namaBrg').val('');
     $('#inputPk').val('');
     $('#userId').val('');
-    $('#tanggalKeluar').val('');
+
     $('#keterangan').val('');
 
   });

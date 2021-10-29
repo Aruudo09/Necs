@@ -121,14 +121,16 @@
                  <div class="row mb-3">
                      <div class="form-group">
                          <label for="posting">Posting :</label>
-                         <input type="text" name="posting" id="posting" class="form-control">
+                         <input type="text" name="posting" id="posting" class="form-control" maxlength="1">
                      </div>
                  </div>
                 <!--INPUT TANGGAL KELUAR-->
+                <?php $date = date("Y/m/d");
+                $newDate = date("Y-m-d", strtotime($date)); ?>
                  <div class="row mb-3">
                      <div class="form-group col">
                          <label for="tanggalKeluar">Tanggal Keluar :</label>
-                         <input type="date" name="tanggalKeluar" id="tanggalKeluar" class="form-control">
+                         <input type="date" name="tanggalKeluar" id="tanggalKeluar" class="form-control" value="<?php echo $newDate; ?>">
                      </div>
                  </div>
                 <!--INPUT KETERANGAN-->

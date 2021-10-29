@@ -11,6 +11,7 @@
 
     public function getAllBarangKlr() {
       $this->db->query('SELECT NOMOR_SLIP, b.NAMA_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, b.Stock_brg, QUANTITY_MINTA FROM barang_keluar a JOIN barang b ON a.KODE_BRG = b.KODE_BRG');
+
       return $this->db->resultSet();
     }
 
