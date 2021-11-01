@@ -11,6 +11,7 @@ $(function() {
       $('.modal-footer button[type=submit]').html('Simpan');
 
       $('#noPo').val();
+      $('#noPo2').hide();
       $('#pemesan').val('');
       $('#sp').val('');
 
@@ -48,6 +49,8 @@ $(function() {
       $('#labelPo').html('Edit Nomor Purchased Order');
       $('.modal-footer button[type=submit]').html('Ubah Data');
       $('.modal-body form').attr('action', 'http://localhost/Necs/public/purchased_order/update');
+      $('#noPo').hide();
+
 
       const id = $(this).data('id');
       console.log(id);
@@ -58,7 +61,7 @@ $(function() {
         dataType: 'json',
         success: function(data) {
           // console.log(data);
-            $('#noPo').val(data.NO_PO);
+            $('#noPo2').val(data.NO_PO);
             $('#No_po').val(data.NO_PO);
             $('#tanggal_po').val(data.TGL_PO);
             $('#pemesan').val(data.PEMESAN);
@@ -148,45 +151,51 @@ $(function() {
 //BARANG MASUK
 
   //---------CLICK UNTUK MEN-GENERATE NOMOR BA-------------//
-  $(".tableViewPo").click(function() {
 
-    $('#modalLabelBrgMsk').html('Membuat Berita Acara');
-    $('.modal-footer button[type=submit]').html('Simpan Data');
-    var id = $(this).find('.NO_PO').text();
-    $('#poBa').val(id);
-    if ( id.substring(5, 11) == 'PROC-P') {
-      var kode3 = 'ST';
-    } else {
-      var kode3 = 'GA';
-    }
-    // console.log(id.substring(5, 11));
-    // console.log(kod);
-    // console.log(kod1);
-    $('#inputNoMsk').val(kode3 + '-' + kod + '/' + kod1);
-
+  $('#poBa').change(function() {
+      console.log(document.getElementById('poBa').value);
+      var cmbVl = document.getElementById('poBa').value;
+      console.log(cmbVl.substring(5, 11));
+     if (cmbVl.substring(5, 11) == 'PROC-P'){
+         var kode3 = 'ST';
+     }
+     else {
+         var kode3 = 'GA';
+     }
+     $('#inputNoMsk').val(kode3 + '-' + kod + '/' + kod1);
   });
 
+  $('#tambahBa').click(function() {
+    $('#poBa2').hide();
+    $('#poBa').show();
+  });
 
-  //----------TAMBAH NOMOR BA BARU--------------//
-  $('.tampilModalBa').on('click', function() {
+  //-----SET VALUE EDIT BERITA ACARA TMP------//
+  $('.tableViewDtlBcra').click(function() {
 
-    const id = $(this).data('id');
-    // console.log(id);
-    $.ajax({
-        url: 'http://localhost/Necs/public/Barang_masuk/getInput',
-        data: {NO_PO : id},
-        method: 'post',
-        dataType: 'json',
-        success: function(data) {
-          // console.log(data);
+    var set = $(this).find('.poBcraTmp').text();
+    var set1 = $(this).find('.noBcraTmp').text();
+    var set2 = $(this).find('.srjBcraTmp').text();
+    var set3 = $(this).find('.spBcraTmp').text();
+    var set4 = $(this).find('.tglBcraTmp').text();
+    var set5 = $(this).find('.pnmBcraTmp').text();
 
-            $('#opsiSpl').val(data.KODE_SP);
-            $('#ord').val(data.QTY_ORDER);
-            $('#noSRJLN').val('');
-          }
-      });
 
-    });
+    // console.log(set + ' ' + set1 + ' ' + set2 + ' ' + set3 + ' ' + set4 + ' ' +set5);
+    $('#penerimadt').val(set5);
+    $('#tanggalbcra').val(set4);
+    $('#nopo').val(set);
+    $('#nomorsp').val(set3);
+    $('#srjln').val(set2);
+    $('#qtyTerima').val('');
+    $('#NoBcra').val(set1);
+
+    $('#poBa2').val(set);
+    $('#inputNoMsk').val(set1);
+    $('#noSRJLN').val(set2);
+    $('#penerima').val(set5);
+    $('#tanggalTerima').val(set4);
+  });
 
   //---------EDIT HEADER BERITA ACARA----------//
   $('.bcraTmpUpdate').on('click', function() {
@@ -197,74 +206,36 @@ $(function() {
     const id = $(this).data('id');
     console.log(id);
 
-    $.ajax({
-        url: 'http://localhost/Necs/public/Barang_masuk/getUbah',
-        data: {No_msk : id},
-        method: 'post',
-        dataType: 'json',
-        success: function(data) {
-          console.log(data);
-
-            $('#inputNoMsk').val(data.NO_BCRA);
-            $('#tanggalTerima').val(data.TGL_BCRA);
-            $('#poBa').val(data.NO_PO);
-            $('#opsiSpl').val(data.KODE_SP);
-            $('#penerima').val(data.PENERIMA);
-            $('#ord').val(data.QTY_ORDER);
-            $('#noSRJLN').val(data.NO_SRJLN);
-        }
-    });
+    $('#poBa').hide();
+    $('#poBa2').show();
 
   });
 
-  //-----SET VALUE BERITA ACARA TMP------//
-  $('.tableViewDtlBcra').click(function() {
-
-    var set = $(this).find('.poBcraTmp').text();
-    var set1 = $(this).find('.noBcraTmp').text();
-    var set2 = $(this).find('.srjBcraTmp').text();
-    var set4 = $(this).find('.tglBcraTmp').text();
-    var set5 = $(this).find('.pnmBcraTmp').text();
-
-
-    console.log(set + ' ' + set1 + ' ' + set2 + ' ' + set3 + ' ' + set4 + ' ' +set5);
-    $('#penerimadt').val(set5);
-    $('#tanggalbcra').val(set4);
-    $('#nopo').val(set);
-    $('#nomorsp').val(set3);
-    $('#srjln').val(set2);
-    $('#qtyTerima').val('');
-    $('#NoBcra').val(set1);
-  });
 
   //---------INPUT DETAIL BERITA ACARA----------//
-  $('.inputDtlBcra').on('click', function() {
-
-    $('#labelDtlBcra').html('Input Detail Berita Acara');
-    $('.modal-footer button[type=submit]').html('Simpan Data');
-
+  $('.inptDtl').click(function() {
     const id = $(this).data('id');
     console.log(id);
-
-    $.ajax({
-        url: 'http://localhost/Necs/public/Barang_masuk/getUbahTmp',
-        data: {NO_PO : id},
-        method: 'post',
-        dataType: 'json',
-        success: function(data) {
-          console.log(data);
-          var select = document.getElementById('opsiBrg');
-
-            //-----GENERATE OPTION BARANG DARI PO----//
-            for (var i = 0 in data) {
-                $(select).append('<option value=' + data[i].KODE_BRG + '>' + data[i].NAMA_BRG + '</option>');
-            }
-
-        }
-    });
-
-
   });
+
+  $('.tableViewPo').click(function() {
+    //SET VALUE DETAIL BERITA ACARA
+    var kdPo = $(this).find('.kdPo').text();
+    var harga = $(this).find('.kdHrg').text();
+    var qtyTrm = $(this).find('.kdTglBa').text();
+    var kdTrm = $(this).find('.kdTrm').text();
+    var kdSp = $(this).find('.kdSp').text();
+    var kdBrg = $(this).find('.kdBrg').text();
+    console.log(kdBrg);
+    console.log(harga);
+
+    $('#nopo').val(kdPo);
+    $('#nomorsp').val(kdSp);
+    $('#brg').val(kdBrg);
+    $('#hrg').val(harga);
+    $('#qtyTerima').val('');
+  });
+
 
   //----------EDIT DETAIL BARANG MASUK----------//
   $('.updDtlBrgMsk').on('click', function() {

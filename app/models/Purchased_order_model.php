@@ -28,7 +28,7 @@ class Purchased_order_model {
   }
 
   public function getAllDataTmp() {
-    $this->db->query('SELECT NO_PO, TGL_PO, PEMESAN, purchased_order_tmp.KODE_SP, supplier.NAMA_SP FROM purchased_order_tmp, supplier WHERE purchased_order_tmp.KODE_SP = supplier.KODE_SP ORDER BY TGL_PO DESC Limit 1');
+    $this->db->query('SELECT NO_PO, TGL_PO, PEMESAN, purchased_order_tmp.KODE_SP, supplier.NAMA_SP FROM purchased_order_tmp, supplier WHERE purchased_order_tmp.KODE_SP = supplier.KODE_SP ORDER BY NO_PO DESC Limit 1');
 
     return $this->db->resultSet();
   }
@@ -76,7 +76,7 @@ class Purchased_order_model {
   public function tambahDataPo($data) {
     $query = "INSERT INTO purchased_order
                 VALUES
-                (:detailNoPo, :detailPemesan, :detailTglPo, :detailSp, :brg, :qty, :harga, NULL, '')";
+                (:detailNoPo, :detailPemesan, :detailTglPo, :detailSp, :brg, :qty, :harga, NULL, '', '')";
     // var_dump($query);
     // echo $query;
     $this->db->query($query);
@@ -110,12 +110,14 @@ class Purchased_order_model {
 
   public function ubahData($data) {
     $query = "UPDATE purchased_order_tmp SET
+                NO_PO = :noPo2,
                 TGL_PO = :tanggal_po,
                 PEMESAN = :pemesan,
                 KODE_SP = :sp
               WHERE NO_PO = :No_po";
 
     $this->db->query($query);
+    $this->db->bind('noPo2', $data['noPo2']);
     $this->db->bind('tanggal_po', $data['tanggal_po']);
     $this->db->bind('pemesan', $data['pemesan']);
     $this->db->bind('sp', $data['sp']);

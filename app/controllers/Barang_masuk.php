@@ -5,9 +5,10 @@
       public function index() {
           $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk();
           $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
-          $data['po'] = $this->model('Purchased_order_model')->getAllDataPo();
+          $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra();
+          $data['po1'] = $this->model('Purchased_order_model')->getAllDataPo();
           $data['sp'] = $this->model('Barang_masuk_model')->getOptionSpl();
-          $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
+          // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
           $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
 
           $this->view('templates/header', $data);
@@ -24,6 +25,7 @@
       public function tambahTmp() {
         if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0) {
             $this->model('Barang_masuk_model')->updateCounter();
+            $this->model('Barang_masuk_model')->updateStats($_POST);
             Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;
@@ -36,8 +38,10 @@
 
       public function tambah() {
       if( $this->model('Barang_masuk_model')->cekOrder($_POST) == true) {
+        echo "<script type='text/javascript'>alert('PAS MANTAB');</script>";
         if ( $this->model('Barang_masuk_model')->tambahBrgMsk($_POST) > 0) {
             $this->model('Barang_masuk_model')->updateorder($_POST);
+            $this->model('Barang_masuk_model')->setStats($_POST);
             Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;

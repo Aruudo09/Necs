@@ -151,6 +151,12 @@
                                   <option value="<?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?>"
                                     ><?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?> - Umum</option>
                                 </select>
+                                <select class="form-select" name="noPo2" id="noPo2">
+                                  <option value="<?php echo sprintf('%04d', $cnt['po']) . "/PROC-P/" . date("m/y"); ?>"
+                                    ><?php echo sprintf('%04d', $cnt['po']) . "/PROC-P/" . date("m/y"); ?> - Produksi</option>
+                                  <option value="<?php echo sprintf('%04d', $cnt['po']) . "/PROC-U/" . date("m/y"); ?>"
+                                    ><?php echo sprintf('%04d', $cnt['po']) . "/PROC-U/" . date("m/y"); ?> - Umum</option>
+                                </select>
                               <?php endforeach; ?>
                               </div>
                           <!--INPUT PEMESAN-->

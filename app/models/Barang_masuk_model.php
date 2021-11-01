@@ -20,10 +20,13 @@
         $this->db->execute();
       }
 
-      public function getOptionBrg() {
-        $this->db->query('SELECT * FROM barang');
-        return $this->db->resultSet();
-      }
+      // public function getOptionBrg() {
+      //   $this->db->query('SELECT a.KODE_BRG, b.NAMA_BRG, a.HARGA_PO
+      //                     FROM purchased_order a
+      //                     LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
+      //                     WHERE NO_PO = 0011/PROC-P/11/21 AND QTY_ORDER > QTY_TERIMA;');
+      //   return $this->db->resultSet();
+      // }
 
       public function getOptionSpl() {
         $this->db->query('SELECT * FROM supplier');
@@ -39,6 +42,16 @@
 
       public function getAllBarangMsk() {
         $this->db->query('SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP');
+
+        return $this->db->resultSet();
+      }
+
+      public function getAllPoBcra() {
+        $this->db->query('SELECT a.NO_PO, a.TGL_PO, c.KODE_SP, c.NAMA_SP, b.KODE_BRG, b.NAMA_BRG, b.Jenis_brg, b.Stock_brg, a.QTY_ORDER, a.QTY_TERIMA, b.Satuan, a.HARGA_PO, a.TOT_HARGA
+        FROM purchased_order a
+        LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
+        LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+        WHERE a.QTY_ORDER > a.QTY_TERIMA AND a.status != 1;');
 
         return $this->db->resultSet();
       }
@@ -71,32 +84,40 @@
       }
 
       public function cekOrder($data) {
-        $query = "SELECT NO_PO, PEMESAN, TGL_PO, QTY_ORDER, QTY_TERIMA, HARGA_PO, TOT_HARGA FROM purchased_order WHERE NO_PO = :nopo AND KODE_BRG = :opsiBrg AND QTY_ORDER > QTY_TERIMA";
+        $query = "SELECT NO_PO, PEMESAN, TGL_PO, QTY_ORDER, QTY_TERIMA, HARGA_PO, TOT_HARGA FROM purchased_order WHERE NO_PO = :nopo AND KODE_BRG = :brg AND QTY_ORDER > QTY_TERIMA";
 
         $this->db->query($query);
         $this->db->bind('nopo', $data['nopo']);
-        $this->db->bind('opsiBrg', $data['opsiBrg']);
+        $this->db->bind('brg', $data['brg']);
 
         $ord = $this->db->single();
-        var_dump($ord['QTY_ORDER']);
-        if ( $ord['QTY_ORDER'] >= $data['qtyTerima']) {
+        $selisih = $ord['QTY_ORDER'] - $ord['QTY_TERIMA'];
+        var_dump($selisih);
+        if ( $selisih >= $data['qtyTerima']) {
             return true;
         } else {
           return false;
         }
+      }
 
+      public function updateStats($data) {
+        $query = "UPDATE purchased_order SET status = 0
+                  WHERE NO_PO = :poBa AND QTY_ORDER > QTY_TERIMA";
+
+        $this->db->query($query);
+        $this->db->bind('poBa', $data['poBa']);
+
+        $this->db->execute();
       }
 
       public function tambahBrgMskTmp($data) {
-        $query = "INSERT INTO berita_acara_tmp
-                    VALUES
-                    (:inputNoMsk, :poBa, :noSRJLN, :opsiSpl, :tanggalTerima, :penerima)";
+        $query = "INSERT INTO berita_acara_tmp (NO_BCRA, NO_PO, NO_SRJLN, KODE_SP, TGL_BCRA, PENERIMA)
+                  SELECT :inputNoMsk, :poBa, :noSRJLN, KODE_SP, :tanggalTerima, :penerima FROM purchased_order_tmp WHERE NO_PO = :poBa";
         $this->db->query($query);
         $this->db->bind('inputNoMsk', $data['inputNoMsk']);
         $this->db->bind('noSRJLN', $data['noSRJLN']);
         $this->db->bind('tanggalTerima', $data['tanggalTerima']);
         $this->db->bind('poBa', $data['poBa']);
-        $this->db->bind('opsiSpl', $data['opsiSpl']);
         $this->db->bind('penerima', $data['penerima']);
 
         $this->db->execute();
@@ -107,7 +128,7 @@
       public function tambahBrgMsk($data) {
         $query = "INSERT INTO berita_acara
                     VALUES
-                    (:NoBcra, :penerimadt, :tanggalbcra, :nopo, :nomorsp, :opsiBrg, :qtyTerima, :srjln)";
+                    (:NoBcra, :penerimadt, :tanggalbcra, :nopo, :nomorsp, :brg, :hrg, :qtyTerima, :srjln)";
 
         $this->db->query($query);
         $this->db->bind('NoBcra', $data['NoBcra']);
@@ -115,9 +136,10 @@
         $this->db->bind('nomorsp', $data['nomorsp']);
         $this->db->bind('penerimadt', $data['penerimadt']);
         $this->db->bind('nopo', $data['nopo']);
-        $this->db->bind('opsiBrg', $data['opsiBrg']);
+        $this->db->bind('brg', $data['brg']);
         $this->db->bind('srjln', $data['srjln']);
         $this->db->bind('qtyTerima', $data['qtyTerima']);
+        $this->db->bind('hrg', $data['hrg']);
 
         $this->db->execute();
         return $this->db->rowCount();
@@ -160,13 +182,24 @@
       public function updateorder($data) {
         $query2 = "UPDATE purchased_order SET
                     QTY_TERIMA = QTY_TERIMA + :qtyTerima
-                    WHERE NO_PO = :nopo AND KODE_BRG = :opsiBrg AND QTY_ORDER > QTY_TERIMA";
+                    WHERE NO_PO = :nopo AND KODE_BRG = :brg AND QTY_ORDER > QTY_TERIMA";
         $this->db->query($query2);
         $this->db->bind('nopo', $data['nopo']);
         $this->db->bind('qtyTerima', $data['qtyTerima']);
-        $this->db->bind('opsiBrg', $data['opsiBrg']);
+        $this->db->bind('brg', $data['brg']);
 
         $this->db->execute();
+      }
+
+      public function setStats($data) {
+        $query = "UPDATE purchased_order SET status = 1
+                  WHERE NO_PO = :nopo AND KODE_BRG = :brg AND QTY_ORDER > QTY_TERIMA AND status = 0";
+
+                  $this->db->query($query);
+                  $this->db->bind('nopo', $data['nopo']);
+                  $this->db->bind('brg', $data['brg']);
+
+                  $this->db->execute();
       }
 
       public function ubahBrgMskTmp($data) {
