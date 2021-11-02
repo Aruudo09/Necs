@@ -22,38 +22,32 @@
         $this->view('barang_masuk/detail', $data);
       }
 
-      public function tambahTmp() {
-        if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0) {
-            $this->model('Barang_masuk_model')->updateCounter();
-            $this->model('Barang_masuk_model')->updateStats($_POST);
-            Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        } else {
-          Flasher::setFlash('Berita Acara', 'gagal', 'ditambahkan', 'danger');
-          header('Location: ' . BASEURL . '/barang_masuk');
-          exit;
-        }
-      }
 
       public function tambah() {
-      if( $this->model('Barang_masuk_model')->cekOrder($_POST) == true) {
-        echo "<script type='text/javascript'>alert('PAS MANTAB');</script>";
-        if ( $this->model('Barang_masuk_model')->tambahBrgMsk($_POST) > 0) {
-            $this->model('Barang_masuk_model')->updateorder($_POST);
-            $this->model('Barang_masuk_model')->setStats($_POST);
-            Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        } else {
-          Flasher::setFlash('Berita Acara', 'gagal', 'ditambahkan', 'danger');
-          header('Location: ' . BASEURL . '/barang_masuk');
-          exit;
+        var_dump($_POST);
+        foreach( $_POST as $data) {
+          echo $data[''];
         }
-      }
-      else {
-        echo "<script type='text/javascript'>alert('Kuantitas Melibihi Order!');</script>";
-      }
+      // if( $this->model('Barang_masuk_model')->cekOrder($_POST) == true) {
+      //   echo "<script type='text/javascript'>alert('PAS MANTAB');</script>";
+      //   if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0) {
+      //       $this->model('Barang_masuk_model')->tambahBrgMsk($_POST);
+      //       $this->model('Barang_masuk_model')->updateCounter();
+      //       $this->model('Barang_masuk_model')->updateStats($_POST);
+      //       $this->model('Barang_masuk_model')->updateorder($_POST);
+      //       $this->model('Barang_masuk_model')->setStats($_POST);
+      //       Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
+      //       header('Location: ' . BASEURL . '/barang_masuk');
+      //       exit;
+      //   } else {
+      //     Flasher::setFlash('Berita Acara', 'gagal', 'ditambahkan', 'danger');
+      //     header('Location: ' . BASEURL . '/barang_masuk');
+      //     exit;
+      //   }
+      // }
+      // else {
+      //   echo "<script type='text/javascript'>alert('Kuantitas Melibihi Order!');</script>";
+      // }
       }
 
       public function hapus($No_msk) {
@@ -78,6 +72,10 @@
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;
         }
+      }
+
+      public function optBrg() {
+        echo json_encode($this->model('Barang_masuk_model')->getOptionBrg($_POST['opt']));
       }
 
       public function getInput() {

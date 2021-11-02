@@ -153,9 +153,9 @@ $(function() {
   //---------CLICK UNTUK MEN-GENERATE NOMOR BA-------------//
 
   $('#poBa').change(function() {
-      console.log(document.getElementById('poBa').value);
+      // console.log(document.getElementById('poBa').value);
       var cmbVl = document.getElementById('poBa').value;
-      console.log(cmbVl.substring(5, 11));
+      // console.log(cmbVl.substring(5, 11));
      if (cmbVl.substring(5, 11) == 'PROC-P'){
          var kode3 = 'ST';
      }
@@ -163,11 +163,54 @@ $(function() {
          var kode3 = 'GA';
      }
      $('#inputNoMsk').val(kode3 + '-' + kod + '/' + kod1);
+
+     $.ajax({
+       type: 'POST',
+       url: 'http://localhost/Necs/public/Barang_masuk/optBrg',
+       data: {opt : cmbVl},
+       dataType: 'json',
+       success: function(data) {
+         console.log(data);
+         var appenddata1 = "";
+                   for (var i = 0; i < data.length; i++) {
+                       appenddata1 += "<option value = '" + data[i].KODE_BRG + " '>" + data[i].NAMA_BRG + " </option>";
+                   }
+                   $("#optBrg").append(appenddata1);
+       }
+     });
   });
 
   $('#tambahBa').click(function() {
     $('#poBa2').hide();
     $('#poBa').show();
+  });
+
+  //-----TAMBAH FILED INPUT BARANG------//
+  $('.add').click(function() {
+    var new_row = parseInt($('#num_row').val()) + 1;
+    console.log(new_row);
+    var new_input = "<td><input type='number' placeholder='Harga...' name='hrgBl[]' id='hrgBl" + new_row + "' class='form-control'><td>";
+    var new_input1 = "<tr><td><input type='text' placeholder='Barang...' name='brg[]' id='brg" + new_row + "' class='form-control'></td>";
+    var new_input2 = "<td><input type='number' placeholder='Quantity...' name='qty[]' id='qty" + new_row + "' class='form-control'></td>";
+
+
+     $('#new_row').append(new_input1 + new_input + new_input2);
+
+     $('#num_row').val(new_row);
+  });
+
+  //-----MENGURANGI FIELD BARANG-----//
+  $('.remove').click(function() {
+    var old_row = $('#num_row').val();
+    console.log(old_row);
+
+     if (old_row > 1) {
+       $('#hrgBl' + old_row).remove();
+       $('#brg' + old_row).remove();
+       $('#qty' + old_row).remove();
+       $('#remove' + old_row).remove();
+       $('#num_row').val(old_row - 1);
+     }
   });
 
   //-----SET VALUE EDIT BERITA ACARA TMP------//
@@ -191,10 +234,10 @@ $(function() {
     $('#NoBcra').val(set1);
 
     $('#poBa2').val(set);
-    $('#inputNoMsk').val(set1);
-    $('#noSRJLN').val(set2);
-    $('#penerima').val(set5);
-    $('#tanggalTerima').val(set4);
+    $('#inputNoMsk2').val(set1);
+    $('#noSRJLN2').val(set2);
+    $('#penerima2').val(set5);
+    $('#tanggalTerima2').val(set4);
   });
 
   //---------EDIT HEADER BERITA ACARA----------//
@@ -205,10 +248,6 @@ $(function() {
     $('.modal-body form').attr('action', 'http://localhost/Necs/public/Barang/ubahTmp');
     const id = $(this).data('id');
     console.log(id);
-
-    $('#poBa').hide();
-    $('#poBa2').show();
-
   });
 
 
@@ -218,6 +257,7 @@ $(function() {
     console.log(id);
   });
 
+  //-----CLICK SET BARANG-----//
   $('.tableViewPo').click(function() {
     //SET VALUE DETAIL BERITA ACARA
     var kdPo = $(this).find('.kdPo').text();
@@ -226,13 +266,16 @@ $(function() {
     var kdTrm = $(this).find('.kdTrm').text();
     var kdSp = $(this).find('.kdSp').text();
     var kdBrg = $(this).find('.kdBrg').text();
+    var nmBrg = $(this).find('.nmBrg').text();
     console.log(kdBrg);
     console.log(harga);
 
     $('#nopo').val(kdPo);
     $('#nomorsp').val(kdSp);
     $('#brg').val(kdBrg);
+    $('#optBrg').append("<option value = '" + kdBrg + " ' selected>" + nmBrg + " </option>");
     $('#hrg').val(harga);
+    $('#hrgBl').val(harga);
     $('#qtyTerima').val('');
   });
 
@@ -247,11 +290,6 @@ $(function() {
     const id = $(this).data('id');
     const id2 = $(this).data('brg-id');
     const id3 = $(this).data('po-id');
-    const id4 = $(this).data('date-id');
-    console.log(id);
-    console.log(id2);
-    console.log(id3);
-    console.log(id4);
     $('#brg').val(id2);
     $('#NoBcra').val(id);
     $('#nopo').val(id3);

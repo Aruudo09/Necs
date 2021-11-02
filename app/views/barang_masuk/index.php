@@ -11,18 +11,19 @@
   <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
 
     <!--TOMBOL TAMBAH NOMOR BA-->
-        <div class="row mb-3">
+        <!-- <div class="row mb-3">
           <div class="col-lg-6">
             <button type="button" class="btn btn-primary" id="tambahBa" data-bs-toggle="modal" data-bs-target="#modalBrgMsk">
                 Tambah Data
             </button>
           </div>
-        </div>
+        </div> -->
     <!---END TOMBOL TAMBAH NOMOR BA-->
 
+  <!--TABLE VIEW BERITA ACARA-->
     <div class="row">
       <div class="overflow-auto">
-        <h3>INPUT BERITA ACARA</h3>
+        <h3>BERITA ACARA</h3>
           <table class="table text-center table-hover">
                 <thead>
                   <tr class="table-warning ">
@@ -47,8 +48,6 @@
                 <td class="tglBcraTmp"><?php print $mhs['TGL_BCRA']; ?></td>
                 <td class="pnmBcraTmp"><?php print $mhs['PENERIMA']; ?></td>
                 <td>
-      <!---TOMBOL TAMBAH DETAIL BA---->
-                  <a href="<?php echo BASEURL; ?>/Barang_masuk/tambah" class="btn btn-success inptDtl" data-bs-toggle="modal" data-bs-target="#modalBrgMsk" data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fas fa-plus"></i></a>
       <!--TOMBOL UPDATE-->
                   <a href="<?php echo BASEURL; ?>/Barang_masuk/ubah/<?php echo $mhs['NO_PO']; ?>"
                 class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
@@ -63,7 +62,87 @@
           </table>
       </div>
   </div>
+<!--END TABLE VIEW BERITA ACARA-->
+
+  <!--FORM INPUT BERITA ACARA-->
+  <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
+    <h3>FORM INPUT BERITA ACARA</h3>
+    <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
+     <!--HIDDEN INPUT NOMOR BCRA-->
+      <input type="hidden" name="No_msk" id="No_msk" value="">
+      <!--INPUT NOMOR PO-->
+        <div class="row mb-3">
+            <div class="col-4">
+                <label for="poBa">No. PO :</label>
+                  <select class="form-select  " name="poBa" id="poBa" onchange="">
+                    <option value="" selected>choose...</option>
+                    <?php foreach ( $data['po1'] as $opt) : ?>
+                    <option value="<?php print $opt['NO_PO']; ?>"
+                      ><?php print $opt['NO_PO']; ?></option>
+                   <?php endforeach; ?>
+                  </select>
+            </div>
+       <!--INPUT NOMOR BCRA-->
+            <div class="col-4">
+                <label for="inputNoMsk">No Masuk :</label>
+                <?php foreach( $data['counter'] as $ct) : ?>
+                <script>
+                    var kod = <?php echo json_encode($ct['ba'], JSON_HEX_TAG); ?>;
+                    var kod1 = <?php echo json_encode(date("y"), JSON_HEX_TAG); ?>;
+                </script>
+                <?php endforeach; ?>
+                <input type="text" name="inputNoMsk" id="inputNoMsk" class="form-control " value="" readonly>
+            </div>
+        </div>
+       <!--INPUT NOMOR SURAT JALAN-->
+        <div class="row mb-3">
+            <div class="col-4">
+                <label for="noSRJLN">No. Surat Jalan :</label>
+                <input type="text" name="noSRJLN" id="noSRJLN" class="form-control">
+            </div>
+            <!--INPUT TANGGAL TERIMA-->
+             <?php $date = date("Y/m/d");
+             $newDate = date("Y-m-d", strtotime($date)); ?>
+             <div class="col-4">
+                 <label for="tanggalTerima">Tanggal Terima :</label>
+                 <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control" value="<?php echo $newDate; ?>">
+             </div>
+        </div>
+       <!--INPUT PENERIMA-->
+        <div class="row mb-3">
+            <div class="col-4">
+                <label for="penerima">Penerima :</label>
+                <input type="text" name="penerima" id="penerima" class="form-control">
+            </div>
+        </div>
+
+    <!--INPUT FIELD BARANG-->
+      <table class="mb-2">
+        <tr>
+          <td><label for="optBrg">Barang :</label></td>
+          <td><label for="hrgBl">Harga :</label></td>
+          <td><label for="qty">Quantity</label></td>
+        </tr>
+
+        <tr>
+          <td><select class="form-select" name="brg[]" id="optBrg">
+            <option value="" selected>choose.......</option>
+          </select></td>
+          <td><input type="number" name="hrgBl[]" id="hrgBl" class="form-control" value=""></td>
+          <td><input type="number" name="qty[]" class="form-control" id="qty" value=""></td>
+          <td><button type="button" name="add[]" class="btn btn-success add"><i class="fas fa-plus"></i></button></td>
+          <td><button type="button" name="remove" class="btn btn-danger remove"><i class="fas fa-minus"></i></button></td>
+        </tr>
+      </table>
+      <div id="new_row"class="mb-3"></div>
+      <input type="hidden" value="1" id="num_row">
+    <!--END INPUT FIELD BARANG-->
+    <button type="submit" class="btn btn-primary">Save changes</button>
+  </form>
+<!--END FORM INPUT BERITA ACARA-->
 </div>
+</div>
+
 
 <!--TABLE VIEW LIST PURCHASED ORDER-->
   <div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
@@ -97,7 +176,6 @@
                     <th scope="col">Satuan</th>
                     <th scope="col">Harga Order</th>
                     <th scope="col">Total</th>
-                    <th scope="col">Fitur</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -106,7 +184,7 @@
                 <td class="kdPo"><?php print $mhs['NO_PO']; ?></td>
                 <td><?php print $mhs['NAMA_SP']; ?></td>
                 <td class="kdSp" style="display:none"><?php print $mhs['KODE_SP']; ?></td>
-                <td><?php print $mhs['NAMA_BRG']; ?></td>
+                <td class="nmBrg"><?php print $mhs['NAMA_BRG']; ?></td>
                 <td class="kdBrg" style="display:none"><?php print $mhs['KODE_BRG']; ?></td>
                 <td><?php print $mhs['Jenis_brg']; ?></td>
                 <td><?php print $mhs['Stock_brg']; ?></td>
@@ -115,10 +193,6 @@
                 <td><?php print $mhs['Satuan']; ?></td>
                 <td class="kdHrg"><?php print $mhs['HARGA_PO']; ?></td>
                 <td><?php print $mhs['TOT_HARGA']; ?></td>
-      <!--TOMBOL INPUT BA-->
-                <td class="d-flex justify-content-center p-2">
-                  <a href="#" class="btn btn-success tampilModalBa" data-bs-toggle="modal" data-bs-target="#detailBcra" data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-file"></i></a>
-              </td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
@@ -199,42 +273,29 @@
                      <!--INPUT NOMOR PO-->
                        <div class="row mb-3">
                            <div class="form-group">
-                               <label for="poBa">No. PO :</label>
-                                 <select class="form-select" name="poBa" id="poBa" onchange="">
-                                   <option value="" selected>choose...</option>
-                                   <?php foreach ( $data['po1'] as $opt) : ?>
-                                   <option value="<?php print $opt['NO_PO']; ?>"
-                                     ><?php print $opt['NO_PO']; ?></option>
-                                  <?php endforeach; ?>
-                                 </select>
+                               <label for="poBa2">No. PO :</label>
                                  <input type="text" name="poBa2" id="poBa2" value="" class="form-control" readonly>
                            </div>
                        </div>
                       <!--INPUT NOMOR BCRA-->
                        <div class="row mb-3">
                            <div class="form-group">
-                               <label for="inputNoMsk">No Masuk :</label>
-                               <?php foreach( $data['counter'] as $ct) : ?>
-                               <script>
-                                   var kod = <?php echo json_encode($ct['ba'], JSON_HEX_TAG); ?>;
-                                   var kod1 = <?php echo json_encode(date("y"), JSON_HEX_TAG); ?>;
-                               </script>
-                               <?php endforeach; ?>
-                               <input type="text" name="inputNoMsk" id="inputNoMsk" class="form-control" value="" readonly>
+                               <label for="inputNoMsk2">No Masuk :</label>
+                               <input type="text" name="inputNoMsk2" id="inputNoMsk2" class="form-control" value="" readonly>
                            </div>
                        </div>
                       <!--INPUT NOMOR SURAT JALAN-->
                        <div class="row mb-3">
                            <div class="form-group">
-                               <label for="noSRJLN">No. Surat Jalan :</label>
-                               <input type="text" name="noSRJLN" id="noSRJLN" class="form-control">
+                               <label for="noSRJLN2">No. Surat Jalan :</label>
+                               <input type="text" name="noSRJLN2" id="noSRJLN2" class="form-control">
                            </div>
                        </div>
                       <!--INPUT PENERIMA-->
                        <div class="row mb-3">
                            <div class="form-group">
-                               <label for="penerima">Penerima :</label>
-                               <input type="text" name="penerima" id="penerima" class="form-control">
+                               <label for="penerima2">Penerima :</label>
+                               <input type="text" name="penerima2" id="penerima2" class="form-control">
                            </div>
                        </div>
                       <!--INPUT TANGGAL TERIMA-->
@@ -242,22 +303,10 @@
                          <?php $date = date("Y/m/d");
                          $newDate = date("Y-m-d", strtotime($date)); ?>
                            <div class="form-group">
-                               <label for="tanggalTerima">Tanggal Terima :</label>
-                               <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control" value="<?php echo $newDate; ?>">
+                               <label for="tanggalTerima2">Tanggal Terima :</label>
+                               <input type="date" name="tanggalTerima2" id="tanggalTerima2" class="form-control" value="<?php echo $newDate; ?>">
                            </div>
                        </div>
-                       <!-- <div class="row mb-3">
-                         <div class="form-group">
-                           <label for="brg">Barang :</label>
-
-                           <select class="form-select" name="brg">
-                             <option value="">
-
-                             </option>
-                           </select>
-
-                         </div>
-                       </div> -->
                  </div>
                  <div class="modal-footer">
                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -281,20 +330,10 @@
                           <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
                           <!--HIDEEN INPUT NOMOR BARANG-->
                             <input type="text" name="NoBcra" id="NoBcra" value="">
-                          <!--HIDEEN INPUT PENERIMA-->
-                            <input type="text" name="penerimadt" id="penerimadt" value="">
-                          <!--HIDEEN INPUT TANGGAL BERITA ACARA-->
-                            <input type="text" name="tanggalbcra" id="tanggalbcra" value="">
                           <!--HIDEEN INPUT NOMOR PO-->
                             <input type="text" name="nopo" id="nopo" value="">
-                          <!--HIDEEN INPUT KODE SUPPLIER-->
-                            <input type="text" name="nomorsp" id="nomorsp" value="">
-                          <!--HIDEEN INPUT NOMOR SURAT JALAN-->
-                            <input type="text" name="srjln" id="srjln" value="">
                           <!--HIDEEN INPUT KODE BARANG-->
                             <input type="text" name="brg" id="brg" value="">
-                          <!--HIDEEN INPUT HARGA BARANG-->
-                            <input type="text" name="hrg" id="hrg" value="">
                             <!--INPUT QUANTITY DITERIMA-->
                               <div class="row mb-3">
                                 <div class="form-group col">
