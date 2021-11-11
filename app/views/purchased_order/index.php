@@ -1,4 +1,3 @@
-  <div id="page-content-wrapper">
       <div class="container-fluid px-4">
 
           <!--FLASH MESSAGE-->
@@ -9,124 +8,187 @@
             </div>
 
         <!--TOMBOL TAMBAH NOMOR PO-->
+        <div class="row">
+          <div class="col">
           <div class="border border-dark rounded-3 bg-gradient p-3">
-            <div class="row mb-3">
-              <div class="col-lg-6">
-                <button type="button" class="btn btn-primary" id="tambahData" data-bs-toggle="modal" data-bs-target="#modalPo">
-                    Tambah Data
-                </button>
+            <h3>FORM INPUT PO</h3>
+              <hr>
+            <form action="<?php echo BASEURL; ?>/purchased_order/tambah" method="post">
+                <!--HIDDEN INPUT NOMOR PO-->
+                    <input type="hidden" name="No_po" id="No_po" value="">
+                <!--INPUT NOMOR PO-->
+                    <div class="mb-3">
+                      <label for="noPo">No PO :</label>
+                      <?php foreach($data['counter'] as $cnt) : ?>
+                      <select class="form-select" name="noPo" id="noPo">
+                        <option value="" selected readonly disabled>Choose....</option>
+                        <option value="<?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-P/" . date("m/y"); ?>"
+                          ><?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-P/" . date("m/y"); ?> - Produksi</option>
+                        <option value="<?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?>"
+                          ><?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?> - Umum</option>
+                      </select>
+                    <?php endforeach; ?>
+                    </div>
+                <!--INPUT PEMESAN-->
+                    <div class="mb-3">
+                      <label for="pemesan">Pemesan :</label>
+                      <input type="text" name="pemesan" id="pemesan" value="" class="form-control" required>
+                    </div>
+                <!--TANGGAL INPUT-->
+                    <div class="mb-3">
+                      <?php $date = date("Y/m/d");
+                      $newDate = date("Y-m-d", strtotime($date)); ?>
+                        <label for="tanggal_po" class="form-label">Tanggal PO :</label>
+                        <input type="date" class="form-control" id="tanggal_po" name="tanggal_po" value="<?php echo $newDate; ?>">
+                    </div>
+                <!--INPUT SUPPLIER-->
+                    <div class="mb-3">
+                        <label for="sp" class="form-label">Supplier :</label>
+                        <select id="sp" name="sp" class="form-select">
+                          <option value="" selected readonly disabled>Choose...</option>
+                        <?php foreach ( $data['sp'] as $brg) : ?>
+                          <option value="<?php echo $brg['KODE_SP'] ?>"><?php echo $brg['NAMA_SP'] ?></option>
+                        <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                      <h5>Input Barang</h5>
+                        <div class="row">
+                          <div class="col-7">
+                            <select class="form-select inptBrgPo" name="inptBrgPo" id="inptBrgPo" onchange="">
+                              <option selected readonly disabled>Choose...</option>
+                              <?php foreach( $data['brg'] as $brg) : ?>
+                                <option value="<?php echo $brg['KODE_BRG'] ?>"><?php echo $brg['NAMA_BRG'] ?></option>
+                              <?php endforeach; ?>
+                            </select>
+                          </div>
+                          <div class="col-2">
+                            <button type="button" name="button" class="btn btn-danger remove"><i class="fas fa-minus"></i></button>
+                          </div>
+                        </div>
+                    </div>
+                    <div id="add_row" class="row mb-3"></div>
+                    <input type="hidden" value="0" id="num_row">
+                    <div class="row">
+                      <hr>
+                      <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                      </div>
+                    </div>
+                </form>
               </div>
             </div>
         <!---END TOMBOL TAMBAH NOMOR PO-->
 
-            <div class="row">
+            <div class="col">
+              <div class="border border-dark rounded-3 bg-gradient p-3">
               <div class="overflow-auto">
-                <h3>INPUT PURCHASE ORDER</h3>
-                  <table class="table text-center table-hover">
-                        <thead>
-                          <tr class="table-warning ">
-                            <th scope="col">No. PO</th>
-                            <th scope="col">Tanggal PO</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Supplier</th>
-                            <th scope="col">Fitur</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                      <?php foreach( $data['tmp'] as $mhs ) : ?>
-                        <tr>
-                        <td><?php print $mhs['NO_PO']; ?></td>
-                        <td><?php print $mhs['TGL_PO'];?></td>
-                        <td><?php print $mhs['PEMESAN']; ?></td>
-                        <td><?php print $mhs['NAMA_SP']; ?></td>
-              <!--TOMBOL INPUT DETAIL PO-->
-                        <td class="d-flex justify-content-center p-2">
-                          <a href="#" class="btn btn-success newDtlPo" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-file"></i></a>
-              <!--TOMBOL UPDATE NOMOR PO-->
-                          <a href="<?php echo BASEURL; ?>/purchased_order/Update/<?php echo $mhs['NO_PO']; ?>"
-                        class="btn btn-primary editPo" data-bs-toggle="modal" data-bs-target="#modalPo"
-                        data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
-              <!--TOMBOL HAPUS NOMOR PO-->
-                          <a href="<?php echo BASEURL; ?>/purchased_order/hapusPo/<?php echo $mhs['NO_PO']; ?>"
-                        class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
-                      </td>
-                        </tr>
-                        <?php endforeach; ?>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-        </div>
-
-
-        <div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
-
-            <div class="row">
-              <div class="">
-                <h3>LIST PURCHASED ORDER</h3>
-                <!---SEARCH-->
-                <div class="row mb-2">
-                  <div class="col-lg-6">
-                    <form class="" action="<?php echo BASEURL; ?>/purchased_order/cari" method="post">
-                      <div class="input-group mb-2">
-                        <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
-                      </div>
-                    </form>
+                <h3>PURCHASE ORDER</h3>
+                  <div class="d-flex mt-2 mb-2">
+                      <input type="text" name="srchPotxt" placeholder="Nomor PO...." id="srchPotxt" class="form-control" style="width:50%">
+                      <button type="button" name="srchPo" id="srchPo" class="btn btn-success" onclick="" style="width:15%"><i class="fas fa-search"></i></button>
                   </div>
-                </div>
-                <!---END SEARCH-->
-                <!--TABLE DETAIL PO-->
-                  <table class="table table-bordered table-responsive text-center table-hover">
-                        <thead>
-                          <tr class="table-warning ">
-                            <th scope="col">No. PO</th>
-                            <th scope="col">Tanggal PO</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Supplier</th>
-                            <th scope="col">Barang</th>
-                            <th scope="col">Jenis</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Order</th>
-                            <th scope="col">Terima</th>
-                            <th scope="col">Satuan</th>
-                            <th scope="col">Harga Order</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Fitur</th>
+                  <table class="table table-striped tblPo">
+                    <?php foreach( $data['tmp'] as $mhs ) : ?>
+                          <tr>
+                            <th class="col">No. PO</th>
+                            <td><input type="text" style="width:55%" id="Np" class="form-control" name="" value="<?php print $mhs['NO_PO']; ?>" readonly></td>
                           </tr>
-                        </thead>
-                        <tbody>
-                      <?php foreach( $data['po'] as $mhs ) : ?>
-                        <tr>
-                        <td><?php print $mhs['NO_PO']; ?></td>
-                        <td><?php print $mhs['TGL_PO'];?></td>
-                        <td><?php print $mhs['PEMESAN']; ?></td>
-                        <td><?php print $mhs['NAMA_SP']; ?></td>
-                        <td><?php print $mhs['NAMA_BRG']; ?></td>
-                        <td><?php print $mhs['Jenis_brg']; ?></td>
-                        <td><?php print $mhs['Stock_brg']; ?></td>
-                        <td><?php print $mhs['QTY_ORDER']; ?></td>
-                        <td><?php print $mhs['QTY_TERIMA']; ?></td>
-                        <td><?php print $mhs['Satuan']; ?></td>
-                        <td><?php print $mhs['HARGA_PO']; ?></td>
-                        <td><?php print $mhs['TOT_HARGA']; ?></td>
-                        <td class="d-flex justify-content-center p-2">
-              <!--TOMBOL UPDATE-->
-                          <a href="<?php echo BASEURL; ?>/purchased_order/update/<?php echo $mhs['NO_PO']; ?>"
-                        class="btn btn-primary editDtlPo" data-bs-toggle="modal" data-bs-target="#detailModal"
-                        data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
-              <!--TOMBOL HAPUS-->
-                          <a href="<?php echo BASEURL; ?>/purchased_order/hapusDetail/<?php echo $mhs['NO_PO']; ?>"
-                        class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
-                      </td>
-                        </tr>
+                          <tr>
+                            <th class="col">Tanggal PO</th>
+                            <td id="tglPo"><?php print $mhs['TGL_PO'];?></td>
+                          </tr>
+                          <tr>
+                            <th class="col">Nama</th>
+                            <td id="pmsn"><?php print $mhs['PEMESAN']; ?></td>
+                          </tr>
+                          <tr>
+                            <th class="col">Supplier</th>
+                            <td id="nmSp"><?php print $mhs['NAMA_SP']; ?></td>
+                          </tr>
+                          <tr>
+                            <th style="display:none">Kode Supplier</th>
+                            <td id="kdSpPo" style="display:none"><?php print $mhs['KODE_SP']; ?></td>
+                          </tr>
+                            <th class="col">Fitur</th>
+                            <!--TOMBOL CETAK PO-->
+                                      <td>
+                                        <a href="<?php echo BASEURL; ?>/purchased_order/detail/<?php echo $mhs['NO_PO'] ?>" class="btn btn-success newDtlPo" data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-print"></i></a>
+                            <!--TOMBOL UPDATE NOMOR PO-->
+                                        <a href="<?php echo BASEURL; ?>/purchased_order/Update/<?php echo $mhs['NO_PO']; ?>" class="btn btn-primary editPo" data-bs-toggle="modal" data-bs-target="#modalPo"
+                                      data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
+                            <!--TOMBOL HAPUS NOMOR PO-->
+                                        <button type="button" class="btn btn-danger hpsPo" id="hpsPo" name="button"><i class="fas fa-trash" onclick=""></i></button>
+                                    </td>
+                          </tr>
                         <?php endforeach; ?>
-                      </tbody>
                   </table>
-                  <!--END TABLE DETAIL PO-->
               </div>
           </div>
         </div>
+        </div>
+
+        <!--TABLE VIEW PURCHASED ORDER-->
+        <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+          <div class="overflow-auto">
+            <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbPo">
+                <h3>LIST PURCHASED ORDER</h3>
+                  <thead class="table-warning">
+                    <tr>
+                      <th scope="col">No. PO</th>
+                      <th scope="col">Tanggal PO</th>
+                      <th scope="col">Nama</th>
+                      <th scope="col">Supplier</th>
+                      <th class="d-none">Kode Barang</th>
+                      <th scope="col">Barang</th>
+                      <th scope="col">Jenis</th>
+                      <th scope="col">Stock</th>
+                      <th scope="col">Order</th>
+                      <th scope="col">Terima</th>
+                      <th scope="col">Satuan</th>
+                      <th scope="col">Harga</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Fitur</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                <?php foreach( $data['po'] as $mhs ) : ?>
+                  <tr>
+                  <td id="npDtl"><?php print $mhs['NO_PO']; ?></td>
+                  <td><?php print $mhs['TGL_PO'];?></td>
+                  <td><?php print $mhs['PEMESAN']; ?></td>
+                  <td><?php print $mhs['NAMA_SP']; ?></td>
+                  <td id="kdBrgDtl" class="d-none"><?php print $mhs['KODE_BRG']; ?></td>
+                  <td><?php print $mhs['NAMA_BRG']; ?></td>
+                  <td><?php print $mhs['Jenis_brg']; ?></td>
+                  <td><?php print $mhs['Stock_brg']; ?></td>
+                  <td><?php print $mhs['QTY_ORDER']; ?></td>
+                  <td><?php print $mhs['QTY_TERIMA']; ?></td>
+                  <td><?php print $mhs['Satuan']; ?></td>
+                  <td><?php print $mhs['HARGA_PO']; ?></td>
+                  <td><?php print $mhs['TOT_HARGA']; ?></td>
+                  <td style="width:80%">
+        <!--TOMBOL UPDATE-->
+          <div class="float-start">
+            <a href="<?php echo BASEURL; ?>/purchased_order/update/<?php echo $mhs['NO_PO']; ?>"
+          class="btn btn-primary editDtlPo" data-bs-toggle="modal" data-bs-target="#detailModal"
+          data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
+          </div>
+        <!--TOMBOL HAPUS-->
+          <div class="float-end">
+            <a href="<?php echo BASEURL; ?>/purchased_order/hapusDetail/<?php echo $mhs['NO_PO'] . '/' .$mhs['KODE_BRG']; ?>"
+          class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
+          </div>
+                </td>
+                  </tr>
+                  <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+      </div>
+
+          <!--END TABLE VIEW PURCHASED ORDER-->
 
 
           <!---MODAL PURCHASED ORDER-->
@@ -143,38 +205,25 @@
                               <input type="hidden" name="No_po" id="No_po" value="">
                           <!--INPUT NOMOR PO-->
                               <div class="mb-3">
-                                <label for="noPo">No PO :</label>
-                                <?php foreach($data['counter'] as $cnt) : ?>
-                                <select class="form-select" name="noPo" id="noPo">
-                                  <option value="<?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-P/" . date("m/y"); ?>"
-                                    ><?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-P/" . date("m/y"); ?> - Produksi</option>
-                                  <option value="<?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?>"
-                                    ><?php echo sprintf('%04d', $cnt['po']+1) . "/PROC-U/" . date("m/y"); ?> - Umum</option>
-                                </select>
-                                <select class="form-select" name="noPo2" id="noPo2">
-                                  <option value="<?php echo sprintf('%04d', $cnt['po']) . "/PROC-P/" . date("m/y"); ?>"
-                                    ><?php echo sprintf('%04d', $cnt['po']) . "/PROC-P/" . date("m/y"); ?> - Produksi</option>
-                                  <option value="<?php echo sprintf('%04d', $cnt['po']) . "/PROC-U/" . date("m/y"); ?>"
-                                    ><?php echo sprintf('%04d', $cnt['po']) . "/PROC-U/" . date("m/y"); ?> - Umum</option>
-                                </select>
-                              <?php endforeach; ?>
+                                <label for="noPo2">No PO :</label>
+                                <input type="text" class="form-control" name="noPo2" id="noPo2" value="" maxlength="17">
                               </div>
                           <!--INPUT PEMESAN-->
                               <div class="mb-3">
-                                <label for="pemesan">Pemesan :</label>
-                                <input type="text" name="pemesan" id="pemesan" value="" class="form-control" required>
+                                <label for="pemesan2">Pemesan :</label>
+                                <input type="text" name="pemesan2" id="pemesan2" value="" class="form-control" required>
                               </div>
                           <!--TANGGAL INPUT-->
                               <div class="mb-3">
                                 <?php $date = date("Y/m/d");
                                 $newDate = date("Y-m-d", strtotime($date)); ?>
-                                  <label for="tanggal_po" class="form-label">Tanggal PO :</label>
-                                  <input type="date" class="form-control" id="tanggal_po" name="tanggal_po" value="<?php echo $newDate; ?>">
+                                  <label for="tanggal_po2" class="form-label">Tanggal PO :</label>
+                                  <input type="date" class="form-control" id="tanggal_po2" name="tanggal_po2" value="<?php echo $newDate; ?>">
                               </div>
                           <!--INPUT SUPPLIER-->
                               <div class="mb-3">
-                                  <label for="sp" class="form-label">Supplier :</label>
-                                  <select id="sp" name="sp" class="form-select">
+                                  <label for="sp2" class="form-label">Supplier :</label>
+                                  <select id="sp2" name="sp2" class="form-select">
                                   <?php foreach ( $data['sp'] as $brg) : ?>
                                     <option value="<?php echo $brg['KODE_SP'] ?>"><?php echo $brg['NAMA_SP'] ?></option>
                                   <?php endforeach; ?>
@@ -201,10 +250,8 @@
                         <div class="modal-body">
                           <form action="<?php echo BASEURL; ?>/purchased_order/tambahDetail" method="post">
                               <!--HIDDEN INPUT-->
-                                  <input type="hidden" name="detailNoPo" id="detailNoPo" value="">
-                                  <input type="hidden" name="detailPemesan" id="detailPemesan" value="">
-                                  <input type="hidden" name="detailTglPo" id="detailTglPo" value="">
-                                  <input type="hidden" name="detailSp" id="detailSp" value="">
+                                  <input type="text" name="detailNoPo" id="detailNoPo" value="">
+                                  <input type="text" name="detailBarang" id="detailBarang" value="">
                               <!--PEMESAN INPUT-->
                                   <div class="mb-3">
                                       <label for="brg" class="form-label">Barang :</label>
@@ -233,6 +280,3 @@
                   </div>
 
           </div>
-      </div>
-  </div>
-</div>

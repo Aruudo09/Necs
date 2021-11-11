@@ -5,8 +5,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="<?php echo BASEURL; ?>/DataTables/datatables.css" />
     <link rel="stylesheet" href="<?php echo BASEURL; ?>/styles.css" />
     <title>Necs</title>
 </head>
@@ -15,7 +17,7 @@
 
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-      <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px;" id="sidebar-wrapper">
+      <div class="d-flex  flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px;" id="sidebar-wrapper">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
               <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
               <span class="fs-4">Necs</span>
@@ -53,7 +55,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a href="account">
                         Account
                       </a>
                     </li>
@@ -85,7 +87,7 @@
         <!-- /#sidebar-wrapper -->
 
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+            <nav class="navbar stciky-top navbar-expand-lg navbar-light bg-transparent py-4 px-4">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
                     <h2 class="fs-2 m-0">Dashboard</h2>
@@ -97,3 +99,4 @@
                     <span class="navbar-toggler-icon"></span>
                 </button> -->
             </nav>
+          

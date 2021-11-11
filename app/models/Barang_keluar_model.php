@@ -37,39 +37,59 @@
     }
 
     public function cekStock($data) {
-      $query = "SELECT Stock_brg FROM barang, barang_keluar WHERE barang.KODE_BRG = :namaBrg";
+      $i = 0;
+      $y = 1;
+      foreach( $data['nmBrg'] as $brg ) {
+
+      $query = "SELECT Stock_brg FROM barang, barang_keluar WHERE barang.KODE_BRG = :kdBrg" .$i. "";
 
       $this->db->query($query);
-      $this->db->bind('namaBrg', $data['namaBrg']);
+      $this->db->bind('kdBrg' .$i , $data['kdBrg'][$i]);
       $stk = $this->db->single();
 
-      var_dump($stk['Stock_brg']);
-      if (  $data['qtyMinta'] <= $stk['Stock_brg']) {
-        var_dump($data['qtyMinta']);
-        return true;
-      } else {
+    if (  $data['qtyMinta'][$i] <= $stk['Stock_brg']) {
+        if ( $y == count($data['nmBrg'])) {
+          return true;
+        }
+        else {
+          $i++;
+          $y++;
+          continue;
+        }
+      } elseif( $data['qtyMinta'][$i] > $stk['Stock_brg']) {
         return false;
       }
+
+    }
     }
 
     public function tambahBrgKlr($data) {
-      $query = "INSERT INTO barang_keluar
-                  VALUES
-                  (:inputNoPk, :namaBrg, :shift, :posting, :tanggalKeluar, :keterangan, :nama, :noRef, :qtyMinta)";
+      $i = 0;
+      $y = 1;
+      foreach( $data['nmBrg'] as $brg) {
+      $query = "INSERT INTO barang_keluar (NOMOR_SLIP, KODE_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, QUANTITY_MINTA) VALUES (:inputNoPk, :kdBrg" .$i. ", :shift, :posting, :tanggalKeluar, :keterangan" .$i. ", :nama, :noRef, :qtyMinta" .$i. ")";
 
       $this->db->query($query);
       $this->db->bind('inputNoPk', $data['inputNoPk']);
-      $this->db->bind('namaBrg', $data['namaBrg']);
+      $this->db->bind('kdBrg' .$i, $data['kdBrg'][$i]);
       $this->db->bind('shift', $data['shift']);
       $this->db->bind('posting', $data['posting']);
       $this->db->bind('tanggalKeluar', $data['tanggalKeluar']);
-      $this->db->bind('keterangan', $data['keterangan']);
+      $this->db->bind('keterangan' .$i, $data['keterangan'][$i]);
       $this->db->bind('nama', $data['nama']);
       $this->db->bind('noRef', $data['noRef']);
-      $this->db->bind('qtyMinta', $data['qtyMinta']);
+      $this->db->bind('qtyMinta' .$i, $data['qtyMinta'][$i]);
 
       $this->db->execute();
-      return $this->db->rowCount();
+      if ( $y == count($data['nmBrg'])) {
+        return true;
+      } else {
+        $i++;
+        $y++;
+        continue;
+      }
+    }
+      // return $this->db->rowCount();
     }
 
     public function hapusDataKlr($No_pakai) {

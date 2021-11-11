@@ -7,48 +7,101 @@
         </div>
     </div>
 
-<div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
     <!--DATA KELUAR BARANG-->
 
-    <!-- INPUT BARANG KELUAR  -->
-      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-barang">
-      <div class="row mb-3 mt-4">
-        <div class="col-lg-6">
-          <button type="button" class="btn btn-primary" id="tambahBrgKlr" data-bs-toggle="modal" data-bs-target="#modalBrgKlr">
-              Input Data Barang Keluar
-          </button>
-        </div>
-      </div>
 
-
-      <!--VIEW TABLE MASUK BARANG-->
-        <h3 class="fs-4 mb-3">Daftar Barang Keluar</h3>
-      <!--SEARCH BAR-->
-        <div class="row mb-2">
-          <div class="col-lg-6">
-            <form class="" action="<?php echo BASEURL; ?>/barang_keluar/cari" method="post">
-              <div class="input-group mb-2">
-              <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
+      <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
+        <h3>FORM INPUT PENGEBONAN BARANG</h3>
+        <form class="" action="<?php echo BASEURL; ?>/Barang_keluar/tambah" method="post">
+         <!--HIDDEN INPUT NOMOR SLIP-->
+          <input type="hidden" name="No_pk" id="No_pk" value="">
+         <!--INPUT NOMOR SLIP-->
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label for="inputNoPk">No Pemakaian :</label>
+                    <?php foreach( $data['counter'] as $cnt) : ?>
+                    <input type="text" name="inputNoPk" id="inputNoPk" class="form-control" value="<?php echo $cnt['klr'] . "-" . "K/" . date("y"); ?>" readonly>
+                  <?php endforeach; ?>
+                </div>
             </div>
-            </form>
-          </div>
-      <!--END SEARCH BAR-->
-        </div>
-            <table class="table table-hover text-center">
-              <thead class="table-info">
+            <!--INPUT NAMA USER-->
+             <div class="row mb-3">
+                 <div class="col-4">
+                     <label for="nama">Nama :</label>
+                     <input type="text" name="nama" id="nama" class="form-control">
+                 </div>
+             </div>
+           <!--INPUT SHIFT-->
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label for="shift">Shift :</label>
+                    <input type="text" name="shift" id="shift" class="form-control">
+                </div>
+           <!--INPUT POSTING-->
+                <div class="col-3">
+                    <label for="posting">Posting :</label>
+                    <input type="text" name="posting" id="posting" class="form-control" maxlength="1">
+                </div>
+            </div>
+           <!--INPUT TANGGAL KELUAR-->
+           <?php $date = date("Y/m/d");
+           $newDate = date("Y-m-d", strtotime($date)); ?>
+            <div class="row mb-4">
+                <div class="col-3">
+                    <label for="tanggalKeluar">Tanggal Keluar :</label>
+                    <input type="date" name="tanggalKeluar" id="tanggalKeluar" class="form-control" value="<?php echo $newDate; ?>">
+                </div>
+           <!--INPUT NOMOR REF-->
+                <div class="col-3">
+                    <label for="noRef">No. Ref :</label>
+                    <input type="text" name="noRef" id="noRef" class="form-control">
+                </div>
+            </div>
+          <!--FIELD INPUT BARANG-->
+          <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
+            <h6>FIELD INPUT BARANG</h6>
+            <div class="row mb-2">
+              <div class="col-5">
+                <select id="selectBrg" class="form-select selectBrg" name="namaBrg[]" style="width: 80%">
+                  <option value="" selected>choose....</option>
+                  <?php foreach ( $data['optionBrg'] as $item) : ?>
+                  <option value="<?php echo $item['KODE_BRG']; ?>"><?php echo $item['NAMA_BRG']; ?></option>
+                <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="col-1">
+                <button type="button" name="remove" class="btn btn-danger remove"><i class="fas fa-minus"></i></button>
+              </div>
+            </div>
+             <div id="add_row" class="row mb-4"></div>
+             <input type="hidden" value="0" id="num_row">
+           </div>
+          <!--FIELD INPUT BARANG-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+      </form>
+    </div>
+
+<div class="border border-dark rounded-3 bg-white mt-4 mb-4 p-3">
+  <div class="overflow-auto">
+      <!--VIEW TABLE MASUK BARANG-->
+            <table class="table table-hover text-center tblBon">
+              <h3 class="fs-4 mb-3">Daftar Barang Keluar</h3>
+              <thead>
                 <tr>
-                  <th scope="col">No Pemakaian</th>
-                  <th scope="col">Nama</th>
-                  <th scope="col">No. Ref</th>
-                  <th scope="col">Barang</th>
-                  <th scope="col">Shift</th>
-                  <th scope="col">Posting</th>
-                  <th scope="col">Keterangan</th>
-                  <th scope="col">Stock</th>
-                  <th scope="col">Jumlah pemakaian</th>
-                  <th scope="col">Tanggal pemakaian</th>
-                  <th scope="col">Fitur</th>
+                  <th class="col-7">No Pemakaian</th>
+                  <th class="col-7">Nama</th>
+                  <th class="col-7">No. Ref</th>
+                  <th class="col-7">Barang</th>
+                  <th class="col-7">Shift</th>
+                  <th class="col-7">Posting</th>
+                  <th class="col-7">Stock</th>
+                  <th class="col-7">Jumlah pemakaian</th>
+                  <th class="col-7">Tanggal pemakaian</th>
+                  <th class="col-7">Keterangan</th>
+                  <th class="col-7">Fitur</th>
                 </tr>
              </thead>
              <tbody>
@@ -60,23 +113,35 @@
                   <td><?php echo $brgK['NAMA_BRG']; ?></td>
                   <td><?php echo $brgK['SHIFT']; ?></td>
                   <td><?php echo $brgK['POSTING']; ?></td>
-                  <td><?php echo $brgK['KETERANGAN']; ?></td>
                   <td><?php echo $brgK['Stock_brg']; ?></td>
                   <td><?php echo $brgK['QUANTITY_MINTA']; ?></td>
                   <td><?php echo $brgK['TANGGAL_OUT']; ?></td>
-                  <td scope="row">
-                      <a href="#" class="btn btn-success"><i class="fa fa-print"></i></a>
+                  <td><?php echo $brgK['KETERANGAN']; ?></td>
+                  <td style="width:16%">
+                    <div class="row">
+                    <!--PRINT-->
+                      <div class="col">
+                        <a href="#" class="btn btn-success"><i class="fa fa-print"></i></a>
+                      </div>
+                    <!--HAPUS-->
+                    <div class="col">
                       <a href="<?php echo BASEURL; ?>/Barang_keluar/hapus/<?php echo $brgK['NOMOR_SLIP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                    </div>
+                    <!--EDIT-->
+                    <div class="col">
                       <a href="<?php echo BASEURL; ?>/Barang_keluar/ubah" class="btn btn-primary editBrgKlr" data-bs-toggle="modal" data-bs-target="#modalBrgKlr" data-id="<?php echo $brgK['NOMOR_SLIP']; ?>"><i class="fa fa-pen"></i></a>
+                    </div>
+                  </div>
                   </td>
                 </tr>
                 <?php endforeach; ?>
              </tbody>
             </table>
+          </div>
       <!--VIEW TABLE MASUK BARANG-->
 
   </div>
-</div>
+
 
 <!-- Modal -->
        <div class="modal fade" id="modalBrgKlr" tabindex="-1" role="dialog" aria-labelledby="modalBrgKlr" aria-hidden="true">
@@ -99,27 +164,21 @@
                        <?php endforeach; ?>
                      </div>
                  </div>
-                <!--INPUT BARANG-->
-                 <div class="row mb-3">
-                     <div class="form-group">
-                         <label for="namaBrg">Barang :</label>
-                         <select id="namaBrg" class="form-select" name="namaBrg">
-                           <?php foreach ( $data['optionBrg'] as $item) : ?>
-                           <option value="<?php echo $item['KODE_BRG']; ?>"><?php echo $item['NAMA_BRG']; ?></option>
-                         <?php endforeach; ?>
-                         </select>
-                     </div>
-                 </div>
+                 <!--INPUT NAMA USER-->
+                  <div class="row mb-3">
+                      <div class="form-group">
+                          <label for="nama">Nama :</label>
+                          <input type="text" name="nama" id="nama" class="form-control">
+                      </div>
+                  </div>
                 <!--INPUT SHIFT-->
                  <div class="row mb-3">
-                     <div class="form-group">
+                     <div class="col-6">
                          <label for="shift">Shift :</label>
                          <input type="text" name="shift" id="shift" class="form-control">
                      </div>
-                 </div>
                 <!--INPUT POSTING-->
-                 <div class="row mb-3">
-                     <div class="form-group">
+                     <div class="col-6">
                          <label for="posting">Posting :</label>
                          <input type="text" name="posting" id="posting" class="form-control" maxlength="1">
                      </div>
@@ -128,39 +187,37 @@
                 <?php $date = date("Y/m/d");
                 $newDate = date("Y-m-d", strtotime($date)); ?>
                  <div class="row mb-3">
-                     <div class="form-group col">
+                     <div class="col-6">
                          <label for="tanggalKeluar">Tanggal Keluar :</label>
                          <input type="date" name="tanggalKeluar" id="tanggalKeluar" class="form-control" value="<?php echo $newDate; ?>">
                      </div>
-                 </div>
-                <!--INPUT KETERANGAN-->
-                 <div class="row mb-3">
-                     <div class="form-group">
-                         <label for="keterangan">Keterangan :</label>
-                         <input type="text" name="keterangan" id="keterangan" class="form-control">
-                     </div>
-                 </div>
-                <!--INPUT NAMA USER-->
-                 <div class="row mb-3">
-                     <div class="form-group">
-                         <label for="nama">Nama :</label>
-                         <input type="text" name="nama" id="nama" class="form-control">
-                     </div>
-                 </div>
                 <!--INPUT NOMOR REF-->
-                 <div class="row mb-3">
-                     <div class="form-group">
+                     <div class="col-6">
                          <label for="noRef">No. Ref :</label>
                          <input type="text" name="noRef" id="noRef" class="form-control">
                      </div>
                  </div>
+                 <!--INPUT BARANG-->
+                  <div class="row mb-3">
+                      <div class="col-5">
+                          <label for="namaBrg">Barang :</label>
+                          <select id="namaBrg" class="form-select" name="namaBrg">
+                            <?php foreach ( $data['optionBrg'] as $item) : ?>
+                            <option value="<?php echo $item['KODE_BRG']; ?>"><?php echo $item['NAMA_BRG']; ?></option>
+                          <?php endforeach; ?>
+                          </select>
+                      </div>
                 <!--INPUT JUMLAH AMBIL-->
-                 <div class="row mb-3">
-                     <div class="form-group">
+                     <div class="col-5">
                          <label for="qtyMinta">Jumlah Minta :</label>
                          <input type="text" name="qtyMinta" id="qtyMinta" class="form-control">
                      </div>
-                 </div>
+                 <!--INPUT KETERANGAN-->
+                      <div class="col-6">
+                          <label for="keterangan">Keterangan :</label>
+                          <input type="text" name="keterangan" id="keterangan" class="form-control">
+                      </div>
+                  </div>
            </div>
            <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -15,7 +15,8 @@
 
       public function tambah() {
         if ( $this->model('Barang_keluar_model')->cekStock($_POST) == true) {
-        if ( $this->model('Barang_keluar_model')->tambahBrgKlr($_POST) > 0) {
+          echo "<script type='text/javascript'>alert('PAS MANTAB!');</script>";
+        if ($this->model('Barang_keluar_model')->tambahBrgKlr($_POST) == true) {
             $this->model('Barang_keluar_model')->updateCounter();
             Flasher::setFlash('Barang Keluar', 'berhasil', 'ditambahkan', 'success');
             header('Location: ' . BASEURL . '/barang_keluar');

@@ -20,38 +20,28 @@
 
 
   <!--TABLE VIEW SUPPLIER-->
-    <h3 class="fs-4 mb-3">Daftar Supplier</h3>
-    <div class="row mb-2">
-        <div class="col-lg-6">
-          <form class="" action="<?php echo BASEURL; ?>/supplier/cari" method="post">
-          <div class="input-group mb-2">
-          <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
-          </div>
-          </form>
-        </div>
-      </div>
-      <div class="table_wrapper">
-          <table class="table table-hover text-center">
-              <thead class="table-info">
+  <h3 class="fs-4 mb-3">Daftar Supplier</h3>
+    <div class="border border-dark rounded-3 bg-white mt-3 p-3">
+      <div class="overflow-auto">
+          <table class="table table-hover text-center" id="tbSp">
+              <thead>
                 <tr>
-                  <th scope="col">Nama Supplier</th>
-                  <th scope="col">Alamat</th>
-                  <th scope="col">No Telp</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Contact Person</th>
-                  <th scope="col">NPWP</th>
-                  <th scope="col">Tanggal Input</th>
-                  <th scope="col">Tanggal Update</th>
-                  <th scope="col">Qty Bulan</th>
-                  <th scope="col">Fitur</th>
+                  <th class="col">Supplier</th>
+                  <th class="col">No Telp</th>
+                  <th class="col">Email</th>
+                  <th class="col">Contact Person</th>
+                  <th class="col">NPWP</th>
+                  <th class="col">Tanggal Input</th>
+                  <th class="col">Tanggal Update</th>
+                  <th class="col">Qty Bulan</th>
+                  <th class="col" style="width:100%">Alamat</th>
+                  <th class="col">Fitur</th>
                 </tr>
               </thead>
               <tbody>
                 <?php foreach ( $data['supplier'] as $spl) : ?>
                 <tr>
                   <td><?php echo $spl['NAMA_SP']; ?></td>
-                  <td><?php echo $spl['ALAMAT_SP']; ?></td>
                   <td><?php echo $spl['TELEPON']; ?></td>
                   <td><?php echo $spl['email']; ?></td>
                   <td><?php echo $spl['HUBUNGAN']; ?></td>
@@ -59,7 +49,8 @@
                   <td><?php echo $spl['Tanggal_input']; ?></td>
                   <td><?php echo $spl['Tanggal_update']; ?></td>
                   <td><?php echo $spl['quantity_perbulan']; ?></td>
-                  <td class="d-flex justify-content-center">
+                  <td><?php echo $spl['ALAMAT_SP']; ?></td>
+                  <td class="">
                     <!--HAPUS SUPPLIER-->
                       <a href="<?php echo BASEURL; ?>/Supplier/hapus/<?php echo $spl['KODE_SP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
                     <!--EDIT SUPPLIER-->
@@ -71,6 +62,7 @@
           </table>
       </div>
     </div>
+  </div>
 
       <!-- Modal -->
             <div class="modal fade" id="modalSpl" tabindex="-1" role="dialog" aria-labelledby="modalSpl" aria-hidden="true">

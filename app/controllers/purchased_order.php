@@ -25,41 +25,31 @@ class purchased_order extends Controller {
   }
 
 //---------FUNGSI MENAMPILKAN REPORT PO----------//
-  public function detail($No_po) {
+  public function detail($No_po, $No_po1, $No_po2, $No_po3) {
     $data['judul'] = 'Detail Purchased Order';
-    $data['detail'] = $this->model('Purchased_order_model')->getDataPoById($No_po);
-    $this->view('templates/header', $data);
+    $data['po'] = $this->model('Purchased_order_model')->getAlldataPoCtkTmp($No_po, $No_po1, $No_po2, $No_po3);
+    $data['po1'] = $this->model('Purchased_order_model')->getAlldataPoCtkDtl($No_po, $No_po1, $No_po2, $No_po3);
+
     $this->view('purchased_order/detail', $data);
-    $this->view('templates/footer');
+
   }
 
 //---------FUNGSI MEMBUAT NOMOR PO----------//
   public function tambah() {
     // var_dump($_POST);
     if ( $this->model('Purchased_order_model')->tambahData($_POST) > 0) {
-      $this->model('Purchased_order_model')->updateCounter();
-      Flasher::setFlash('Purchased Order', 'berhasil', 'ditambahkan', 'success');
-        header('Location: ' . BASEURL . '/purchased_order');
-        exit;
+      if ( $this->model('Purchased_order_model')->tambahDataPo($_POST) == true) {
+        $this->model('Purchased_order_model')->updateCounter();
+        Flasher::setFlash('Purchased Order', 'berhasil', 'ditambahkan', 'success');
+          header('Location: ' . BASEURL . '/purchased_order');
+          exit;
     } else {
       Flasher::setFlash('Purchased Order', 'gagal', 'ditambahkan', 'danger');
         header('Location: ' . BASEURL . '/purchased_order');
         exit;
     }
   }
-//---------FUNGSI MEMBUAT DETAIL PO----------//
-  public function tambahDetail() {
-    // var_dump($_POST);
-    if ( $this->model('Purchased_order_model')->tambahDataPo($_POST) > 0) {
-      Flasher::setFlash('Purchased Order', 'berhasil', 'ditambahkan', 'success');
-        header('Location: ' . BASEURL . '/purchased_order');
-        exit;
-    } else {
-      Flasher::setFlash('Purchased Order', 'gagal', 'ditambahkan', 'danger');
-        header('Location: ' . BASEURL . '/purchased_order');
-        exit;
-    }
-  }
+}
 
 //---------FUNGSI UBAH NOMOR PO----------//
   public function Update() {
@@ -88,8 +78,8 @@ class purchased_order extends Controller {
   }
 
 //---------FUNGSI HAPUS NOMOR PO----------//
-  public function hapusPo($No_po) {
-    if ( $this->model('Purchased_order_model')->hapusData($No_po) > 0) {
+  public function hapusPo() {
+    if ( $this->model('Purchased_order_model')->hapusData($_POST['hps']) > 0) {
       Flasher::setFlash('Purchased Order', 'berhasil', 'dihapus', 'success');
         header('Location: ' . BASEURL . '/purchased_order');
         exit;
@@ -101,9 +91,9 @@ class purchased_order extends Controller {
   }
 
 //---------FUNGSI HAPUS DETAIL PO----------//
-  public function hapusDetail($No_po) {
+  public function hapusDetail($No_po, $No_po1, $No_po2, $No_po3, $kd) {
     // var_dump($_POST);
-    if ( $this->model('Purchased_order_model')->hapusDataPo($No_po) > 0) {
+    if ( $this->model('Purchased_order_model')->hapusDataPo($No_po, $No_po1, $No_po2, $No_po3, $kd) > 0) {
       Flasher::setFlash('Purchased Order', 'berhasil', 'dihapus', 'success');
         header('Location: ' . BASEURL . '/purchased_order');
         exit;
@@ -114,14 +104,9 @@ class purchased_order extends Controller {
     }
   }
 
-//---------FUNGSI CARI DETAIL PO----------//
+//---------FUNGSI CARI PO----------//
   public function cari() {
-    $data['judul'] = 'Daftar Mahasiswa';
-    $data['po'] = $this->model('Purchased_order_model')->cariDataPo();
-
-    $this->view('templates/header', $data);
-    $this->view('purchased_order/index', $data);
-    $this->view('templates/footer');
+    echo json_encode($this->model('Purchased_order_model')->cariDataPo($_POST['srchPo']));
   }
 
 }

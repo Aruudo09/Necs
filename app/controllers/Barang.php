@@ -5,11 +5,16 @@
         $data['judul'] = 'Daftar Barang';
         $data['barang'] = $this->model('Barang_model')->getAllBarang();
         $data['optionSpl'] = $this->model('Barang_model')->getOptionSpl();
+        $data['optBrg'] = $this->model('Barang_model')->getOptBrg();
 
 
         $this->view('templates/header', $data);
         $this->view('barang/index', $data);
         $this->view('templates/footer');
+      }
+
+      public function cek() {
+        echo json_encode($this->model('Barang_model')->statsBrg());
       }
 
       public function tambah() {
@@ -40,7 +45,10 @@
 
       public function getUbah() {
         echo json_encode($this->model('Barang_model')->getBrgUbah($_POST['Kode_brg']));
+      }
 
+      public function barang() {
+        echo json_encode($data['barang'] = $this->model('Barang_model')->getAllBarang($_POST));
       }
 
       public function ubah() {

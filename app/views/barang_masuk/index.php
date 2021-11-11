@@ -8,160 +8,146 @@
     </div>
 
   <!--TABLE VIEW NOMOR BERITA ACARA-->
-  <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
-
-    <!--TOMBOL TAMBAH NOMOR BA-->
-        <!-- <div class="row mb-3">
-          <div class="col-lg-6">
-            <button type="button" class="btn btn-primary" id="tambahBa" data-bs-toggle="modal" data-bs-target="#modalBrgMsk">
-                Tambah Data
-            </button>
-          </div>
-        </div> -->
-    <!---END TOMBOL TAMBAH NOMOR BA-->
-
-  <!--TABLE VIEW BERITA ACARA-->
-    <div class="row">
-      <div class="overflow-auto">
-        <h3>BERITA ACARA</h3>
-          <table class="table text-center table-hover">
-                <thead>
-                  <tr class="table-warning ">
-                    <th scope="col">No. PO</th>
-                    <th scope="col">Nomor</th>
-                    <th scope="col">Surat Jalan</th>
-                    <th scope="col">Supplier</th>
-                    <th scope="col" style="display:none">Kode Supplier</th>
-                    <th scope="col">Tanggal Terima</th>
-                    <th scope="col">Penerima</th>
-                    <th scope="col">Fitur</th>
-                  </tr>
-                </thead>
-                <tbody>
-              <?php foreach( $data['bcraTmp'] as $mhs ) : ?>
-                <tr class="tableViewDtlBcra">
-                <td class="poBcraTmp"><?php print $mhs['NO_PO']; ?></td>
-                <td class="noBcraTmp"><?php print $mhs['NO_BCRA']; ?></td>
-                <td class="srjBcraTmp"><?php print $mhs['NO_SRJLN']; ?></td>
-                <td><?php print $mhs['NAMA_SP'];?></td>
-                <td class="spBcraTmp" style="display:none"><?php print $mhs['KODE_SP'];?></td>
-                <td class="tglBcraTmp"><?php print $mhs['TGL_BCRA']; ?></td>
-                <td class="pnmBcraTmp"><?php print $mhs['PENERIMA']; ?></td>
-                <td>
-      <!--TOMBOL UPDATE-->
-                  <a href="<?php echo BASEURL; ?>/Barang_masuk/ubah/<?php echo $mhs['NO_PO']; ?>"
-                class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
-                data-id="<?php echo $mhs['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
-      <!--TOMBOL HAPUS-->
-                  <a href="<?php echo BASEURL; ?>/Barang_masuk/hapus/<?php echo $mhs['NO_BCRA']; ?>"
-                class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
-              </td>
-                </tr>
-                <?php endforeach; ?>
-              </tbody>
-          </table>
-      </div>
-  </div>
-<!--END TABLE VIEW BERITA ACARA-->
+  <div class="row">
 
   <!--FORM INPUT BERITA ACARA-->
-  <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
-    <h3>FORM INPUT BERITA ACARA</h3>
-    <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
-     <!--HIDDEN INPUT NOMOR BCRA-->
-      <input type="hidden" name="No_msk" id="No_msk" value="">
-      <!--INPUT NOMOR PO-->
-        <div class="row mb-3">
-            <div class="col-4">
-                <label for="poBa">No. PO :</label>
-                  <select class="form-select  " name="poBa" id="poBa" onchange="">
-                    <option value="" selected>choose...</option>
-                    <?php foreach ( $data['po1'] as $opt) : ?>
-                    <option value="<?php print $opt['NO_PO']; ?>"
-                      ><?php print $opt['NO_PO']; ?></option>
-                   <?php endforeach; ?>
-                  </select>
+        <div class="col-6">
+          <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
+            <h3>FORM INPUT BERITA ACARA</h3>
+            <hr>
+            <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
+             <!--HIDDEN INPUT NOMOR BCRA-->
+              <input type="hidden" name="No_msk" id="No_msk" value="">
+              <!--INPUT NOMOR PO-->
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="poBa">No. PO :</label>
+                          <select class="form-select  " name="poBa" id="poBa" onchange="">
+                            <option value="" selected>choose...</option>
+                            <?php foreach ( $data['po1'] as $opt) : ?>
+                            <option value="<?php print $opt['NO_PO']; ?>"
+                              ><?php print $opt['NO_PO']; ?></option>
+                           <?php endforeach; ?>
+                          </select>
+                    </div>
+               <!--INPUT NOMOR BCRA-->
+                    <div class="col-6">
+                        <label for="inputNoMsk">No Masuk :</label>
+                        <?php foreach( $data['counter'] as $ct) : ?>
+                        <script>
+                            var kod = <?php echo json_encode($ct['ba'], JSON_HEX_TAG); ?>;
+                            var kod1 = <?php echo json_encode(date("y"), JSON_HEX_TAG); ?>;
+                        </script>
+                        <?php endforeach; ?>
+                        <input type="text" name="inputNoMsk" id="inputNoMsk" class="form-control " value="" readonly>
+                    </div>
+                </div>
+               <!--INPUT NOMOR SURAT JALAN-->
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="noSRJLN">No. Surat Jalan :</label>
+                        <input type="text" name="noSRJLN" id="noSRJLN" class="form-control">
+                    </div>
+                    <!--INPUT TANGGAL TERIMA-->
+                     <?php $date = date("Y/m/d");
+                     $newDate = date("Y-m-d", strtotime($date)); ?>
+                     <div class="col-4">
+                         <label for="tanggalTerima">Tanggal Terima :</label>
+                         <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control" value="<?php echo $newDate; ?>">
+                     </div>
+                </div>
+               <!--INPUT PENERIMA-->
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="penerima">Penerima :</label>
+                        <input type="text" name="penerima" id="penerima" class="form-control">
+                    </div>
+                </div>
+            <!--INPUT FIELD BARANG-->
+              <div id="new_row" class="row mb-3"></div>
+              <input type="hidden" value="1" id="num_row">
+            <!--END INPUT FIELD BARANG-->
+            <hr>
+            <div class="row">
+              <div class="col-12 text-end">
+                  <button type="submit" class="btn btn-primary btnSmpn">Simpan</button>
+              </div>
             </div>
-       <!--INPUT NOMOR BCRA-->
-            <div class="col-4">
-                <label for="inputNoMsk">No Masuk :</label>
-                <?php foreach( $data['counter'] as $ct) : ?>
-                <script>
-                    var kod = <?php echo json_encode($ct['ba'], JSON_HEX_TAG); ?>;
-                    var kod1 = <?php echo json_encode(date("y"), JSON_HEX_TAG); ?>;
-                </script>
-                <?php endforeach; ?>
-                <input type="text" name="inputNoMsk" id="inputNoMsk" class="form-control " value="" readonly>
-            </div>
+          </form>
+        <!--END FORM INPUT BERITA ACARA-->
         </div>
-       <!--INPUT NOMOR SURAT JALAN-->
-        <div class="row mb-3">
-            <div class="col-4">
-                <label for="noSRJLN">No. Surat Jalan :</label>
-                <input type="text" name="noSRJLN" id="noSRJLN" class="form-control">
-            </div>
-            <!--INPUT TANGGAL TERIMA-->
-             <?php $date = date("Y/m/d");
-             $newDate = date("Y-m-d", strtotime($date)); ?>
-             <div class="col-4">
-                 <label for="tanggalTerima">Tanggal Terima :</label>
-                 <input type="date" name="tanggalTerima" id="tanggalTerima" class="form-control" value="<?php echo $newDate; ?>">
-             </div>
-        </div>
-       <!--INPUT PENERIMA-->
-        <div class="row mb-3">
-            <div class="col-4">
-                <label for="penerima">Penerima :</label>
-                <input type="text" name="penerima" id="penerima" class="form-control">
-            </div>
-        </div>
+      </div>
 
-    <!--INPUT FIELD BARANG-->
-      <table class="mb-2">
-        <tr>
-          <td><label for="optBrg">Barang :</label></td>
-          <td><label for="hrgBl">Harga :</label></td>
-          <td><label for="qty">Quantity</label></td>
-        </tr>
-
-        <tr>
-          <td><select class="form-select" name="brg[]" id="optBrg">
-            <option value="" selected>choose.......</option>
-          </select></td>
-          <td><input type="number" name="hrgBl[]" id="hrgBl" class="form-control" value=""></td>
-          <td><input type="number" name="qty[]" class="form-control" id="qty" value=""></td>
-          <td><button type="button" name="add[]" class="btn btn-success add"><i class="fas fa-plus"></i></button></td>
-          <td><button type="button" name="remove" class="btn btn-danger remove"><i class="fas fa-minus"></i></button></td>
-        </tr>
-      </table>
-      <div id="new_row"class="mb-3"></div>
-      <input type="hidden" value="1" id="num_row">
-    <!--END INPUT FIELD BARANG-->
-    <button type="submit" class="btn btn-primary">Save changes</button>
-  </form>
-<!--END FORM INPUT BERITA ACARA-->
-</div>
+      <!--TABLE VIEW BERITA ACARA-->
+      <div class="col-6">
+        <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
+          <div class="row">
+            <div class="overflow-auto">
+              <h3>BERITA ACARA</h3>
+              <!--SEARCH BAR-->
+                  <div class="d-flex">
+                    <input type="text" style="width:50%" class="form-control" placeholder="Nomor PO atau Nomor BA...." name="keyword" value="" id="srchBatxt">
+                    <button type="button" style="width:15%" class="btn btn-success srchBa" name="button" onclick=""><i class="fas fa-search"></i></button>
+                  </div>
+              <!--SEARCH BAR-->
+                <table class="table tableViewDtlBcra">
+                <?php foreach( $data['bcraTmp'] as $mhs ) : ?>
+                      <tr>
+                        <th>No. PO</th>
+                        <td><input type="text" style="width:60%" class="form-control poBcraTmp" id="poBcraTmp" name="" value="<?php print $mhs['NO_PO']; ?>" readonly></td>
+                      </tr>
+                      <tr>
+                        <th>Nomor</th>
+                        <td><input type="text" style="width:40%" class="form-control noBcraTmp" id="noBcraTmp" name="" value="<?php print $mhs['NO_BCRA']; ?>" readonly></td>
+                      </tr>
+                      <tr>
+                        <th>Surat Jalan</th>
+                        <td class="srjBcraTmp"><?php print $mhs['NO_SRJLN']; ?></td>
+                      </tr>
+                      <tr>
+                        <th>Supplier</th>
+                        <td class="spNmBcraTmp"><?php print $mhs['NAMA_SP'];?></td>
+                      </tr>
+                      <tr>
+                        <th>Tanggal Terima</th>
+                        <td class="tglBcraTmp"><?php print $mhs['TGL_BCRA']; ?></td>
+                      </tr>
+                      <tr>
+                        <th>Penerima</th>
+                        <td class="pnmBcraTmp"><?php print $mhs['PENERIMA']; ?></td>
+                      </tr>
+                        <th style="display:none">Kode Supplier</th>
+                        <td class="spBcraTmp" style="display:none"><?php print $mhs['KODE_SP'];?></td>
+                      </tr>
+                      <tr>
+                        <th>Fitur</th>
+                        <td>
+              <!--TOMBOL CETAK BA-->
+                          <a class="btn btn-success ctkBa"><i class="fas fa-print"></i></a>
+              <!--TOMBOL UPDATE-->
+                          <a href="<?php echo BASEURL; ?>/Barang_masuk/ubah/<?php echo $mhs['NO_PO']; ?>"
+                        class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
+                        data-id="<?php echo $mhs['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
+              <!--TOMBOL HAPUS-->
+                          <a href="#" class="btn btn-danger hpsBa" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
+                      </td>
+                      </tr>
+                    <?php endforeach; ?>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--END TABLE VIEW BERITA ACARA-->
 </div>
 
 
 <!--TABLE VIEW LIST PURCHASED ORDER-->
-  <div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
-    <div class="row">
-      <div class="">
-        <h3>LIST PURCHASED ORDER</h3>
-      <!--SEARCH BAR-->
-        <div class="row mb-2">
-          <div class="col-lg-6">
-              <form class="" action="<?php echo BASEURL; ?>/barang_masuk/cari" method="post">
-                <div class="input-group mb-2">
-                <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
-                </div>
-              </form>
-            </div>
-          </div>
-      <!---SEARCH BAR-->
-          <table class="table table-bordered table-responsive text-center table-hover">
+  <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+    <div class="">
+      <div class="overflow-auto">
+          <table class="table table-bordered table-striped table-responsive text-center table-hover tbPo2">
+            <h3 class="mb-3">LIST PURCHASED ORDER</h3>
                 <thead>
                   <tr class="table-warning ">
                     <th scope="col">No. PO</th>
@@ -202,22 +188,11 @@
 </div>
 
 <!--VIEW TABLE DETAIL BERITA ACARA-->
-<div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
-  <h3 class="fs-4 mb-2">DAFTAR BARANG MASUK</h3>
-  <!--SEARCH BAR-->
-  <div class="row mb-2">
-    <div class="col-lg-6">
-        <form class="" action="<?php echo BASEURL; ?>/barang_masuk/cari" method="post">
-          <div class="input-group mb-2">
-          <input type="text" class="form-control" placeholder="cari data.." name="keyword" id="keyword" autocomplete="off" aria-label="Recipient's username" aria-describedby="button-addon2">
-          <button class="btn btn-outline-secondary" type="submit" id="tombolCari">Cari</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!--END SEARCH BAR-->
-      <table class="table table-hover text-center">
-        <thead class="table-info">
+    <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+      <div class="overflow-auto">
+      <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbDtlBa">
+        <h3 class="fs-4 mb-3">DAFTAR BARANG MASUK</h3>
+        <thead class="table-warning">
           <tr>
             <th scope="col">No Masuk</th>
             <th scope="col">Tanggal Diterima</th>
@@ -234,27 +209,30 @@
        <tbody>
          <?php foreach ( $data['barangMsk'] as $brgM) : ?>
             <tr>
-              <td><?php echo $brgM['NO_BCRA']; ?></td>
-              <td><?php echo $brgM['TGL_BCRA']; ?></td>
-              <td><?php echo $brgM['PENERIMA']; ?></td>
-              <td><?php echo $brgM['NO_PO']; ?></td>
-              <td><?php echo $brgM['NAMA_SP']; ?></td>
-              <td><?php echo $brgM['NAMA_BRG']; ?></td>
-              <td><?php echo $brgM['QTY_TERIMA']; ?></td>
-              <td><?php echo $brgM['NO_SRJLN']; ?></td>
-              <td class="d-flex justify-content-center">
-              <!--CETAK DETAIL BARANG MASUK-->
-                  <a href="<?php echo BASEURL; ?>/barang_masuk/detail/<?php echo $brgM['PENERIMA']; ?>" class="btn btn-success"><i class="fa fa-print"></i></a>
+              <td><?php print $brgM['NO_BCRA']; ?></td>
+              <td><?php print $brgM['TGL_BCRA']; ?></td>
+              <td><?php print $brgM['PENERIMA']; ?></td>
+              <td><?php print $brgM['NO_PO']; ?></td>
+              <td><?php print $brgM['NAMA_SP']; ?></td>
+              <td><?php print $brgM['NAMA_BRG']; ?></td>
+              <td><?php print $brgM['QTY_TERIMA']; ?></td>
+              <td><?php print $brgM['NO_SRJLN']; ?></td>
+              <td style="width:11%">
               <!--HAPUS DETAIL BARANG MASUK-->
+                <div class="float-start">
                   <a href="<?php echo BASEURL; ?>/barang_masuk/hapusDtl/<?php echo $brgM['NO_BCRA']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                </div>
               <!--EDIT DETAIL BARANG MASUK-->
+                <div class="float-end">
                   <a href="#" class="btn btn-primary updDtlBrgMsk" data-bs-toggle="modal" data-bs-target="#detailBcra" data-date-id="<?php echo $brgM['TGL_BCRA'] ?>" data-po-id="<?php echo $brgM['NO_PO'] ?>" data-brg-id="<?php echo $brgM['KODE_BRG'] ?>" data-id="<?php echo $brgM['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
+                </div>
               </td>
             </tr>
          <?php endforeach; ?>
        </tbody>
       </table>
-      </div>
+    </div>
+  </div>
 <!--END VIEW TABLE BERITA ACARA-->
 
 
@@ -329,11 +307,11 @@
                         <div class="modal-body">
                           <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
                           <!--HIDEEN INPUT NOMOR BARANG-->
-                            <input type="text" name="NoBcra" id="NoBcra" value="">
+                            <input type="hidden" name="NoBcra" id="NoBcra" value="">
                           <!--HIDEEN INPUT NOMOR PO-->
-                            <input type="text" name="nopo" id="nopo" value="">
+                            <input type="hidden" name="nopo" id="nopo" value="">
                           <!--HIDEEN INPUT KODE BARANG-->
-                            <input type="text" name="brg" id="brg" value="">
+                            <input type="hidden" name="brg" id="brg" value="">
                             <!--INPUT QUANTITY DITERIMA-->
                               <div class="row mb-3">
                                 <div class="form-group col">

@@ -21,8 +21,8 @@
       <hr>
 
 
-
-          <div class="left">
+        <div class="row">
+          <div class="col">
             <?php foreach ( $data['detail'] as $bm ) : ?>
             <p>Ref. PO BMC. No                    : <?php echo $bm['NO_PO']; ?></p>
             <p>Pada hari ini tanggal              : <?php echo $bm['TGL_BCRA']; ?></p>
@@ -34,11 +34,13 @@
 
           <br>
 
-          <div class="right"
-            <p>Nomor    : <?php  ?></p>
-            <p>No PR    : <?php  ?></p>
+          <div class="col">
+            <?php foreach( $data['detail'] as $bm) : ?>
+              <p>Nomor    : <?php echo $bm['NO_BCRA']; ?></p>
+              <p>No PR    : <?php break; ?></p>
+            <?php endforeach; ?>
           </div>
-
+        </div>
           <br>
 
           <table class="table table-bordered text-center">

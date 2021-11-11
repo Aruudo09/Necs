@@ -9,10 +9,14 @@ class Barang_model {
     $this->db = new Database;
   }
 
-  public function getAllBarang() {
-    $this->db->query('SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY KODE_BRG ASC');
+  public function statsBrg() {
+    $this->db->query('SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, STOCK_MIN, STOCK_MAX, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE STOCK_MIN >= Stock_brg OR STOCK_MAX <= Stock_brg ORDER BY NAMA_BRG ASC');
     return $this->db->resultSet();
+  }
 
+  public function getAllBarang() {
+    $this->db->query('SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY NAMA_BRG ASC');
+    return $this->db->resultSet();
   }
 
   public function getOptionSpl() {
@@ -20,15 +24,20 @@ class Barang_model {
     return $this->db->resultSet();
   }
 
+  public function getOptBrg() {
+    $this->db->query('SELECT NAMA_BRG FROM barang');
+    return $this->db->resultSet();
+  }
+
   public function tambahBrg($data) {
-    $query = "INSERT INTO barang
-                VALUES
-                ('', :inputSpl, :inputNamaBrg, :inputJnsBrg, :stockBrg, :satuan, :tanggalInput, :harga)";
+    $query = "INSERT INTO barang (KODE_BRG, KODE_SP, NAMA_BRG, Jenis_brg, STOCK_MIN, STOCK_MAX, Stock_brg, Satuan, Tanggal_beli, Harga) VALUES (NULL, :inputSpl, :inputNamaBrg, :inputJnsBrg, :stckMin, :stckMax, :stockBrg, :satuan, :tanggalInput, :harga)";
 
               $this->db->query($query);
               $this->db->bind('inputSpl', $data['inputSpl']);
               $this->db->bind('inputNamaBrg', $data['inputNamaBrg']);
               $this->db->bind('inputJnsBrg', $data['inputJnsBrg']);
+              $this->db->bind('stckMin', $data['stckMin']);
+              $this->db->bind('stckMax', $data['stckMax']);
               $this->db->bind('stockBrg', $data['stockBrg']);
               $this->db->bind('satuan', $data['satuan']);
               $this->db->bind('tanggalInput', $data['tanggalInput']);
