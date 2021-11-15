@@ -9,6 +9,7 @@ class purchased_order extends Controller {
     $data['brg'] = $this->model('Purchased_order_model')->getDataBrg();
     $data['counter'] = $this->model('Purchased_order_model')->counter_po();
 
+    $this->akses();
     $this->view('templates/header', $data);
     $this->view('purchased_order/index', $data);
     $this->view('templates/footer');

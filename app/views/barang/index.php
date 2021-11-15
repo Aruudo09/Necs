@@ -14,7 +14,7 @@
         <div class="row mb-3 mt-2">
           <div class="col-lg-6">
             <button type="button" class="btn btn-primary" id="tambahBarang" data-bs-toggle="modal" data-bs-target="#modalBarang"><i class="fas fa-plus"></i> Input Data Barang</button>
-            <button type="button" name="button" class="btn btn-warning" id="cek" onclick="">cek barang</button>
+            <button type="button" name="button" class="btn btn-warning" id="cek" data-bs-toggle="modal" data-bs-target="#cekBrg" onclick="">Re-Order Point</button>
           </div>
         </div>
 
@@ -23,11 +23,10 @@
 
           <div class="border border-dark rounded-3 bg-white mt-4 p-3">
           <div class="overflow-auto">
-            <table class="table table-hover text-center" id="tbBrg">
+            <table class="table table-striped table-bordered table-hover text-center" id="tbBrg">
               <h3 class="fs-4 mb-3">Daftar Barang</h3>
-                <thead>
+                <thead class="table-warning">
                   <tr>
-                    <th style="display:none">Kode Barang</th>
                     <th scope="col">Nama Barang</th>
                     <th scope="col">Jenis Barang</th>
                     <th scope="col">Stock</th>
@@ -41,7 +40,6 @@
                 <tbody>
                   <?php foreach ( $data['barang'] as $brg) : ?>
                       <tr>
-                        <td style="display:none"><?php print $brg['KODE_BRG'] ?></td>
                         <td><?php print $brg['NAMA_BRG'] ?></td>
                         <td><?php print $brg['Jenis_brg'] ?></td>
                         <td><?php print $brg['Stock_brg'] ?></td>
@@ -147,8 +145,49 @@
                   </div>
                 </div>
               </div>
-              </div>
+            </div>
 
+        <!--MODAL CEK BARANG-->
+        <div class="modal fade" id="cekBrg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content p-3">
+                <div class="modal-header">
+                  <h5 class="modal-title">Re-Order Point</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <h4>DAFTAR TABLE BARANG</h4>
+                  <table class="table table-bordered text-center">
+                    <thead class="table-info">
+                      <tr class="">
+                        <th class="col">Nama Barang</th>
+                        <th class="col">Jenis Barang</th>
+                        <th class="col">Stock Min</th>
+                        <th class="col">Stock Max</th>
+                        <th class="col">Stock Barang</th>
+                        <th class="col">Satuan</th>
+                        <th class="col-2">Supplier</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach( $data['ckBrg'] as $brg) : ?>
+                      <td><?php print $brg['NAMA_BRG'] ?></td>
+                      <td><?php print $brg['Jenis_brg'] ?></td>
+                      <td><?php print $brg['STOCK_MIN'] ?></td>
+                      <td><?php print $brg['STOCK_MAX'] ?></td>
+                      <td><?php print $brg['Stock_brg'] ?></td>
+                      <td><?php print $brg['Satuan'] ?></td>
+                      <td><?php print $brg['NAMA_SP'] ?></td>
+                    <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
 </div>
 

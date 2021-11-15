@@ -6,15 +6,11 @@
         $data['barang'] = $this->model('Barang_model')->getAllBarang();
         $data['optionSpl'] = $this->model('Barang_model')->getOptionSpl();
         $data['optBrg'] = $this->model('Barang_model')->getOptBrg();
-
+        $data['ckBrg'] = $this->model('Barang_model')->statsBrg();
 
         $this->view('templates/header', $data);
         $this->view('barang/index', $data);
         $this->view('templates/footer');
-      }
-
-      public function cek() {
-        echo json_encode($this->model('Barang_model')->statsBrg());
       }
 
       public function tambah() {

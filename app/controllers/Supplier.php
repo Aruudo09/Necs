@@ -6,6 +6,7 @@
       $data['judul'] = 'Daftar Supplier';
       $data['supplier'] = $this->model('Supplier_model')->getAllSupplier();
 
+      $this->akses();
       $this->view('templates/header', $data);
       $this->view('supplier/index', $data);
       $this->view('templates/footer');

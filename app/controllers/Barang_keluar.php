@@ -8,6 +8,7 @@
         $data['optionBrg'] = $this->model('Barang_keluar_model')->getBarangItem();
         $data['counter'] = $this->model('Barang_keluar_model')->getDataCounter();
 
+        $this->akses();
         $this->view('templates/header', $data);
         $this->view('barang_keluar/index', $data);
         $this->view('templates/footer');

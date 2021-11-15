@@ -68,6 +68,8 @@ class Barang_model {
                 KODE_SP = :inputSpl,
                 NAMA_BRG = :inputNamaBrg,
                 Jenis_brg = :inputJnsBrg,
+                STOCK_MIN = :stckMin,
+                STOCK_MAX = :stckMax,
                 Stock_brg = :stockBrg,
                 Satuan = :satuan,
                 Harga = :harga
@@ -77,6 +79,8 @@ class Barang_model {
     $this->db->bind('inputSpl', $data['inputSpl']);
     $this->db->bind('inputNamaBrg', $data['inputNamaBrg']);
     $this->db->bind('inputJnsBrg', $data['inputJnsBrg']);
+    $this->db->bind('stckMin', $data['stckMin']);
+    $this->db->bind('stckMax', $data['stckMax']);
     $this->db->bind('stockBrg', $data['stockBrg']);
     $this->db->bind('satuan', $data['satuan']);
     $this->db->bind('harga', $data['harga']);

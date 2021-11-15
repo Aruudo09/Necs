@@ -87,9 +87,9 @@
 <div class="border border-dark rounded-3 bg-white mt-4 mb-4 p-3">
   <div class="overflow-auto">
       <!--VIEW TABLE MASUK BARANG-->
-            <table class="table table-hover text-center tblBon">
+            <table class="table table-responsive table-bordered table-striped table-hover text-center tblBon">
               <h3 class="fs-4 mb-3">Daftar Barang Keluar</h3>
-              <thead>
+              <thead class="table-warning">
                 <tr>
                   <th class="col-7">No Pemakaian</th>
                   <th class="col-7">Nama</th>
@@ -118,9 +118,9 @@
                   <td><?php echo $brgK['TANGGAL_OUT']; ?></td>
                   <td><?php echo $brgK['KETERANGAN']; ?></td>
                   <td style="width:16%">
-                    <div class="row">
+                    <div class="row d-flex justify-content-evenly">
                     <!--PRINT-->
-                      <div class="col">
+                      <div class="col ">
                         <a href="#" class="btn btn-success"><i class="fa fa-print"></i></a>
                       </div>
                     <!--HAPUS-->

@@ -149,21 +149,6 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
 
 if (window.location.pathname=='/Necs/public/barang') {
 
-  //-----------CEK STOCK BARANG-----------//
-  $('#cek').click(function() {
-    $.ajax({
-      url: 'http://localhost/Necs/public/barang/cek',
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        var tableData = "";
-        for (var i = 0; i < data.length; i++) {
-          tableData = data[i];
-        }
-        console.log(tableData);
-      }
-    });
-  });
   //-----------TAMBAH BARANG BARU-----------//
   $('#tambahBarang').on('click', function() {
 

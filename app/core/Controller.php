@@ -2,6 +2,13 @@
 
 class Controller {
 
+      public function akses() {
+        if ( !isset($_SESSION["login"])) {
+          header('Location: ' . BASEURL . '/login');
+          exit;
+        }
+      }
+
       public function view($view, $data = [] ) {
         require_once '../app/views/' . $view . '.php';
       }

@@ -11,6 +11,7 @@
           // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
           $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
 
+          $this->akses();
           $this->view('templates/header', $data);
           $this->view('barang_masuk/index', $data);
           $this->view('templates/footer');
