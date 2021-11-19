@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
 
     <!--MENAMPILKAN FLASH MESSAGE-->
-    <div class="row">
+    <div class="row my-2">
         <div class="col-lg-6">
           <?php FLASHER::flash(); ?>
         </div>
@@ -12,6 +12,7 @@
 
       <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
         <h3>FORM INPUT PENGEBONAN BARANG</h3>
+        <hr>
         <form class="" action="<?php echo BASEURL; ?>/Barang_keluar/tambah" method="post">
          <!--HIDDEN INPUT NOMOR SLIP-->
           <input type="hidden" name="No_pk" id="No_pk" value="">
@@ -117,19 +118,19 @@
                   <td><?php echo $brgK['QUANTITY_MINTA']; ?></td>
                   <td><?php echo $brgK['TANGGAL_OUT']; ?></td>
                   <td><?php echo $brgK['KETERANGAN']; ?></td>
-                  <td style="width:16%">
-                    <div class="row d-flex justify-content-evenly">
+                  <td style="width:14%">
+                    <div class="d-flex justify-content-evenly">
                     <!--PRINT-->
                       <div class="col ">
                         <a href="#" class="btn btn-success"><i class="fa fa-print"></i></a>
                       </div>
                     <!--HAPUS-->
                     <div class="col">
-                      <a href="<?php echo BASEURL; ?>/Barang_keluar/hapus/<?php echo $brgK['NOMOR_SLIP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                      <a class="btn btn-danger hps" onclick="return confirm('apa anda yakin?')" data-id="<?php echo $brgK['NOMOR_SLIP']; ?>" data-brg="<?php echo $brgK['KODE_BRG']; ?>"><i class="fa fa-trash"></i></a>
                     </div>
                     <!--EDIT-->
                     <div class="col">
-                      <a href="<?php echo BASEURL; ?>/Barang_keluar/ubah" class="btn btn-primary editBrgKlr" data-bs-toggle="modal" data-bs-target="#modalBrgKlr" data-id="<?php echo $brgK['NOMOR_SLIP']; ?>"><i class="fa fa-pen"></i></a>
+                      <a class="btn btn-primary editBrgKlr" data-bs-toggle="modal" data-bs-target="#modalBrgKlr" data-id="<?php echo $brgK['NOMOR_SLIP']; ?>" data-kd="<?php echo $brgK['KODE_BRG']; ?>"><i class="fa fa-pen"></i></a>
                     </div>
                   </div>
                   </td>
@@ -154,33 +155,33 @@
            <div class="modal-body">
              <form class="" action="<?php echo BASEURL; ?>/Barang_keluar/tambah" method="post">
               <!--HIDDEN INPUT NOMOR SLIP-->
-               <input type="hidden" name="No_pk" id="No_pk" value="">
+               <input type="hidden" name="kd_brg" id="kd_brg" value="">
               <!--INPUT NOMOR SLIP-->
                  <div class="row mb-3">
                      <div class="form-group">
-                         <label for="inputNoPk">No Pemakaian :</label>
+                         <label for="inputNoPk2">No Pemakaian :</label>
                          <?php foreach( $data['counter'] as $cnt) : ?>
-                         <input type="text" name="inputNoPk" id="inputNoPk" class="form-control" value="<?php echo $cnt['klr'] . "-" . "K/" . date("y"); ?>">
+                         <input type="text" name="inputNoPk2" id="inputNoPk2" class="form-control" value="<?php echo $cnt['klr'] . "-" . "K/" . date("y"); ?>">
                        <?php endforeach; ?>
                      </div>
                  </div>
                  <!--INPUT NAMA USER-->
                   <div class="row mb-3">
                       <div class="form-group">
-                          <label for="nama">Nama :</label>
-                          <input type="text" name="nama" id="nama" class="form-control">
+                          <label for="nama2">Nama :</label>
+                          <input type="text" name="nama2" id="nama2" class="form-control">
                       </div>
                   </div>
                 <!--INPUT SHIFT-->
                  <div class="row mb-3">
                      <div class="col-6">
-                         <label for="shift">Shift :</label>
-                         <input type="text" name="shift" id="shift" class="form-control">
+                         <label for="shift2">Shift :</label>
+                         <input type="text" name="shift2" id="shift2" class="form-control">
                      </div>
                 <!--INPUT POSTING-->
                      <div class="col-6">
-                         <label for="posting">Posting :</label>
-                         <input type="text" name="posting" id="posting" class="form-control" maxlength="1">
+                         <label for="posting2">Posting :</label>
+                         <input type="text" name="posting2" id="posting2" class="form-control" maxlength="1">
                      </div>
                  </div>
                 <!--INPUT TANGGAL KELUAR-->
@@ -188,20 +189,20 @@
                 $newDate = date("Y-m-d", strtotime($date)); ?>
                  <div class="row mb-3">
                      <div class="col-6">
-                         <label for="tanggalKeluar">Tanggal Keluar :</label>
-                         <input type="date" name="tanggalKeluar" id="tanggalKeluar" class="form-control" value="<?php echo $newDate; ?>">
+                         <label for="tanggalkeluar2">Tanggal Keluar :</label>
+                         <input type="date" name="tanggalkeluar2" id="tanggalkeluar2" class="form-control" value="<?php echo $newDate; ?>">
                      </div>
                 <!--INPUT NOMOR REF-->
                      <div class="col-6">
-                         <label for="noRef">No. Ref :</label>
-                         <input type="text" name="noRef" id="noRef" class="form-control">
+                         <label for="noRef2">No. Ref :</label>
+                         <input type="text" name="noRef2" id="noRef2" class="form-control">
                      </div>
                  </div>
                  <!--INPUT BARANG-->
                   <div class="row mb-3">
                       <div class="col-5">
-                          <label for="namaBrg">Barang :</label>
-                          <select id="namaBrg" class="form-select" name="namaBrg">
+                          <label for="namaBrg2">Barang :</label>
+                          <select id="namaBrg2" class="form-select" name="namaBrg2">
                             <?php foreach ( $data['optionBrg'] as $item) : ?>
                             <option value="<?php echo $item['KODE_BRG']; ?>"><?php echo $item['NAMA_BRG']; ?></option>
                           <?php endforeach; ?>
@@ -209,13 +210,13 @@
                       </div>
                 <!--INPUT JUMLAH AMBIL-->
                      <div class="col-5">
-                         <label for="qtyMinta">Jumlah Minta :</label>
-                         <input type="text" name="qtyMinta" id="qtyMinta" class="form-control">
+                         <label for="qtyMinta2">Jumlah Minta :</label>
+                         <input type="text" name="qtyMinta2" id="qtyMinta2" class="form-control">
                      </div>
                  <!--INPUT KETERANGAN-->
                       <div class="col-6">
-                          <label for="keterangan">Keterangan :</label>
-                          <input type="text" name="keterangan" id="keterangan" class="form-control">
+                          <label for="keterangan2">Keterangan :</label>
+                          <input type="text" name="keterangan2" id="keterangan2" class="form-control">
                       </div>
                   </div>
            </div>

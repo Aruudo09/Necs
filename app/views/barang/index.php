@@ -1,13 +1,13 @@
 <div class="container-fluid px-4">
 
     <!--MENAMPILKAN FLASH MESSAGE-->
-      <div class="row">
+      <div class="row my-2">
          <div class="col-lg-6">
             <?php FLASHER::flash(); ?>
          </div>
       </div>
 
-<div class="border border-dark rounded-3 bg-gradient mt-4 p-3">
+<!-- <div class="border border-dark rounded-3 bg-gradient mt-4 p-3"> -->
     <!--Data Barang-->
       <!-- Button trigger modal -->
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-barang">
@@ -21,7 +21,7 @@
 
    <!--TABLE VIEW BARANG-->
 
-          <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+          <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
           <div class="overflow-auto">
             <table class="table table-striped table-bordered table-hover text-center" id="tbBrg">
               <h3 class="fs-4 mb-3">Daftar Barang</h3>
@@ -48,8 +48,10 @@
                         <td><?php print $brg['Harga'] ?></td>
                         <td><?php print $brg['NAMA_SP'] ?></td>
                         <td>
-                          <a href="#" class="btn btn-info btnUpdateBrg" data-bs-toggle="modal" data-bs-target="#modalBarang" data-id="<?php echo $brg['KODE_BRG'] ?>"><i class="fas fa-pen"></i></a>
-                          <a href="<?php echo BASEURL; ?>/barang/hapus/<?php echo $brg['KODE_BRG'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></a>
+                          <div class="d-flex justify-content-around">
+                            <a href="#" class="btn btn-info btnUpdateBrg" data-bs-toggle="modal" data-bs-target="#modalBarang" data-id="<?php echo $brg['KODE_BRG'] ?>"><i class="fas fa-pen"></i></a>
+                            <a href="<?php echo BASEURL; ?>/barang/hapus/<?php echo $brg['KODE_BRG'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></a>
+                          </div>
                         </td>
                       </tr>
                   <?php endforeach; ?>
@@ -156,10 +158,11 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                  <div class="overflow-auto">
                   <h4>DAFTAR TABLE BARANG</h4>
                   <table class="table table-bordered text-center">
                     <thead class="table-info">
-                      <tr class="">
+                      <tr>
                         <th class="col">Nama Barang</th>
                         <th class="col">Jenis Barang</th>
                         <th class="col">Stock Min</th>
@@ -171,6 +174,7 @@
                     </thead>
                     <tbody>
                       <?php foreach( $data['ckBrg'] as $brg) : ?>
+                      <tr>
                       <td><?php print $brg['NAMA_BRG'] ?></td>
                       <td><?php print $brg['Jenis_brg'] ?></td>
                       <td><?php print $brg['STOCK_MIN'] ?></td>
@@ -178,9 +182,11 @@
                       <td><?php print $brg['Stock_brg'] ?></td>
                       <td><?php print $brg['Satuan'] ?></td>
                       <td><?php print $brg['NAMA_SP'] ?></td>
-                    <?php endforeach; ?>
+                      </tr>
+                      <?php endforeach; ?>
                     </tbody>
                   </table>
+                </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -189,6 +195,6 @@
             </div>
           </div>
 
-</div>
+<!-- </div> -->
 
 </div>

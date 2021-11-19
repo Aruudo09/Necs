@@ -3,9 +3,11 @@
   class account extends Controller {
 
     public function index() {
+      $data['dept'] = $this->model('account_model')->getDept();
+
       $this->akses();
       $this->view('templates/header');
-      $this->view('account/index');
+      $this->view('account/index', $data);
       $this->view('templates/footer');
     }
 

@@ -32,20 +32,12 @@
       }
       }
 
-      public function hapus($No_pakai) {
-        if ( $this->model('Barang_keluar_model')->hapusDataKlr($No_pakai)) {
-            Flasher::setFlash('Barang Keluar', 'berhasil', 'dihapus', 'success');
-            header('Location: ' . BASEURL . '/barang_keluar');
-            exit;
-        } else {
-          Flasher::setFlash('Barang Keluar', 'gagal', 'dihapus', 'danger');
-          header('Location: ' . BASEURL . '/barang_keluar');
-          exit;
-        }
+      public function hapus() {
+        $this->model('Barang_keluar_model')->hapusDataKlr($_POST);
       }
 
       public function getUbah() {
-        echo json_encode($this->model('Barang_keluar_model')->getBrgKlrUbah($_POST['No_pakai']));
+        echo json_encode($this->model('Barang_keluar_model')->getBrgKlrUbah($_POST));
       }
 
       public function ubah() {

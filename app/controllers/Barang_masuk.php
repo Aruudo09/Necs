@@ -46,19 +46,12 @@
       }
 
       public function hapus() {
-        if ( $this->model('Barang_masuk_model')->hpsBcra($_POST['hps']) > 0) {
-            Flasher::setFlash('Berita Acara', 'berhasil', 'dihapus', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        } else {
-            Flasher::setFlash('Berita Acara', 'gagal', 'dhapus', 'danger');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        }
+        $this->model('Barang_masuk_model')->hpsBcra($_POST);
+        $this->model('Barang_masuk_model')->ubahStat($_POST);
       }
 
-      public function hapusDtl($No_msk) {
-        if ( $this->model('Barang_masuk_model')->hpsDtlBcra($No_msk) > 0) {
+      public function hapusDtl() {
+        if ( $this->model('Barang_masuk_model')->hpsDtlBcra($_POST) > 0) {
             Flasher::setFlash('Berita Acara', 'berhasil', 'dihapus', 'success');
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;

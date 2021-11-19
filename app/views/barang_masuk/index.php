@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
 
   <!--MENAMPILKAN FLASH MESSAGE-->
-    <div class="row">
+    <div class="row my-2">
         <div class="col-lg-6">
           <?php FLASHER::flash(); ?>
         </div>
@@ -11,7 +11,7 @@
   <div class="row">
 
   <!--FORM INPUT BERITA ACARA-->
-        <div class="col-6">
+        <div class="col-md-6">
           <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
             <h3>FORM INPUT BERITA ACARA</h3>
             <hr>
@@ -79,9 +79,8 @@
       </div>
 
       <!--TABLE VIEW BERITA ACARA-->
-      <div class="col-6">
+      <div class="col-md-6">
         <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
-          <div class="row">
             <div class="overflow-auto">
               <h3>BERITA ACARA</h3>
               <!--SEARCH BAR-->
@@ -125,17 +124,15 @@
               <!--TOMBOL CETAK BA-->
                           <a class="btn btn-success ctkBa"><i class="fas fa-print"></i></a>
               <!--TOMBOL UPDATE-->
-                          <a href="<?php echo BASEURL; ?>/Barang_masuk/ubah/<?php echo $mhs['NO_PO']; ?>"
-                        class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
+                          <a class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
                         data-id="<?php echo $mhs['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
               <!--TOMBOL HAPUS-->
-                          <a href="#" class="btn btn-danger hpsBa" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
+                          <a class="btn btn-danger hpsBa" data-id="<?php echo $mhs['NO_PO']; ?>" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
                       </td>
                       </tr>
                     <?php endforeach; ?>
               </table>
             </div>
-          </div>
         </div>
       </div>
       <!--END TABLE VIEW BERITA ACARA-->
@@ -152,9 +149,7 @@
                   <tr class="table-warning ">
                     <th scope="col">No. PO</th>
                     <th scope="col">Supplier</th>
-                    <th scope="col" style="display:none">Kode Supplier</th>
                     <th scope="col">Barang</th>
-                    <th scope="col" style="display:none">Kode Barang</th>
                     <th scope="col">Jenis</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Order</th>
@@ -169,9 +164,7 @@
                 <tr class="tableViewPo">
                 <td class="kdPo"><?php print $mhs['NO_PO']; ?></td>
                 <td><?php print $mhs['NAMA_SP']; ?></td>
-                <td class="kdSp" style="display:none"><?php print $mhs['KODE_SP']; ?></td>
                 <td class="nmBrg"><?php print $mhs['NAMA_BRG']; ?></td>
-                <td class="kdBrg" style="display:none"><?php print $mhs['KODE_BRG']; ?></td>
                 <td><?php print $mhs['Jenis_brg']; ?></td>
                 <td><?php print $mhs['Stock_brg']; ?></td>
                 <td><?php print $mhs['QTY_ORDER']; ?></td>
@@ -188,7 +181,7 @@
 </div>
 
 <!--VIEW TABLE DETAIL BERITA ACARA-->
-    <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+    <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
       <div class="overflow-auto">
       <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbDtlBa">
         <h3 class="fs-4 mb-3">DAFTAR BARANG MASUK</h3>
@@ -217,14 +210,16 @@
               <td><?php print $brgM['NAMA_BRG']; ?></td>
               <td><?php print $brgM['QTY_TERIMA']; ?></td>
               <td><?php print $brgM['NO_SRJLN']; ?></td>
-              <td style="width:11%">
-              <!--HAPUS DETAIL BARANG MASUK-->
-                <div class="float-start">
-                  <a href="<?php echo BASEURL; ?>/barang_masuk/hapusDtl/<?php echo $brgM['NO_BCRA']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
-                </div>
-              <!--EDIT DETAIL BARANG MASUK-->
-                <div class="float-end">
-                  <a href="#" class="btn btn-primary updDtlBrgMsk" data-bs-toggle="modal" data-bs-target="#detailBcra" data-date-id="<?php echo $brgM['TGL_BCRA'] ?>" data-po-id="<?php echo $brgM['NO_PO'] ?>" data-brg-id="<?php echo $brgM['KODE_BRG'] ?>" data-id="<?php echo $brgM['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
+              <td style="width:10%">
+                <div class="d-flex justify-content-around">
+                  <!--HAPUS DETAIL BARANG MASUK-->
+                    <div class="col">
+                      <a class="btn btn-danger hpsdtl" data-id="<?php echo $brgM['NO_BCRA']; ?>" data-kd="<?php echo $brgM['KODE_BRG']; ?>" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                    </div>
+                  <!--EDIT DETAIL BARANG MASUK-->
+                    <div class="col">
+                      <a class="btn btn-primary updDtlBrgMsk" data-bs-toggle="modal" data-bs-target="#detailBcra" data-date-id="<?php echo $brgM['TGL_BCRA'] ?>" data-id="<?php echo $brgM['NO_PO'] ?>" data-brg="<?php echo $brgM['KODE_BRG'] ?>" data-kd="<?php echo $brgM['NO_BCRA'] ?>"><i class="fa fa-pen"></i></a>
+                    </div>
                 </div>
               </td>
             </tr>
@@ -307,11 +302,11 @@
                         <div class="modal-body">
                           <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
                           <!--HIDEEN INPUT NOMOR BARANG-->
-                            <input type="hidden" name="NoBcra" id="NoBcra" value="">
+                            <input type="text" name="NoBcra" id="NoBcra" value="">
                           <!--HIDEEN INPUT NOMOR PO-->
-                            <input type="hidden" name="nopo" id="nopo" value="">
+                            <input type="text" name="nopo" id="nopo" value="">
                           <!--HIDEEN INPUT KODE BARANG-->
-                            <input type="hidden" name="brg" id="brg" value="">
+                            <input type="text" name="brg" id="brg" value="">
                             <!--INPUT QUANTITY DITERIMA-->
                               <div class="row mb-3">
                                 <div class="form-group col">

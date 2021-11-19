@@ -1,7 +1,7 @@
       <div class="container-fluid px-4">
 
           <!--FLASH MESSAGE-->
-            <div class="row">
+            <div class="row my-2">
                <div class="col-lg-6">
                   <?php FLASHER::flash(); ?>
                </div>
@@ -9,8 +9,8 @@
 
         <!--TOMBOL TAMBAH NOMOR PO-->
         <div class="row">
-          <div class="col">
-          <div class="border border-dark rounded-3 bg-gradient p-3">
+          <div class="col-md-6">
+          <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
             <h3>FORM INPUT PO</h3>
               <hr>
             <form action="<?php echo BASEURL; ?>/purchased_order/tambah" method="post">
@@ -80,8 +80,8 @@
             </div>
         <!---END TOMBOL TAMBAH NOMOR PO-->
 
-            <div class="col">
-              <div class="border border-dark rounded-3 bg-gradient p-3">
+            <div class="col-md-6">
+              <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
               <div class="overflow-auto">
                 <h3>PURCHASE ORDER</h3>
                   <div class="d-flex mt-2 mb-2">
@@ -118,7 +118,7 @@
                                         <a href="<?php echo BASEURL; ?>/purchased_order/Update/<?php echo $mhs['NO_PO']; ?>" class="btn btn-primary editPo" data-bs-toggle="modal" data-bs-target="#modalPo"
                                       data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
                             <!--TOMBOL HAPUS NOMOR PO-->
-                                        <button type="button" class="btn btn-danger hpsPo" id="hpsPo" name="button"><i class="fas fa-trash" onclick=""></i></button>
+                                        <button type="button" class="btn btn-danger hpsPo" id="hpsPo" name="button" data-id="<?php echo $mhs['NO_PO']; ?>" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></button>
                                     </td>
                           </tr>
                         <?php endforeach; ?>
@@ -126,10 +126,10 @@
               </div>
           </div>
         </div>
-        </div>
+      </div>
 
         <!--TABLE VIEW PURCHASED ORDER-->
-        <div class="border border-dark rounded-3 bg-white mt-4 p-3">
+        <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
           <div class="overflow-auto">
             <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbPo">
                 <h3>LIST PURCHASED ORDER</h3>
@@ -139,7 +139,6 @@
                       <th scope="col">Tanggal PO</th>
                       <th scope="col">Nama</th>
                       <th scope="col">Supplier</th>
-                      <th class="d-none">Kode Barang</th>
                       <th scope="col">Barang</th>
                       <th scope="col">Jenis</th>
                       <th scope="col">Stock</th>
@@ -159,7 +158,6 @@
                   <td><?php print $mhs['TGL_PO'];?></td>
                   <td><?php print $mhs['PEMESAN']; ?></td>
                   <td><?php print $mhs['NAMA_SP']; ?></td>
-                  <td id="kdBrgDtl" class="d-none"><?php print $mhs['KODE_BRG']; ?></td>
                   <td><?php print $mhs['NAMA_BRG']; ?></td>
                   <td><?php print $mhs['Jenis_brg']; ?></td>
                   <td><?php print $mhs['Stock_brg']; ?></td>
@@ -168,18 +166,19 @@
                   <td><?php print $mhs['Satuan']; ?></td>
                   <td><?php print $mhs['HARGA_PO']; ?></td>
                   <td><?php print $mhs['TOT_HARGA']; ?></td>
-                  <td style="width:80%">
-        <!--TOMBOL UPDATE-->
-          <div class="float-start">
-            <a href="<?php echo BASEURL; ?>/purchased_order/update/<?php echo $mhs['NO_PO']; ?>"
-          class="btn btn-primary editDtlPo" data-bs-toggle="modal" data-bs-target="#detailModal"
-          data-id="<?php echo $mhs['NO_PO']; ?>"><i class="fa fa-pen"></i></a>
-          </div>
-        <!--TOMBOL HAPUS-->
-          <div class="float-end">
-            <a href="<?php echo BASEURL; ?>/purchased_order/hapusDetail/<?php echo $mhs['NO_PO'] . '/' .$mhs['KODE_BRG']; ?>"
-          class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
-          </div>
+                  <td style="width:10%">
+                    <div class="d-flex justify-content-evenly">
+                      <!--TOMBOL UPDATE-->
+                        <div class="col">
+                          <a href="<?php echo BASEURL; ?>/purchased_order/update/<?php echo $mhs['NO_PO']; ?>"
+                        class="btn btn-primary editDtlPo" data-bs-toggle="modal" data-bs-target="#detailModal"
+                        data-id="<?php echo $mhs['NO_PO']; ?>" data-kd="<?php echo $mhs['KODE_BRG']; ?>"><i class="fa fa-pen"></i></a>
+                        </div>
+                      <!--TOMBOL HAPUS-->
+                        <div class="col">
+                          <a class="btn btn-danger hps" onclick="return confirm('apa anda yakin?');" data-id="<?php echo $mhs['NO_PO']; ?>" data-kd="<?php echo $mhs['KODE_BRG']; ?>"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </div>
                 </td>
                   </tr>
                   <?php endforeach; ?>
@@ -206,7 +205,7 @@
                           <!--INPUT NOMOR PO-->
                               <div class="mb-3">
                                 <label for="noPo2">No PO :</label>
-                                <input type="text" class="form-control" name="noPo2" id="noPo2" value="" maxlength="17">
+                                <input type="text" class="form-control" name="noPo2" id="noPo2" value="" maxlength="17" readonly>
                               </div>
                           <!--INPUT PEMESAN-->
                               <div class="mb-3">
@@ -250,16 +249,12 @@
                         <div class="modal-body">
                           <form action="<?php echo BASEURL; ?>/purchased_order/tambahDetail" method="post">
                               <!--HIDDEN INPUT-->
-                                  <input type="text" name="detailNoPo" id="detailNoPo" value="">
-                                  <input type="text" name="detailBarang" id="detailBarang" value="">
+                                  <input type="hidden" name="detailNoPo" id="detailNoPo" value="">
+                                  <input type="hidden" name="detailBarang" id="detailBarang" value="">
                               <!--PEMESAN INPUT-->
                                   <div class="mb-3">
                                       <label for="brg" class="form-label">Barang :</label>
-                                      <select id="brg" name="brg" class="form-select">
-                                      <?php foreach ( $data['brg'] as $brg) : ?>
-                                        <option value="<?php echo $brg['KODE_BRG'] ?>"><?php echo $brg['NAMA_BRG'] ?></option>
-                                      <?php endforeach; ?>
-                                      </select>
+                                      <input type="text" id="brg" class="form-control" name="brg" value="" readonly>
                                   </div>
                                   <div class="mb-3">
                                       <label for="qty" class="form-label">Quantity Order :</label>

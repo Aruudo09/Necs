@@ -3,9 +3,14 @@
 class Controller {
 
       public function akses() {
-        if ( !isset($_SESSION["login"])) {
+        if ( !isset($_SESSION["login"]['status'])) {
           header('Location: ' . BASEURL . '/login');
           exit;
+        }
+        else {
+          $_SESSION['login']['USERNAME'];
+          $_SESSION['login']['KODEF'];
+          $_SESSION['login']['Initial'];
         }
       }
 

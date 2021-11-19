@@ -10,14 +10,15 @@
     }
 
     public function getAllBarangKlr() {
-      $this->db->query('SELECT NOMOR_SLIP, b.NAMA_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, b.Stock_brg, QUANTITY_MINTA FROM barang_keluar a JOIN barang b ON a.KODE_BRG = b.KODE_BRG');
+      $this->db->query('SELECT NOMOR_SLIP, a.KODE_BRG, b.NAMA_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, b.Stock_brg, QUANTITY_MINTA FROM barang_keluar a JOIN barang b ON a.KODE_BRG = b.KODE_BRG');
 
       return $this->db->resultSet();
     }
 
-    public function getBrgKlrUbah($No_pakai) {
-      $this->db->query('SELECT * FROM barang_keluar WHERE NOMOR_SLIP=:No_pakai');
-      $this->db->bind('No_pakai', $No_pakai);
+    public function getBrgKlrUbah($data) {
+      $this->db->query('SELECT * FROM barang_keluar WHERE NOMOR_SLIP=:No_pakai AND KODE_BRG = :kode_brg');
+      $this->db->bind('No_pakai', $data['No_pakai']);
+      $this->db->bind('kode_brg', $data['kode_brg']);
       return $this->db->single();
     }
 
@@ -41,7 +42,7 @@
       $y = 1;
       foreach( $data['nmBrg'] as $brg ) {
 
-      $query = "SELECT Stock_brg FROM barang, barang_keluar WHERE barang.KODE_BRG = :kdBrg" .$i. "";
+      $query = "SELECT Stock_brg FROM barang WHERE barang.KODE_BRG = :kdBrg" .$i. "";
 
       $this->db->query($query);
       $this->db->bind('kdBrg' .$i , $data['kdBrg'][$i]);
@@ -92,10 +93,11 @@
       // return $this->db->rowCount();
     }
 
-    public function hapusDataKlr($No_pakai) {
-      $query = "DELETE FROM barang_keluar WHERE NOMOR_SLIP=:No_pakai";
+    public function hapusDataKlr($data) {
+      $query = "DELETE FROM barang_keluar WHERE NOMOR_SLIP = :id AND KODE_BRG = :brg";
       $this->db->query($query);
-      $this->db->bind('No_pakai', $No_pakai);
+      $this->db->bind('id', $data['id']);
+      $this->db->bind('brg', $data['brg']);
       $this->db->execute();
       return $this->db->rowCount();
     }
@@ -103,26 +105,27 @@
 
     public function ubahBrgKlr($data) {
       $query = "UPDATE barang_keluar SET
-                  KODE_BRG = :namaBrg,
-                  SHIFT = :shift,
-                  POSTING = :posting,
-                  TANGGAL_OUT = :tanggalKeluar,
-                  KETERANGAN = :keterangan,
-                  NAMA_USER = :nama,
-                  NO_REF = :noRef,
-                  QUANTITY_MINTA = :qtyMinta
-                  WHERE NOMOR_SLIP = :No_pk";
+                  KODE_BRG = :namaBrg2,
+                  SHIFT = :shift2,
+                  POSTING = :posting2,
+                  TANGGAL_OUT = :tanggalkeluar2,
+                  KETERANGAN = :keterangan2,
+                  NAMA_USER = :nama2,
+                  NO_REF = :noRef2,
+                  QUANTITY_MINTA = :qtyMinta2
+                  WHERE NOMOR_SLIP = :inputNoPk2 AND KODE_BRG = :kd_brg";
 
       $this->db->query($query);
-      $this->db->bind('namaBrg', $data['namaBrg']);
-      $this->db->bind('shift', $data['shift']);
-      $this->db->bind('posting', $data['posting']);
-      $this->db->bind('tanggalKeluar', $data['tanggalKeluar']);
-      $this->db->bind('keterangan', $data['keterangan']);
-      $this->db->bind('nama', $data['nama']);
-      $this->db->bind('noRef', $data['noRef']);
-      $this->db->bind('qtyMinta', $data['qtyMinta']);
-      $this->db->bind('No_pk', $data['No_pk']);
+      $this->db->bind('namaBrg2', $data['namaBrg2']);
+      $this->db->bind('shift2', $data['shift2']);
+      $this->db->bind('posting2', $data['posting2']);
+      $this->db->bind('tanggalkeluar2', $data['tanggalkeluar2']);
+      $this->db->bind('keterangan2', $data['keterangan2']);
+      $this->db->bind('nama2', $data['nama2']);
+      $this->db->bind('noRef2', $data['noRef2']);
+      $this->db->bind('qtyMinta2', $data['qtyMinta2']);
+      $this->db->bind('inputNoPk2', $data['inputNoPk2']);
+      $this->db->bind('kd_brg', $data['kd_brg']);
 
       $this->db->execute();
 

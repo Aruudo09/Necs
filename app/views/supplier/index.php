@@ -1,13 +1,13 @@
 <div class="container-fluid px-4">
 
   <!--MENAMPILKAN FLASH MESSAGE-->
-    <div class="row">
+    <div class="row my-2">
         <div class="col-lg-6">
           <?php FLASHER::flash(); ?>
         </div>
     </div>
 
-<div class="border border-dark rounded-3 bg-gradient mt-3 p-3">
+
   <!-- Button trigger modal -->
   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-barang">
   <div class="row mb-3 mt-2">
@@ -32,7 +32,6 @@
                   <th class="col">Contact Person</th>
                   <th class="col">NPWP</th>
                   <th class="col">Tanggal Input</th>
-                  <th class="col">Tanggal Update</th>
                   <th class="col">Qty Bulan</th>
                   <th class="col" style="width:100%">Alamat</th>
                   <th class="col">Fitur</th>
@@ -47,14 +46,19 @@
                   <td><?php echo $spl['HUBUNGAN']; ?></td>
                   <td><?php echo $spl['npwp']; ?></td>
                   <td><?php echo $spl['Tanggal_input']; ?></td>
-                  <td><?php echo $spl['Tanggal_update']; ?></td>
                   <td><?php echo $spl['quantity_perbulan']; ?></td>
                   <td><?php echo $spl['ALAMAT_SP']; ?></td>
-                  <td class="">
-                    <!--HAPUS SUPPLIER-->
-                      <a href="<?php echo BASEURL; ?>/Supplier/hapus/<?php echo $spl['KODE_SP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
-                    <!--EDIT SUPPLIER-->
-                      <a href="<?php echo BASEURL; ?>/Supplier/ubah" class="btn btn-success editSpl" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['KODE_SP']; ?>"><i class="fa fa-pen"></i></a>
+                  <td style="width:10%">
+                    <div class="d-flex justify-content-evenly">
+                      <div class="col">
+                        <!--HAPUS SUPPLIER-->
+                          <a href="<?php echo BASEURL; ?>/Supplier/hapus/<?php echo $spl['KODE_SP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                      </div>
+                      <div class="col">
+                        <!--EDIT SUPPLIER-->
+                          <a href="<?php echo BASEURL; ?>/Supplier/ubah" class="btn btn-success editSpl" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['KODE_SP']; ?>"><i class="fa fa-pen"></i></a>
+                      </div>
+                    </div>
                   </td>
                 </tr>
                 <?php endforeach; ?>
@@ -155,5 +159,3 @@
               </div>
             </div>
             </div>
-
-</div>

@@ -23,22 +23,13 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
     var pmsn = $(this).find('#pmsn').text();
     var nmSp = $(this).find('#nmSp').text();
     var kdSpPo = $(this).find('#kdSpPo').text();
-    console.log(kdSpPo);
+
 
     $('#noPo2').val(np);
     $('#tanggal_po2').val(tglPo);
     $('#pemesan2').val(pmsn);
     $('#sp2').val(kdSpPo);
 
-  });
-
-  //-----SET DETAIL PURCHASED ORDER----//
-  $('#tbPo').ready(function(){
-    var dtl = $(this).find('#npDtl').text();
-    console.log(dtl);
-    var kd = $(this).find('#kdBrgDtl').text();
-    $('#detailNoPo').val(dtl);
-    $('#detailBarang').val(kd);
   });
 
   //-----SEARCH PURCHASED ORDER-----//
@@ -121,19 +112,45 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
       $('.modal-body form').attr('action', 'http://localhost/Necs/public/purchased_order/update');
         });
 
-    //-------HAPUS PO--------//
-    $('.hpsPo').click(function(){
-      var hps = document.getElementById('Np').value;
-      console.log(hps);
+    //-------HAPUS DETAIL PO--------//
+    $('.hps').click(function(){
+      const id = $(this).data('id');
+      const kd = $(this).data('kd');
+      console.log(id);
+      console.log(kd);
 
       $.ajax({
-        type: 'post',
         url: 'http://localhost/Necs/public/purchased_order/hapusPo',
-        data: {hps : hps},
-        // success: function(data) {
-        //   // alert("Berhasil Menghapus Data");
-        //   console.log(data);
-        // }
+        data: {id : id, kd : kd},
+        type: 'post',
+        success: function(data) {
+          alert("Berhasil Menghapus Data");
+          window.location.replace('http://localhost/Necs/public/purchased_order');
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = xhr.status + ': ' + xhr.statusText
+          alert("DATA GAGAL DIHAPUS " + errorMessage);
+        }
+      });
+    });
+
+    //-------HAPUS NOMOR PO-------//
+    $('#hpsPo').click(function(){
+      const id = $(this).data('id');
+      console.log(id);
+
+      $.ajax({
+        url: 'http://localhost/Necs/public/purchased_order/hapus',
+        data: {id : id},
+        type: 'post',
+        success: function() {
+          alert("DATA BERHASIL DIHAPUS");
+          window.location.replace("http://localhost/Necs/public/purchased_order");
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = xhr.status + ': ' + xhr.statusText
+          alert("DATA GAGAL DIHAPUS " + errorMessage);
+        }
       });
     });
 
@@ -142,6 +159,25 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
       $('#labelDetailPo').html('Edit Purchased Order');
       $('.modal-footer button[type=submit]').html('Ubah Data');
       $('.modal-body form').attr('action', 'http://localhost/Necs/public/purchased_order/ubah');
+
+      const id = $(this).data('id');
+      const kd = $(this).data('kd');
+      console.log(id);
+      console.log(kd);
+      $.ajax({
+        url: 'http://localhost/Necs/public/purchased_order/getUbahDtl',
+        data: {id : id, kd : kd},
+        method: 'post',
+        dataType: 'json',
+        success: function(data) {
+          console.log(data);
+          $('#detailNoPo').val(data.NO_PO);
+          $('#detailBarang').val(data.KODE_BRG);
+          $('#brg').val(data.NAMA_BRG);
+          $('#qty').val(data.QTY_ORDER);
+          $('#harga').val(data.HARGA_PO);
+        }
+      });
     });
 }
 
@@ -215,9 +251,9 @@ if (window.location.pathname=='/Necs/public/barang_masuk') {
 
   //---------CLICK UNTUK MEN-GENERATE NOMOR BA-------------//
   $('#poBa').change(function() {
-      // console.log(document.getElementById('poBa').value);
+      console.log(document.getElementById('poBa').value);
       var cmbVl = document.getElementById('poBa').value;
-      // console.log(cmbVl.substring(5, 11));
+      console.log(cmbVl);
      if (cmbVl.substring(5, 11) == 'PROC-P'){
          var kode3 = 'ST';
      }
@@ -313,34 +349,31 @@ if (window.location.pathname=='/Necs/public/barang_masuk') {
     console.log(id);
   });
 
+  //----------HAPUS BERITA ACARA------------//
+  $('.hpsBa').click(function(){
+    const id = $(this).data('id');
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/hapus',
+      data: {id : id},
+      type: 'post',
+      success: function() {
+        alert("DATA BERHASIL DIHAPUS");
+        window.location.replace('http://localhost/Necs/public/Barang_masuk');
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("DATA GAGAL DIHAPUS " + errorMessage);
+      }
+    });
+  });
+
 
   //---------INPUT DETAIL BERITA ACARA----------//
   $('.inptDtl').click(function() {
     const id = $(this).data('id');
     console.log(id);
   });
-
-  //-----CLICK SET BARANG-----//
-// $('.tableViewPo').click(function() {
-//     //SET VALUE DETAIL BERITA ACARA
-//     var kdPo = $(this).find('.kdPo').text();
-//     var harga = $(this).find('.kdHrg').text();
-//     var qtyTrm = $(this).find('.kdTglBa').text();
-//     var kdTrm = $(this).find('.kdTrm').text();
-//     var kdSp = $(this).find('.kdSp').text();
-//     var kdBrg = $(this).find('.kdBrg').text();
-//     var nmBrg = $(this).find('.nmBrg').text();
-//     console.log(kdBrg);
-//     console.log(harga);
-//
-//     $('#nopo').val(kdPo);
-//     $('#nomorsp').val(kdSp);
-//     $('#brg').val(kdBrg);
-//     $('#optBrg').append("<option value = '" + kdBrg + " ' selected>" + nmBrg + " </option>");
-//     $('#hrg').val(harga);
-//     $('#hrgBl').val(harga);
-//     $('#qtyTerima').val('');
-//   });
 
 
   //----------EDIT DETAIL BARANG MASUK----------//
@@ -349,29 +382,34 @@ if (window.location.pathname=='/Necs/public/barang_masuk') {
     $('#labelDtlBcra').html('Edit Detail Berita Acara');
     $('.modal-footer button[type=submit]').html('Ubah Data');
     $('.modal-body form').attr('action', 'http://localhost/Necs/public/Barang_masuk/ubahDtl');
-    $('#opsiBrg').hide();
+
     const id = $(this).data('id');
-    const id2 = $(this).data('brg-id');
-    const id3 = $(this).data('po-id');
-    $('#brg').val(id2);
-    $('#NoBcra').val(id);
-    $('#nopo').val(id3);
+    const brg = $(this).data('brg');
+    const kd = $(this).data('kd');
+
+    $('#brg').val(brg);
+    $('#NoBcra').val(kd);
+    $('#nopo').val(id);
 
   });
 
-  //-------HAPUS BARANG MASUK--------//
-  $('.hpsBa').click(function(){
-    var hps = document.getElementById('poBcraTmp').value;
-    console.log(hps);
+  //-------HAPUS DETAIL BARANG MASUK--------//
+  $('.hpsdtl').click(function(){
+    const id = $(this).data('id');
+    const kd = $(this).data('kd');
 
     $.ajax({
       type: 'post',
-      url: 'http://localhost/Necs/public/Barang_masuk/hapus',
-      data: {hps : hps},
-      // success: function(data) {
-      //   // alert("Berhasil Menghapus Data");
-      //   console.log(data);
-      // }
+      url: 'http://localhost/Necs/public/Barang_masuk/hapusDtl',
+      data: {id : id, kd : kd},
+      success: function(data) {
+        alert("Berhasil Menghapus Data");
+        window.location.replace("http://localhost/Necs/public/Barang_masuk");
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("DATA GAGAL DIHAPUS " + errorMessage);
+      }
     });
   });
 
@@ -388,21 +426,6 @@ if (window.location.pathname=='/Necs/public/barang_masuk') {
 //BARANG KELUAR
 
 if (window.location.pathname=='/Necs/public/barang_keluar') {
-  //--------TAMBAH BARANG KELUAR-----------//
-  $('#tambahBrgKlr').on('click', function() {
-
-    $('#modalLabelBrgKlr').html('Tambah Data Keluar Barang');
-    $('.modal-footer button[type=submit]').html('Simpan Data');
-
-
-    $('#namaBrg').val('');
-    $('#inputPk').val('');
-    $('#userId').val('');
-
-    $('#keterangan').val('');
-
-  });
-
 
   //------COMBOBOX BARANG-------//
   $(document).ready(function() {
@@ -413,8 +436,6 @@ if (window.location.pathname=='/Necs/public/barang_keluar') {
   $('.selectBrg').on('change', function() {
       var value = document.getElementById('selectBrg').value;
       var nama = $(".selectBrg option:selected").text();
-      console.log(value);
-      console.log(nama);
 
       var new_row = parseInt($('#num_row').val()) + 1;
       // console.log(new_row);
@@ -435,7 +456,6 @@ if (window.location.pathname=='/Necs/public/barang_keluar') {
   //-----MENGURANGI FIELD BARANG-----//
   $('.remove').click(function() {
     var old_row = $('#num_row').val();
-    console.log(old_row);
 
      if (old_row > 0) {
        $('#nmBrg' + old_row).remove();
@@ -457,30 +477,52 @@ if (window.location.pathname=='/Necs/public/barang_keluar') {
     $('.modal-body form').attr('action', 'http://localhost/Necs/public/Barang_keluar/ubah');
 
     const id = $(this).data('id');
+    const kd = $(this).data('kd');
     console.log(id);
+    console.log(kd);
 
     $.ajax({
         url: 'http://localhost/Necs/public/Barang_keluar/getUbah',
-        data: {No_pakai : id},
+        data: {No_pakai : id, kode_brg : kd},
         method: 'post',
         dataType: 'json',
         success: function(data) {
           console.log(data);
-            $('#inputNoPk').hide();
-            $('#namaBrg').val(data.KODE_BRG);
-            $('#shift').val(data.SHIFT);
-            $('#posting').val(data.POSTING);
-            $('#tanggalKeluar').val(data.TANGGAL_OUT);
-            $('#keterangan').val(data.KETERANGAN);
-            $('#nama').val(data.NAMA_USER);
-            $('#noRef').val(data.NO_REF);
-            $('#qtyMinta').val(data.QUANTITY_MINTA);
-            $('#tanggalInput').val(data.tanggal_input);
+            $('#inputNoPk2').val(data.NOMOR_SLIP);
+            $('#kd_brg').val(data.KODE_BRG);
+            $('#namaBrg2').val(data.KODE_BRG);
+            $('#shift2').val(data.SHIFT);
+            $('#posting2').val(data.POSTING);
+            $('#tanggalkeluar2').val(data.TANGGAL_OUT);
+            $('#keterangan2').val(data.KETERANGAN);
+            $('#nama2').val(data.NAMA_USER);
+            $('#noRef2').val(data.NO_REF);
+            $('#qtyMinta2').val(data.QUANTITY_MINTA);
             $('#No_pk').val(data.NOMOR_SLIP);
         }
     });
-
   });
+
+  //-------HAPUS BARANG KELUAR----------//
+  $('.hps').click(function(){
+    var id = $(this).data('id');
+    var brg = $(this).data('brg');
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Barang_keluar/hapus',
+      data: {id : id, brg : brg},
+      method: 'post',
+      success: function() {
+        alert("DATA BERHASIL DIHAPUS");
+        window.location.replace("http://localhost/Necs/public/Barang_keluar");
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("DATA GAGAL DIHAPUS " + errorMessage);
+      }
+    });
+  });
+
 }
 
   //SUPPLIER

@@ -36,13 +36,16 @@
 
 
       public function getDataBcraTmp() {
-        $this->db->query('SELECT NO_BCRA, NO_PO, NO_SRJLN, berita_acara_tmp.KODE_SP, supplier.NAMA_SP, TGL_BCRA, PENERIMA FROM berita_acara_tmp, supplier WHERE berita_acara_tmp.KODE_SP = supplier.KODE_SP ORDER BY NO_BCRA DESC LIMIT 1');
+        $this->db->query('SELECT NO_BCRA, NO_PO, NO_SRJLN, a.KODE_SP, b.NAMA_SP, TGL_BCRA, PENERIMA
+                          FROM berita_acara_tmp a
+                          INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP
+                          ORDER BY TGL_BCRA DESC LIMIT 1;');
 
         return $this->db->resultSet();
       }
 
       public function getAllBarangMsk() {
-        $this->db->query('SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP ORDER BY a.NO_PO DESC');
+        $this->db->query('SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP ORDER BY a.TGL_BCRA DESC');
 
         return $this->db->resultSet();
       }
@@ -52,7 +55,7 @@
         FROM purchased_order a
         LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
         LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-        WHERE a.QTY_ORDER > a.QTY_TERIMA
+        WHERE a.QTY_ORDER > a.QTY_TERIMA AND status != "1"
         ORDER BY a.NO_PO DESC');
 
         return $this->db->resultSet();
@@ -62,8 +65,6 @@
         $this->db->query('SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA = :NO_BCRA"/":bcra');
         $this->db->bind('NO_BCRA', $NO_BCRA);
         $this->db->bind('bcra', $bcra);
-        var_dump($NO_BCRA);
-        var_dump($bcra);
         // var_dump($this->db->resultSet());
         return $this->db->resultSet();
       }
@@ -163,19 +164,29 @@
 
       }
 
-      public function hpsBcra($No_msk) {
-        $query = "DELETE FROM berita_acara_tmp WHERE NO_BCRA LIKE :No_msk";
+      public function hpsBcra($data) {
+        $query = "UPDATE berita_acara_tmp SET status = '1' WHERE NO_BCRA = :id";
         $this->db->query($query);
-        $this->db->bind('No_msk', $No_msk);
+        $this->db->bind('id', $data['id']);
 
         $this->db->execute();
         return $this->db->rowCount();
       }
 
-      public function hpsDtlBcra($No_msk) {
-        $query = "DELETE FROM berita_acara WHERE NO_BCRA LIKE :No_msk";
+      public function ubahStat($data) {
+        $query = "UPDATE berita_acara SET status = '1' WHERE NO_BCRA = :id";
         $this->db->query($query);
-        $this->db->bind('No_msk', "%$No_msk%");
+        $this->db->bind('id', $data['id']);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+      }
+
+      public function hpsDtlBcra($data) {
+        $query = "DELETE FROM berita_acara WHERE NO_BCRA LIKE :id AND KODE_BRG = :kd";
+        $this->db->query($query);
+        $this->db->bind('id', $data['id']);
+        $this->db->bind('kd', $data['kd']);
 
         $this->db->execute();
         return $this->db->rowCount();

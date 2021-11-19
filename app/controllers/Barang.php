@@ -8,6 +8,7 @@
         $data['optBrg'] = $this->model('Barang_model')->getOptBrg();
         $data['ckBrg'] = $this->model('Barang_model')->statsBrg();
 
+        $this->akses();
         $this->view('templates/header', $data);
         $this->view('barang/index', $data);
         $this->view('templates/footer');

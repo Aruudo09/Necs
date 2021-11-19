@@ -9,8 +9,12 @@
     public function cek() {
       if ($this->model('login_model')->cek($_POST) == true) {
         //CEK SESSION
-        $_SESSION["login"] = true;
-
+        $_SESSION["login"] = [
+          'status' => true,
+          'USERNAME' => $this->model('login_model')->username($_POST),
+          'KODEF' => $this->model('login_model')->kodef($_POST),
+          'Initial' => $this->model('login_model')->initial($_POST)
+        ];
         header('Location: ' . BASEURL . '/home');
         exit;
       } else {

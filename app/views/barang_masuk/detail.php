@@ -10,22 +10,23 @@
     <title>Berita Acara</title>
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <header>
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-evenly">
               <img src="<?php echo BASEURL; ?>/BMC/bmc.jpg" alt="" width="100" height="100">
-
               <h2 class="text-center">BERITA ACARA<br>PENERIMAAN BARANG</h2>
+              <p></p>
           </div>
       </header>
       <hr>
 
 
         <div class="row">
-          <div class="col">
+          <div class="col-10">
             <?php foreach ( $data['detail'] as $bm ) : ?>
             <p>Ref. PO BMC. No                    : <?php echo $bm['NO_PO']; ?></p>
             <p>Pada hari ini tanggal              : <?php echo $bm['TGL_BCRA']; ?></p>
+            <br>
             <p>Nama Supplier                      : <?php echo $bm['NAMA_SP']; ?></p>
             <p>Delivery Order No.                 : <?php echo $bm['NO_SRJLN']; break; ?></p>
             <p>Jatuh Tempo Pembayaran             : <?php  ?></p>
@@ -55,12 +56,14 @@
               </thead>
 
               <tbody>
+                <?php $total = 0; ?>
                 <?php $i=1; foreach( $data['detail'] as $bm) : ?>
                 <tr>
-                  <td><?php echo $i++ ?></td>
-                  <td><?php echo $bm['NAMA_BRG']; ?></td>
-                  <td><?php echo $bm['QTY_TERIMA']; ?></td>
-                  <td><?php echo $bm['Satuan']; ?></td>
+                  <td style="width:5%"><?php echo $i++ ?></td>
+                  <td style="width:40%"><?php echo $bm['NAMA_BRG']; ?></td>
+                  <td style="width:20%"><?php echo $bm['QTY_TERIMA']; ?></td>
+                  <td style="width:15%"><?php echo $bm['Satuan']; ?></td>
+                  <?php $total += $bm['QTY_TERIMA']; ?>
                 </tr>
               <?php endforeach; ?>
               </tbody>
@@ -68,7 +71,7 @@
               <tfoot>
                 <tr>
                   <td colspan="2">Total</td>
-                  <td><?php  ?></td>
+                  <td><?php print $total; ?></td>
                   <td><?php  ?></td>
                 </tr>
               </tfoot>
