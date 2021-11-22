@@ -12,34 +12,18 @@ $(document).ready(function() {
 
 $(function() {
 
-//PURCHASE ORDER
+//SURAT REQUEST
 
-if (window.location.pathname=='/Necs/public/purchased_order') {
+if (window.location.pathname=='/Necs/public/surat_request') {
 
-  //-----SET PURCHASED ORDER------//
-  $('.tblPo').ready(function(){
-    var np = document.getElementById('Np').value;
-    var tglPo = $(this).find('#tglPo').text();
-    var pmsn = $(this).find('#pmsn').text();
-    var nmSp = $(this).find('#nmSp').text();
-    var kdSpPo = $(this).find('#kdSpPo').text();
-
-
-    $('#noPo2').val(np);
-    $('#tanggal_po2').val(tglPo);
-    $('#pemesan2').val(pmsn);
-    $('#sp2').val(kdSpPo);
-
-  });
-
-  //-----SEARCH PURCHASED ORDER-----//
+  //-----SEARCH SURAT REQUEST-----//
   $('#srchPo').click(function() {
     var srchPo = document.getElementById('srchPotxt').value;
     console.log(srchPo);
 
     $.ajax({
       type: 'post',
-      url: 'http://localhost/Necs/public/purchased_order/cari',
+      url: 'http://localhost/Necs/public/Surat_request/cari',
       data: {srchPo : srchPo},
       dataType: 'json',
       success: function(data) {
@@ -60,15 +44,14 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
 
   //-----SELECT2() OPTION BARANG------//
   $(document).ready(function () {
-    $('#inptBrgPo').select2();
+    $('#inptBrgSr').select2();
   });
 
-  //-----GENERATE FIELD INPUT BARANG DI PO-----//
-  $('.inptBrgPo').on('change', function() {
-    var value = document.getElementById('inptBrgPo').value;
-    var nama = $(".inptBrgPo option:selected").text();
-    // console.log(value);
-    // console.log(nama);
+  //-----GENERATE FIELD INPUT BARANG DI SR-----//
+  $('.inptBrgSr').on('change', function() {
+    var value = document.getElementById('inptBrgSr').value;
+    var nama = $(".inptBrgSr option:selected").text();
+
 
     var new_row = parseInt($('#num_row').val()) + 1;
     console.log(new_row);
@@ -86,7 +69,7 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
      $('#num_row').val(new_row);
   });
 
-  //-----MENGURANGI FIELD BARANG DI PO-----//
+  //-----MENGURANGI FIELD BARANG DI SR-----//
   $('.remove').click(function() {
     var old_row = $('#num_row').val();
     console.log(old_row);
@@ -104,15 +87,15 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
   });
 
 
-  //----mengupdate atau edit NOMOR PO-------//
-  $('.editPo').on('click', function() {
+  //----mengupdate atau edit NOMOR SR-------//
+  $('.editSr').on('click', function() {
 
-      $('#labelPo').html('Edit Nomor Purchased Order');
+      $('#labelPo').html('Edit Nomor Surat Request');
       $('.modal-footer button[type=submit]').html('Ubah Data');
-      $('.modal-body form').attr('action', 'http://localhost/Necs/public/purchased_order/update');
+      $('.modal-body form').attr('action', 'http://localhost/Necs/public/Surat_request/update');
         });
 
-    //-------HAPUS DETAIL PO--------//
+    //-------HAPUS DETAIL SR--------//
     $('.hps').click(function(){
       const id = $(this).data('id');
       const kd = $(this).data('kd');
@@ -120,12 +103,12 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
       console.log(kd);
 
       $.ajax({
-        url: 'http://localhost/Necs/public/purchased_order/hapusPo',
+        url: 'http://localhost/Necs/public/Surat_request/hapusSr',
         data: {id : id, kd : kd},
         type: 'post',
         success: function(data) {
           alert("Berhasil Menghapus Data");
-          window.location.replace('http://localhost/Necs/public/purchased_order');
+          window.location.replace('http://localhost/Necs/public/surat_request');
         },
         error: function(xhr, status, error) {
           var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -134,18 +117,18 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
       });
     });
 
-    //-------HAPUS NOMOR PO-------//
-    $('#hpsPo').click(function(){
+    //-------HAPUS NOMOR SR-------//
+    $('#hpsSr').click(function(){
       const id = $(this).data('id');
       console.log(id);
 
       $.ajax({
-        url: 'http://localhost/Necs/public/purchased_order/hapus',
+        url: 'http://localhost/Necs/public/Surat_request/hapus',
         data: {id : id},
         type: 'post',
         success: function() {
           alert("DATA BERHASIL DIHAPUS");
-          window.location.replace("http://localhost/Necs/public/purchased_order");
+          window.location.replace("http://localhost/Necs/public/surat_request");
         },
         error: function(xhr, status, error) {
           var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -154,30 +137,50 @@ if (window.location.pathname=='/Necs/public/purchased_order') {
       });
     });
 
-    //-------EDIT DETAIL PO-------//
-    $('.editDtlPo').click(function(){
+    //-------EDIT DETAIL SR-------//
+    $('.editDtlSr').click(function(){
       $('#labelDetailPo').html('Edit Purchased Order');
       $('.modal-footer button[type=submit]').html('Ubah Data');
-      $('.modal-body form').attr('action', 'http://localhost/Necs/public/purchased_order/ubah');
+      $('.modal-body form').attr('action', 'http://localhost/Necs/public/Surat_request/ubah');
 
       const id = $(this).data('id');
       const kd = $(this).data('kd');
       console.log(id);
       console.log(kd);
       $.ajax({
-        url: 'http://localhost/Necs/public/purchased_order/getUbahDtl',
+        url: 'http://localhost/Necs/public/Surat_request/getUbahDtl',
         data: {id : id, kd : kd},
         method: 'post',
         dataType: 'json',
         success: function(data) {
           console.log(data);
-          $('#detailNoPo').val(data.NO_PO);
+          $('#detailNoSr').val(data.NO_SR);
           $('#detailBarang').val(data.KODE_BRG);
           $('#brg').val(data.NAMA_BRG);
-          $('#qty').val(data.QTY_ORDER);
-          $('#harga').val(data.HARGA_PO);
+          $('#qty').val(data.QTY_MINTA);
+          $('#harga').val(data.HARGA_SR);
         }
       });
+    });
+
+    //-----SET SURAT REQUEST------//
+    $('.tblSr').ready(function(){
+      try {
+        const sr = document.getElementById('Sr').value;
+        $('#No_sr').val(sr);
+        $('#noSr2').val(sr);
+      } catch (e) {
+        console.log('data kosong');
+      }
+      const tglSr = $(this).find('#tglSr').text();
+      const pmnt = $(this).find('#pmnt').text();
+      const nmSp = $(this).find('#nmSp').text();
+      const kdSpSr = $(this).find('#kdSpSr').text();
+
+      $('#tanggal_po2').val(tglSr);
+      $('#peminta2').val(pmnt);
+      $('#sp2').val(kdSpSr);
+
     });
 }
 

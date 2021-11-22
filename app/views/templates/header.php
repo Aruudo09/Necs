@@ -41,7 +41,7 @@
                         Pengadaan Barang
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_order">Surat Request</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/surat_request">Surat Request</a></li>
                         <li><a class="dropdown-item" href="#">Purchase Requisition</a></li>
                         <li><a class="dropdown-item" href="#">Purchase Order</a></li>
                       </ul>

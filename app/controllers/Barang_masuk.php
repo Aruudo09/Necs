@@ -6,7 +6,7 @@
           $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk();
           $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
           $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra();
-          $data['po1'] = $this->model('Purchased_order_model')->getAllDataPo();
+          // $data['po1'] = $this->model('Purchased_orde_model')->getAllDataPo();
           $data['sp'] = $this->model('Barang_masuk_model')->getOptionSpl();
           // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
           $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
