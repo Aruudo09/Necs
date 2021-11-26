@@ -121,7 +121,7 @@ class Surat_request_model {
       } else {
         $query = "INSERT INTO surat_request (NO_SR, TGL_SR, PEMINTA, KODEF, KODE_SP, KODE_BRG, QTY_MINTA, HARGA_SR, TOT_HARGA, QTY_TERIMA, status)
                     VALUES
-                    (:noSr, :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", :harga" .$i. ", NULL, NULL, DEFAULT)";
+                    (:noSr, :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", :harga" .$i. ", NULL, DEFAULT, DEFAULT)";
         // var_dump($query);
         // echo $query;
         $this->db->query($query);

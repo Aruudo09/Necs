@@ -2,7 +2,10 @@
 
 //----DATA TABLES-----//
 $(document).ready(function() {
-  $('#tbBrg').DataTable();
+  $('#tbBrg').DataTable({
+    // "processing": true,
+    // "serverSide": true
+  });
   $('#tbSp').DataTable();
   $('#tbDtlBa').DataTable();
   $('#tbPo').DataTable();
@@ -182,6 +185,231 @@ if (window.location.pathname=='/Necs/public/surat_request') {
       $('#sp2').val(kdSpSr);
 
     });
+}
+
+//PURCHASED_REQUISITION
+
+if (window.location.pathname=='/Necs/public/purchased_requisition') {
+
+  $(document).ready(function(){
+    $('#noSr').select2();
+  });
+
+  //----------GENERATE NOMOR PR DAN SUPPLIER-------------//
+  $('#noSr').change(function(){
+    var sr = document.getElementById('noSr').value;
+    var init = document.getElementById('hdnPr').value;
+
+    if ( sr.substring(0,7).endsWith('/')) {
+      $('#noPr').val(sr.substring(0,6) + '-' + init + sr.substring(6));
+    } else {
+      $('#noPr').val(sr.substring(0,7) + '-' + init + sr.substring(7));
+    }
+
+    $.ajax({
+      type: 'post',
+      url: 'http://localhost/Necs/public/Purchased_requisition/supplier',
+      data: {id : sr},
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        $('#sp').val(data.NAMA_SP);
+        $('#hdnSp').val(data.KODE_SP);
+      }
+    });
+  });
+
+  //----------DATA TABLE TABLE SR------------//
+  $('#tabSr').DataTable({
+    "processing": true,
+    "serverSide": true
+  });
+
+  //-----------GENERATE ROW DETAIL SR-------------//
+  $('.btn').click(function(){
+    const id = $(this).data('id');
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_requisition/dtlSr',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+          $('#tbSr').text(data[0].NO_SR);
+          $('#tbPmnt').text(data[0].PEMINTA);
+          $('#tbDept').text(data[0].NMDEF);
+          $('#tbSpr').text(data[0].NAMA_SP);
+          $('#numRow').remove();
+
+        for (var i = 0; i < data.length; i++) {
+          var row = "<tbody><tr id='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
+          var row1 = "<td>"+ data[i].QTY_MINTA +"</td>";
+          var row2 = "<td>"+ data[i].Satuan +"</td>";
+          var row3 = "<td>"+ data[i].HARGA_SR +"</td>";
+          var row4 = "<td>"+ data[i].TOT_HARGA +"</td></tr></tbody></table>";
+
+          $('#myTabs').append(row + row1 + row2 + row3 + row4);
+        }
+      }
+    });
+  });
+
+}
+
+if (window.location.pathname=='/Necs/public/purchased_requisition/detail') {
+  //----------HAPUS PURCHASED REQUISITION---------//
+  $('.hps').click(function(){
+    if (confirm("Apa anda yakin?")) {
+      const id = $(this).data('id');
+
+      $.ajax({
+        url: 'http://localhost/Necs/public/Purchased_requisition/hapus',
+        type: 'post',
+        data: {id : id},
+        success: function(data) {
+          alert("Data Berhasil Dihapus");
+          window.location.replace('http://localhost/Necs/public/purchased_requisition/detail');
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = xhr.status + ': ' + xhr.statusText
+          alert("DATA GAGAL DIHAPUS " + errorMessage);
+        }
+      });
+    }
+  });
+
+  //---------SET INPUT MODAL EDIT PR-------------//
+  $('.edit').click(function(){
+    const id = $(this).data('id');
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_requisition/setPr',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        $('#nmPr').val(data.NO_PR);
+        $('#usr').val(data.USER);
+        $('#tgl_pr').val(data.TGL_PR);
+
+      }
+    });
+  });
+}
+
+//PURCHASED_ORDER
+
+if (window.location.pathname == '/Necs/public/purchased_order') {
+
+  $('#noPr').change(function(){
+    var id = document.getElementById('noPr').value;
+    $('#numRow').remove();
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_order/getSp',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        $('#sp').val(data.NAMA_SP);
+        $('#hdnSp').val(data.KODE_SP);
+      }
+    });
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_order/getBrg',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+          var row = "<tbody><tr id='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
+          var row0 = "<td style='display:none'><input type='text' name='kd[]' value='"+ data[i].KODE_BRG +"'></td>";
+          var row1 = "<td><input type='number' style='width:40%' name='qty[]' value='"+ data[i].QTY_MINTA +"'></td>";
+          var row2 = "<td>"+ data[i].Satuan +"</td>";
+          var row3 = "<td><input type='number' style='width:60%' name='hrg[]' value='"+ data[i].HARGA_SR +"' readonly></td>";
+          var row4 = "<td>"+ data[i].TOT_HARGA +"</td></tr></tbody></table>";
+
+          $('#tbPr').append(row + row0 + row1 + row2 + row3 + row4);
+        }
+      }
+    });
+  });
+
+}
+
+if ( window.location.pathname == '/Necs/public/purchased_order/detail') {
+
+  //-----------MODAL VIEW DETAIL PO-------------//
+  $('.dtl').click(function(){
+    const i = $(this).data('id');
+    var id = decodeURIComponent(i);
+
+    $('#Po').text(id);
+    $('#edt').prop('disabled', true);
+    $('.numRow').remove();
+
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_order/getPo',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        $('#tbPmsn').text(data.PEMESAN);
+        $('#tbDept').text(data.NMDEF);
+        $('#tbSpr').text(data.NAMA_SP);
+        $('#tbTgl').text(data.TGL_PO);
+      }
+    });
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_order/getDtl',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+
+        for (var i = 0; i < data.length; i++) {
+          var row = "<tbody><tr class='numRow'><td>" +data[i].NAMA_BRG+ "</td>";
+          var row0 = "<td><input type='number' name='qty[]' class='qty' style='width:70%' value='" +data[i].QTY_ORDER+ "'></td>";
+          var row1 = "<td>" +data[i].QTY_TERIMA+ "</td>";
+          var row2 = "<td>" +data[i].Satuan+ "</td>";
+          var row3 = "<td>" +data[i].HARGA_PO+ "</td>";
+          var row4 = "<td>" +data[i].TOT_HARGA+ "</td></tr></tbody>";
+
+          $('#myTabs').append(row + row0 + row1 + row2 + row3 +row4);
+        }
+        $(".qty").on('click keypress', function(){
+          console.log('Hello world');
+          $('#edt').prop('disabled', false);
+        });
+      }
+    });
+
+  });
+
+  //-----------HAPUS PURCHASED ORDER------------//
+  $('.hps').click(function(){
+    const i = $(this).data('id');
+    var id = decodeURIComponent(i);
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Purchased_order/hapus',
+      type: 'post',
+      data: {id : id},
+      success: function(data) {
+        alert("Purchased Order Berhasil Dihapus !");
+        window.location.replace('http://localhost/Necs/public/purchased_order/detail');
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("DATA GAGAL DIHAPUS " + errorMessage);
+      }
+    });
+  });
 }
 
 //BARANG

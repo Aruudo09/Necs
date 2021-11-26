@@ -13,7 +13,8 @@
           'status' => true,
           'USERNAME' => $this->model('login_model')->username($_POST),
           'KODEF' => $this->model('login_model')->kodef($_POST),
-          'Initial' => $this->model('login_model')->initial($_POST)
+          'Initial' => $this->model('login_model')->initial($_POST),
+          'NMDEF' => $this->model('login_model')->nmdef($_POST)
         ];
         header('Location: ' . BASEURL . '/home');
         exit;

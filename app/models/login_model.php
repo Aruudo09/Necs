@@ -60,6 +60,19 @@
       }
     }
 
+    public function nmdef($data) {
+      $query = "SELECT b.NMDEF, a.PASSWORD FROM user a INNER JOIN tarif b ON a.KODEF = b.KODEF WHERE USERNAME = :usrName";
+      $this->db->query($query);
+      $this->db->bind('usrName', $data['usrName']);
+      $dt = $this->db->single();
+
+      if ($this->db->rowCount() == 1) {
+        if (password_verify($data['password'], $dt['PASSWORD'])) {
+          return $dt['NMDEF'];
+        }
+      }
+    }
+
   }
 
  ?>

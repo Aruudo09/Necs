@@ -11,6 +11,7 @@ class Controller {
           $_SESSION['login']['USERNAME'];
           $_SESSION['login']['KODEF'];
           $_SESSION['login']['Initial'];
+          $_SESSION['login']['NMDEF'];
         }
       }
 
