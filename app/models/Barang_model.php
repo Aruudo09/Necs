@@ -7,6 +7,7 @@ class Barang_model {
 
   public function __construct() {
     $this->db = new Database;
+    $this->dbh = new Database;
   }
 
   public function statsBrg() {
@@ -14,9 +15,33 @@ class Barang_model {
     return $this->db->resultSet();
   }
 
-  public function getAllBarang() {
-    $this->db->query('SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY NAMA_BRG ASC');
-    return $this->db->resultSet();
+  public function getAllBarang($page) {
+
+    $this->dbh->query('SELECT * FROM barang');
+    $this->dbh->execute();
+
+    $banyakData = $this->dbh->rowCount();
+    $banyakDataPerHal = 5;
+    $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+    if ( $page >= 1 ) {
+      $halamanAktif = $page;
+    } else {
+      $halamanAktif = 1;
+    }
+
+    $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
+    $this->db->query($query);
+
+    $dt = array(
+      "data" => $this->db->resultSet(),
+      "halamanAktif" => $halamanAktif,
+      "banyakHal" => $banyakHal
+    );
+
+    return $dt;
   }
 
   public function getOptionSpl() {
@@ -91,19 +116,38 @@ class Barang_model {
     return $this->db->rowCount();
   }
 
-  public function cariData() {
-    $keyword = $_POST['keyword'];
-    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :keyword";
-    $this->db->query($query);
-    $this->db->bind('keyword', "%$keyword%");
-    return $this->db->resultSet();
-  }
+  public function cariData($page) {
+    $key = $_SESSION['cari'];
 
-  // public function getMahasiswaById($No_po) {
-  //     $this->db->query('SELECT * FROM ' . $this->tableDetail . ' WHERE No_po=:No_po');
-  //     $this->db->bind('No_po', $No_po);
-  //     return $this->db->resultSet();
-  // }
+    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key');
+    $this->dbh->bind('key', "%$key%");
+    $this->dbh->execute();
+
+    $banyakData = $this->dbh->rowCount();
+    $banyakDataPerHal = 5;
+    $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+    if ( $page >= 1 ) {
+      $halamanAktif = $page;
+    } else {
+      $halamanAktif = 1;
+    }
+
+    $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+    $keyword = $_POST['keyword'];
+    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :key LIMIT $dataAwal, $banyakDataPerHal";
+    $this->db->query($query);
+    $this->db->bind('key', "%$key%");
+
+    $dt = array(
+      "data" => $this->db->resultSet(),
+      "halamanAktif" => $halamanAktif,
+      "banyakHal" => $banyakHal
+    );
+
+    return $dt;
+  }
 
   }
 

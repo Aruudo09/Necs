@@ -31,8 +31,8 @@
                         Barang
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang">Data Barang</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_masuk">Barang Masuk</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang/1">Data Barang</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_masuk/1">Barang Masuk</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_keluar">Barang Keluar</a></li>
                       </ul>
                     </li>
@@ -41,9 +41,9 @@
                         Pengadaan Barang
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/surat_request">Surat Request</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_requisition">Purchase Requisition</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_order">Purchase Order</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/surat_request/1">Surat Request</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_requisition/1">Purchase Requisition</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_order/1">Purchase Order</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">

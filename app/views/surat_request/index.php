@@ -1,15 +1,14 @@
       <div class="container-fluid px-4">
 
           <!--FLASH MESSAGE-->
-            <div class="row my-2">
+            <div class="row mx-auto my-2">
                <div class="col-lg-6">
                   <?php FLASHER::flash(); ?>
                </div>
             </div>
 
         <!--TOMBOL TAMBAH NOMOR PO-->
-        <div class="row">
-          <div class="col-md-6">
+        <div class="row mx-auto">
           <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
             <h3>FORM INPUT SR</h3>
               <hr>
@@ -70,118 +69,157 @@
                 </form>
               </div>
             </div>
-        <!---END TOMBOL TAMBAH NOMOR PO-->
 
-            <div class="col-md-6">
+
+            <div class="row mx-auto">
               <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
               <div class="overflow-auto">
-                <h3>SURAT REQUEST</h3>
-                  <div class="d-flex mt-2 mb-2">
-                      <input type="text" name="srchSrtxt" placeholder="Nomor PO...." id="srchSrtxt" class="form-control" style="width:50%">
-                      <button type="button" name="srchSr" id="srchSr" class="btn btn-success" onclick="" style="width:15%"><i class="fas fa-search"></i></button>
-                  </div>
-                  <table class="table table-striped tblSr">
-                    <?php foreach( $data['tmp'] as $mhs ) : ?>
-                          <tr>
-                            <th class="col">No. SR</th>
-                            <td><input type="text" style="width:55%" id="Sr" class="form-control" name="" value="<?php print $mhs['NO_SR']; ?>" readonly></td>
-                          </tr>
-                          <tr>
-                            <th class="col">Tanggal SR</th>
-                            <td id="tglSr"><?php print $mhs['TGL_SR'];?></td>
-                          </tr>
-                          <tr>
-                            <th class="col">Nama</th>
-                            <td id="pmnt"><?php print $mhs['PEMINTA']; ?></td>
-                          </tr>
-                          <tr>
-                            <th class="col">Supplier</th>
-                            <td id="nmSp"><?php print $mhs['NAMA_SP']; ?></td>
-                          </tr>
-                          <tr>
-                            <th style="display:none">Kode Supplier</th>
-                            <td id="kdSpSr" style="display:none"><?php print $mhs['KODE_SP']; ?></td>
-                          </tr>
-                            <th class="col">Fitur</th>
-                            <!--TOMBOL CETAK PO-->
-                                      <td>
-                                        <a href="<?php echo BASEURL; ?>/surat_request/detail/<?php echo $mhs['NO_SR'] ?>" class="btn btn-success newDtlPo" data-id="<?php echo $mhs['NO_SR']; ?>"><i class="fa fa-print"></i></a>
-                            <!--TOMBOL UPDATE NOMOR PO-->
-                                        <a href="<?php echo BASEURL; ?>/surat_request/Update/<?php echo $mhs['NO_SR']; ?>" class="btn btn-primary editSr" data-bs-toggle="modal" data-bs-target="#modalPo"
-                                      data-id="<?php echo $mhs['NO_SR']; ?>"><i class="fa fa-pen"></i></a>
-                            <!--TOMBOL HAPUS NOMOR PO-->
-                                        <button type="button" class="btn btn-danger hpsSr" id="hpsSr" name="button" data-id="<?php echo $mhs['NO_SR']; ?>" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></button>
-                                    </td>
-                          </tr>
-                        <?php endforeach; ?>
+                <h3>LIST SURAT REQUEST</h3>
+                  <form class="" action="<?php echo BASEURL; ?>/surat_request/cari/1" method="post">
+                    <div class="d-flex mt-2 mb-2">
+                        <input type="text" name="keyword" placeholder="Nomor PO...." class="form-control" style="width:30%">
+                        <button type="submit" name="srchSr" class="btn btn-success" onclick="" style="width:6%"><i class="fas fa-search"></i></button>
+                    </div>
+                  </form>
+                  <table class="table table-striped text-center" id="tbSr">
+                    <thead class="table-warning">
+                      <tr>
+                        <th class="col">Nomor SR</th>
+                        <th class="col">Peminta</th>
+                        <th class="col">Departement</th>
+                        <th class="col">Supplier</th>
+                        <th class="col">Tanggal SR</th>
+                        <th class="col">Fitur</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach( $data['tmp']['data'] as $tmp ) : ?>
+                        <tr>
+                          <td><?php print $tmp['NO_SR'] ?></td>
+                          <td><?php print $tmp['PEMINTA'] ?></td>
+                          <td><?php print $tmp['NMDEF'] ?></td>
+                          <td><?php print $tmp['NAMA_SP'] ?></td>
+                          <td><?php print $tmp['TGL_SR'] ?></td>
+                          <td class="d-flex justify-content-evenly">
+                            <!--BUTTON DETAIL-->
+                              <button type="button" class="btn btn-success detail" data-bs-toggle="modal" data-bs-target="#modalDtlSr" data-id="<?php echo $tmp['NO_SR'] ?>" name="button"><i class="fa fa-file"></i></button>
+                            <!--BUTTON EDIT-->
+                              <button type="button" class="btn btn-primary edtSr" data-id="<?php echo $tmp['NO_SR'] ?>" data-bs-toggle="modal" data-bs-target="#modalEdtSr" name="button"><i class="fa fa-pen"></i></button>
+                            <!--BUTTON HAPUS-->
+                              <a href="<?php echo BASEURL; ?>/Surat_request/hapus/<?php echo str_replace('/', '-f' ,($tmp['NO_SR'])) ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
                   </table>
+                  <nav>
+                    <ul class="pagination justify-content-center">
+                      <!--TOMBOL PREV-->
+                        <?php if ( $data['tmp']['halamanAktif'] <= 1 ) { ?>
+                          <li class="page-item disabled">
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
+                          </li>
+                        <?php } else { ?>
+                          <li class="page-item">
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
+                          </li>
+                        <?php } ?>
+                      <!--TOMBOL PAGE-->
+                      <?php
+                        $count = 4;
+                        $startPage = max(1, $data['tmp']['banyakHal'] - $count);
+                        $endPage = min( $data['tmp']['banyakHal'], $data['tmp']['banyakHal'] + $count);
+                       ?>
+                        <?php for ($i=$startPage; $i <= $endPage; $i++) { ?>
+                          <?php if ( $data['tmp']['halamanAktif'] == $i ) { ?>
+                            <li class="page-item active">
+                              <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i ?></a>
+                            </li>
+                          <?php } else { ?>
+                            <li class="page-item">
+                              <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i ?></a>
+                            </li>
+                          <?php } ?>
+                        <?php } ?>
+                      <!--TOMBOL NEXT-->
+                        <?php if ( $data['tmp']['halamanAktif'] == $data['tmp']['banyakHal'] ) { ?>
+                          <li class="page-item disabled">
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                          </li>
+                        <?php } else { ?>
+                          <li class="page-item">
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                          </li>
+                        <?php } ?>
+                    </ul>
+                  </nav>
               </div>
           </div>
         </div>
-      </div>
-
-        <!--TABLE VIEW PURCHASED ORDER-->
-        <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
-          <div class="overflow-auto">
-            <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbPo">
-                <h3>LIST SURAT REQUEST</h3>
-                  <thead class="table-warning">
-                    <tr>
-                      <th scope="col">No. SR</th>
-                      <th scope="col">Tanggal SR</th>
-                      <th scope="col">Supplier</th>
-                      <th scope="col">Barang</th>
-                      <th scope="col">Jenis</th>
-                      <th scope="col">Stock</th>
-                      <th scope="col">Minta</th>
-                      <th scope="col">Terima</th>
-                      <th scope="col">Satuan</th>
-                      <th scope="col">Harga</th>
-                      <th scope="col">Total</th>
-                      <th scope="col">Fitur</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                <?php foreach( $data['po'] as $mhs ) : ?>
-                  <tr>
-                  <td id="npDtl"><?php print $mhs['NO_SR']; ?></td>
-                  <td><?php print $mhs['TGL_SR'];?></td>
-                  <td><?php print $mhs['NAMA_SP']; ?></td>
-                  <td><?php print $mhs['NAMA_BRG']; ?></td>
-                  <td><?php print $mhs['Jenis_brg']; ?></td>
-                  <td><?php print $mhs['Stock_brg']; ?></td>
-                  <td><?php print $mhs['QTY_MINTA']; ?></td>
-                  <td><?php print $mhs['QTY_TERIMA']; ?></td>
-                  <td><?php print $mhs['Satuan']; ?></td>
-                  <td><?php print $mhs['HARGA_SR']; ?></td>
-                  <td><?php print $mhs['TOT_HARGA']; ?></td>
-                  <td style="width:10%">
-                    <div class="d-flex justify-content-evenly">
-                      <!--TOMBOL UPDATE-->
-                        <div class="col">
-                          <a href="<?php echo BASEURL; ?>/surat_request/update/<?php echo $mhs['NO_SR']; ?>"
-                        class="btn btn-primary editDtlSr" data-bs-toggle="modal" data-bs-target="#detailModal"
-                        data-id="<?php echo $mhs['NO_SR']; ?>" data-kd="<?php echo $mhs['KODE_BRG']; ?>"><i class="fa fa-pen"></i></a>
-                        </div>
-                      <!--TOMBOL HAPUS-->
-                        <div class="col">
-                          <a class="btn btn-danger hps" onclick="return confirm('apa anda yakin?');" data-id="<?php echo $mhs['NO_SR']; ?>" data-kd="<?php echo $mhs['KODE_BRG']; ?>"><i class="fa fa-trash"></i></a>
-                        </div>
-                    </div>
-                </td>
-                  </tr>
-                  <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-      </div>
 
           <!--END TABLE VIEW PURCHASED ORDER-->
 
+          <!--MODAL VIEW DETAIL SURAT REQUEST-->
+              <div class="modal fade" id="modalDtlSr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">View Detail Surat Request</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                     <form class="" action="<?php echo BASEURL; ?>/Surat_request/ubah" method="post">
+                      <table class="table table-borderless">
+                        <tr>
+                          <th class="table-warning col-2">Nomor SR</th>
+                          <td class="table-info"><input type="text" class="form-control" id="Sr" name="Sr" value="" readonly></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning col-2">Peminta</th>
+                          <td class="table-info"><input type="text" class="form-control" id="tbPmnt" name="pmnt" value="" readonly></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning col-2">Departement</th>
+                          <td class="table-info"><input type="text" class="form-control" id="tbDept" name="Dept" value="" readonly></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning col-2">Supplier</th>
+                          <td class="table-info"><input type="text" class="form-control" id="tbSpr" name="Sp" value="" readonly></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning" col-2>Tanggal SR</th>
+                          <td class="table-info"><input type="text" class="form-control" id="tbTgl" name="tgl" value="" readonly></td>
+                        </tr>
+                      </table>
+                        <h4>DAFTAR BARANG</h4>
+                        <div class="overflow-auto">
+                            <table class="table table-bordered text-center" id="myTabs">
+                              <thead class="table-info">
+                                <tr>
+                                  <th class="col">Nama Barang</th>
+                                  <th class="col">Quantity</th>
+                                  <th class="col">Satuan</th>
+                                  <th class="col">Harga</th>
+                                  <th class="col">Total</th>
+                                  <th class="col">Fitur</th>
+                                </tr>
+                              </thead>
+                            </table>
+                          </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"> <b>Edit</b></i></button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+          <!--END MODAL VIEW DETAIL SURAT REQUEST-->
 
-          <!---MODAL PURCHASED ORDER-->
-              <div class="modal fade" id="modalPo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+          <!---MODAL EDIT SURAT REQUEST-->
+              <div class="modal fade" id="modalEdtSr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -189,9 +227,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form action="<?php echo BASEURL; ?>/Surat_request/tambah" method="post">
-                          <!--HIDDEN INPUT NOMOR PO-->
-                              <input type="text" name="No_sr" id="No_sr" value="">
+                      <form action="<?php echo BASEURL; ?>/Surat_request/Update" method="post">
                           <!--INPUT NOMOR PO-->
                               <div class="mb-3">
                                 <label for="noSr2">No SR :</label>
@@ -200,7 +236,7 @@
                           <!--INPUT PEMESAN-->
                               <div class="mb-3">
                                 <label for="peminta2">Pemesan :</label>
-                                <input type="text" name="peminta2" id="peminta2" value="" class="form-control" required>
+                                <input type="text" name="peminta2" id="peminta2" value="" class="form-control" readonly>
                               </div>
                           <!--TANGGAL INPUT-->
                               <div class="mb-3">
@@ -227,41 +263,5 @@
                   </div>
                 </div>
               </div>
-
-              <!---MODAL DETAIL PURCHASED ORDER-->
-                  <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="labelDetailPo" class="formLabel" >Input Barang Purchased Order</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form action="<?php echo BASEURL; ?>/purchased_order/tambahDetail" method="post">
-                              <!--HIDDEN INPUT-->
-                                  <input type="text" name="detailNoSr" id="detailNoSr" value="">
-                                  <input type="text" name="detailBarang" id="detailBarang" value="">
-                              <!--PEMESAN INPUT-->
-                                  <div class="mb-3">
-                                      <label for="brg" class="form-label">Barang :</label>
-                                      <input type="text" id="brg" class="form-control" name="brg" value="" readonly>
-                                  </div>
-                                  <div class="mb-3">
-                                      <label for="qty" class="form-label">Quantity Order :</label>
-                                      <input type="number" class="form-control" id="qty" name="qty" required>
-                                  </div>
-                                  <div class="mb-3">
-                                    <label for="harga">Harga :</label>
-                                    <input type="number" name="harga" id="harga" value="" class="form-control" required>
-                                  </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
           </div>

@@ -1,9 +1,9 @@
 <?php
     class Barang extends Controller {
 
-      public function index() {
+      public function index($page) {
         $data['judul'] = 'Daftar Barang';
-        $data['barang'] = $this->model('Barang_model')->getAllBarang();
+        $data['barang'] = $this->model('Barang_model')->getAllBarang($page);
         $data['optionSpl'] = $this->model('Barang_model')->getOptionSpl();
         $data['optBrg'] = $this->model('Barang_model')->getOptBrg();
         $data['ckBrg'] = $this->model('Barang_model')->statsBrg();
@@ -60,9 +60,14 @@
         }
       }
 
-      public function cari() {
-        $data['judul'] = 'Daftar Mahasiswa';
-        $data['barang'] = $this->model('Barang_model')->cariData();
+      public function cari($page) {
+        if ( isset($_POST['srchbtn'])) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } else {
+          $_SESSION['cari'];
+        }
+
+        $data['barang'] = $this->model('Barang_model')->cariData($page);
         $this->view('templates/header', $data);
         $this->view('barang/index', $data);
         $this->view('templates/footer');

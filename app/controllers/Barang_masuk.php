@@ -2,11 +2,10 @@
 
   class Barang_masuk extends Controller {
 
-      public function index() {
-          $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk();
+      public function index($page) {
+          $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk($page);
           $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
-          $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra();
-          // $data['po1'] = $this->model('Purchased_orde_model')->getAllDataPo();
+          $data['po1'] = $this->model('Barang_masuk_model')->getAllDataPo();
           $data['sp'] = $this->model('Barang_masuk_model')->getOptionSpl();
           // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
           $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
@@ -17,20 +16,26 @@
           $this->view('templates/footer');
       }
 
-      public function detail($NO_BCRA, $bcra) {
+      public function report($NO_BCRA, $bcra) {
         $data['detail'] = $this->model('Barang_masuk_model')->getDataByBcra($NO_BCRA, $bcra);
 
+        $this->view('barang_masuk/report', $data);
+      }
+
+      public function detail() {
+        $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra();
+
+        $this->view('templates/header');
         $this->view('barang_masuk/detail', $data);
+        $this->view('templates/footer');
       }
 
 
       public function tambah() {
+        var_dump($_POST);
       if( $this->model('Barang_masuk_model')->cekOrder($_POST) == true) {
-        echo "<script type='text/javascript'>alert('PAS MANTAB');</script>";
-        if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0) {
-            $this->model('Barang_masuk_model')->tambahBrgMsk($_POST);
+        if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0 && $this->model('Barang_masuk_model')->tambahBrgMsk($_POST) == true && $this->model('Barang_masuk_model')->updateorder($_POST) == true ) {
             $this->model('Barang_masuk_model')->updateCounter();
-            $this->model('Barang_masuk_model')->updateorder($_POST);
             Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;
@@ -42,24 +47,26 @@
       }
       else {
         echo "<script type='text/javascript'>alert('Kuantitas Melibihi Order!');</script>";
-      }
+        // header('Location: ' . BASEURL . '/barang_masuk');
+        // exit;
+        }
       }
 
       public function hapus() {
-        $this->model('Barang_masuk_model')->hpsBcra($_POST);
-        $this->model('Barang_masuk_model')->ubahStat($_POST);
+        if ($this->model('Barang_masuk_model')->hpsBcra($_POST) > 0 && $this->model('Barang_masuk_model')->ubahStat($_POST) > 0 ) {
+          Flasher::setFlash('Berita Acara', 'Berhasil', 'diubah', 'success');
+          header('Location: ' . BASEURL . '/barang_masuk');
+          exit;
+        } else {
+          Flasher::setFlash('Berita Acara', 'Gagal', 'diubah', 'danger');
+          header('Location: ' . BASEURL . '/barang_masuk');
+          exit;
+        }
+
       }
 
       public function hapusDtl() {
-        if ( $this->model('Barang_masuk_model')->hpsDtlBcra($_POST) > 0) {
-            Flasher::setFlash('Berita Acara', 'berhasil', 'dihapus', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        } else {
-            Flasher::setFlash('Berita Acara', 'gagal', 'dhapus', 'danger');
-            header('Location: ' . BASEURL . '/barang_masuk');
-            exit;
-        }
+        echo json_encode($this->model('Barang_masuk_model')->hpsDtlBcra($_POST));
       }
 
       public function optBrg() {
@@ -70,18 +77,17 @@
         echo json_encode($this->model('Barang_masuk_model')->getBrgMskInput($_POST['NO_PO']));
       }
 
-      public function getUbahTmp() {
-        echo json_encode($this->model('Barang_masuk_model')->getBrgMskTmp($_POST['NO_PO']));
+      public function getUbah() {
+        echo json_encode($this->model('Barang_masuk_model')->getBrgMsk($_POST));
       }
 
-      public function getUbah() {
-        echo json_encode($this->model('Barang_masuk_model')->getBrgMskUbah($_POST['No_msk']));
+      public function getUbahTmp() {
+        echo json_encode($this->model('Barang_masuk_model')->getBrgMskUbah($_POST));
       }
 
 
       public function ubahDtl() {
-        if ( $this->model('Barang_masuk_model')->ubahBrgMskDtl($_POST) > 0) {
-          // $this->model('Barang_masuk_model')->ubahTrmPo($_POST);
+        if ( $this->model('Barang_masuk_model')->ubahBrgMskDtl($_POST) == true ) {
             Flasher::setFlash('Berita Acara', 'berhasil', 'diubah', 'success');
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;
@@ -105,8 +111,24 @@
       }
 
 
-      public function cari() {
-        echo json_encode($data['bcraTmp'] = $this->model('Barang_masuk_model')->cariData($_POST['srchBa']));
+      public function cari($page) {
+        if ( isset($_POST['srchbtn'])) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } else {
+          $_SESSION['cari'];
+        }
+
+        $data['barangMsk'] = $this->model('Barang_masuk_model')->cariData($page);
+        $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
+        $data['po1'] = $this->model('Barang_masuk_model')->getAllDataPo();
+        $data['sp'] = $this->model('Barang_masuk_model')->getOptionSpl();
+        // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
+        $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
+
+        $this->akses();
+        $this->view('templates/header');
+        $this->view('barang_masuk/index', $data);
+        $this->view('templates/footer');
       }
 
   }

@@ -4,6 +4,7 @@
 
     public function __construct() {
       $this->db = new Database;
+      $this->dbh = new Database;
     }
 
     public function getCounter() {
@@ -18,15 +19,39 @@
       $this->db->execute();
     }
 
-    public function getAllPo() {
+    public function getAllPo($page) {
+      $this->dbh->query('SELECT * FROM purchased_order_tmp');
+      $this->dbh->execute();
+
+      $banyakDataPerHal = 5;
+      $banyakData = $this->dbh->rowCount();
+      $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+      if ( $page >= 1) {
+        $halamanAktif = $page;
+      } else {
+        $halamanAktif = 1;
+      }
+
+      $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
       $query = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
                 FROM purchased_order_tmp a
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE status != '1'";
+                WHERE status != '1'
+                ORDER BY a.NO_PO
+                LIMIT $dataAwal, $banyakDataPerHal";
 
       $this->db->query($query);
-      return $this->db->resultSet();
+
+      $dt = array(
+        "data" => $this->db->resultSet(),
+        "halamanAktif" => $halamanAktif,
+        "banyakHal" => $banyakHal
+      );
+
+      return $dt;
     }
 
     public function getPr() {
@@ -52,7 +77,7 @@
     }
 
     public function getPo($data) {
-      $query = "SELECT a.TGL_PO, a.PEMESAN, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
+      $query = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
                 FROM purchased_order_tmp a
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP WHERE a.NO_PO = :id";
@@ -129,6 +154,27 @@
       }
     }
 
+    public function ubahDtl($data) {
+      $i = 0;
+      $y = 1;
+      foreach ($data['qty'] as $dt) {
+        $query = "UPDATE purchased_order SET QTY_ORDER = :qty" .$i. " WHERE NO_PO = :Po AND KODE_BRG = :kd" .$i. "";
+        $this->db->query($query);
+        $this->db->bind('qty' .$i, $data['qty'][$i]);
+        $this->db->bind('kd' .$i, $data['kd'][$i]);
+        $this->db->bind('Po', $data['Po']);
+        $this->db->execute();
+
+        if ( $y == count($data['qty']) ) {
+          return true;
+        } else {
+          $i++;
+          $y++;
+          continue;
+        }
+      }
+    }
+
     public function setPo($data) {
       $query = "UPDATE surat_request_tmp SET NO_PO = :noPo WHERE NO_PR = :noPr";
 
@@ -142,8 +188,10 @@
       $query = "UPDATE purchased_order_tmp SET status = '1' WHERE NO_PO = :id";
 
       $this->db->query($data);
-      $this->db->bind('id', $data['id']);
+      $this->db->bind('id', $data);
       $this->db->execute();
+
+      return $this->db->rowCount();
     }
 
   }

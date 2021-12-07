@@ -11,8 +11,8 @@
       $this->view('templates/footer');
     }
 
-    public function detail() {
-      $data['po'] = $this->model('Purchased_order_model')->getAllPo();
+    public function detail($page) {
+      $data['po'] = $this->model('Purchased_order_model')->getAllPo($page);
 
       $this->view('templates/header', $data);
       $this->view('purchased_order/detail', $data);
@@ -49,8 +49,28 @@
       }
     }
 
-    public function hapus() {
-      $this->model('Purchased_order_model')->hapus($_POST);
+    public function ubahDtl() {
+      if ($this->model('Purchased_order_model')->ubahDtl($_POST) == true ) {
+        Flasher::setFlash('Purchased order', 'Berhasil', 'diubah', 'success');
+        header('Location: ' . BASEURL . '/purchased_order/detail/1');
+        exit;
+      } else {
+        Flasher::setFlash('Purchased Order', 'Gagal', 'diubah' , 'danger');
+        header('Location: ' . BASEURL . '/purchased_order/detail/1');
+        exit;
+      }
+    }
+
+    public function hapus($data) {
+      if ($this->model('Purchased_order_model')->hapus(str_replace('-F', '/', $data)) > 0 ) {
+        Flasher::setFlash('Purchased Order', 'Berhasil', 'Dihapus', 'success');
+        header('Location: ' .  bASEURL . '/purchased_order/detail/1');
+        exit;
+      } else {
+        Flasher::setFlash('Purchased Order', 'Gagal', 'Dihapus', 'danger');
+        header('Location: ' . BASEURL . '/purchased_order/detail/1');
+        exit;
+      }
     }
 
   }

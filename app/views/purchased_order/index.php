@@ -5,7 +5,7 @@
       <div class="border border-dark rounded-3 p-3 m-3">
         <div class="d-flex justify-content-around">
           <h3>FORM INPUT PURCHASED ORDER</h3>
-          <a href="<?php echo BASEURL; ?>/purchased_order/detail" type="button" class="btn btn-warning" name="button">Table View</a>
+          <a href="<?php echo BASEURL; ?>/purchased_order/detail/1" type="button" class="btn btn-warning" name="button">Table View</a>
         </div>
         <hr>
         <form action="<?php echo BASEURL; ?>/Purchased_order/tambah" method="post">

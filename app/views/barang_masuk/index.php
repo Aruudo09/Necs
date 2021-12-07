@@ -11,9 +11,14 @@
   <div class="row">
 
   <!--FORM INPUT BERITA ACARA-->
-        <div class="col-md-6">
+        <div class="col">
           <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
-            <h3>FORM INPUT BERITA ACARA</h3>
+            <div class="d-flex justify-content-around">
+              <h3>FORM INPUT BERITA ACARA</h3>
+              <a href="<?php echo BASEURL; ?>/barang_masuk/detail">
+                <button type="button" class="btn btn-warning" id="detail" name="button">View Table</button>
+              </a>
+            </div>
             <hr>
             <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
              <!--HIDDEN INPUT NOMOR BCRA-->
@@ -60,175 +65,183 @@
                 <div class="row mb-3">
                     <div class="col-4">
                         <label for="penerima">Penerima :</label>
-                        <input type="text" name="penerima" id="penerima" class="form-control">
+                        <input type="text" name="penerima" id="penerima" class="form-control" value="<?php echo $_SESSION['login']['USERNAME'] ?>">
                     </div>
                 </div>
-            <!--INPUT FIELD BARANG-->
-              <div id="new_row" class="row mb-3"></div>
-              <input type="hidden" value="1" id="num_row">
-            <!--END INPUT FIELD BARANG-->
-            <hr>
-            <div class="row">
-              <div class="col-12 text-end">
-                  <button type="submit" class="btn btn-primary btnSmpn">Simpan</button>
-              </div>
-            </div>
-          </form>
-        <!--END FORM INPUT BERITA ACARA-->
-        </div>
-      </div>
-
-      <!--TABLE VIEW BERITA ACARA-->
-      <div class="col-md-6">
-        <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
-            <div class="overflow-auto">
-              <h3>BERITA ACARA</h3>
-              <!--SEARCH BAR-->
-                  <div class="d-flex">
-                    <input type="text" style="width:50%" class="form-control" placeholder="Nomor PO atau Nomor BA...." name="keyword" value="" id="srchBatxt">
-                    <button type="button" style="width:15%" class="btn btn-success srchBa" name="button" onclick=""><i class="fas fa-search"></i></button>
+                <h3>DAFTAR BARANG</h3>
+                  <div class="overflow-auto">
+                      <table class="table table-bordered text-center" id="tbBa">
+                        <thead class="table-info">
+                          <tr>
+                            <th class="col-4">Barang</th>
+                            <th class="col-4">Harga</th>
+                            <th class="col-4">Quantity</th>
+                            <th class="col-2">Hapus</th>
+                            <th style="display:none">Kode Barang</th>
+                          </tr>
+                        </thead>
+                      </table>
                   </div>
-              <!--SEARCH BAR-->
-                <table class="table tableViewDtlBcra">
-                <?php foreach( $data['bcraTmp'] as $mhs ) : ?>
-                      <tr>
-                        <th>No. PO</th>
-                        <td><input type="text" style="width:60%" class="form-control poBcraTmp" id="poBcraTmp" name="" value="<?php print $mhs['NO_PO']; ?>" readonly></td>
-                      </tr>
-                      <tr>
-                        <th>Nomor</th>
-                        <td><input type="text" style="width:40%" class="form-control noBcraTmp" id="noBcraTmp" name="" value="<?php print $mhs['NO_BCRA']; ?>" readonly></td>
-                      </tr>
-                      <tr>
-                        <th>Surat Jalan</th>
-                        <td class="srjBcraTmp"><?php print $mhs['NO_SRJLN']; ?></td>
-                      </tr>
-                      <tr>
-                        <th>Supplier</th>
-                        <td class="spNmBcraTmp"><?php print $mhs['NAMA_SP'];?></td>
-                      </tr>
-                      <tr>
-                        <th>Tanggal Terima</th>
-                        <td class="tglBcraTmp"><?php print $mhs['TGL_BCRA']; ?></td>
-                      </tr>
-                      <tr>
-                        <th>Penerima</th>
-                        <td class="pnmBcraTmp"><?php print $mhs['PENERIMA']; ?></td>
-                      </tr>
-                        <th style="display:none">Kode Supplier</th>
-                        <td class="spBcraTmp" style="display:none"><?php print $mhs['KODE_SP'];?></td>
-                      </tr>
-                      <tr>
-                        <th>Fitur</th>
-                        <td>
-              <!--TOMBOL CETAK BA-->
-                          <a class="btn btn-success ctkBa"><i class="fas fa-print"></i></a>
-              <!--TOMBOL UPDATE-->
-                          <a class="btn btn-primary bcraTmpUpdate" data-bs-toggle="modal" data-bs-target="#modalBrgMsk"
-                        data-id="<?php echo $mhs['NO_BCRA']; ?>"><i class="fa fa-pen"></i></a>
-              <!--TOMBOL HAPUS-->
-                          <a class="btn btn-danger hpsBa" data-id="<?php echo $mhs['NO_PO']; ?>" onclick="return confirm('apa anda yakin?');"><i class="fa fa-trash"></i></a>
-                      </td>
-                      </tr>
-                    <?php endforeach; ?>
-              </table>
-            </div>
+              <hr>
+              <div class="row">
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary btnSmpn">Simpan</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-      <!--END TABLE VIEW BERITA ACARA-->
-</div>
-
-
-<!--TABLE VIEW LIST PURCHASED ORDER-->
-  <div class="border border-dark rounded-3 bg-white mt-4 p-3">
-    <div class="">
-      <div class="overflow-auto">
-          <table class="table table-bordered table-striped table-responsive text-center table-hover tbPo2">
-            <h3 class="mb-3">LIST PURCHASED ORDER</h3>
-                <thead>
-                  <tr class="table-warning ">
-                    <th scope="col">No. PO</th>
-                    <th scope="col">Supplier</th>
-                    <th scope="col">Barang</th>
-                    <th scope="col">Jenis</th>
-                    <th scope="col">Stock</th>
-                    <th scope="col">Order</th>
-                    <th scope="col">Terima</th>
-                    <th scope="col">Satuan</th>
-                    <th scope="col">Harga Order</th>
-                    <th scope="col">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-              <?php foreach( $data['po'] as $mhs ) : ?>
-                <tr class="tableViewPo">
-                <td class="kdPo"><?php print $mhs['NO_PO']; ?></td>
-                <td><?php print $mhs['NAMA_SP']; ?></td>
-                <td class="nmBrg"><?php print $mhs['NAMA_BRG']; ?></td>
-                <td><?php print $mhs['Jenis_brg']; ?></td>
-                <td><?php print $mhs['Stock_brg']; ?></td>
-                <td><?php print $mhs['QTY_ORDER']; ?></td>
-                <td class="kdTrm"><?php print $mhs['QTY_TERIMA']; ?></td>
-                <td><?php print $mhs['Satuan']; ?></td>
-                <td class="kdHrg"><?php print $mhs['HARGA_PO']; ?></td>
-                <td><?php print $mhs['TOT_HARGA']; ?></td>
-                </tr>
-                <?php endforeach; ?>
-              </tbody>
-          </table>
-      </div>
-    </div>
-</div>
 
 <!--VIEW TABLE DETAIL BERITA ACARA-->
     <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
+      <h3 class="fs-4 mb-3">DAFTAR BARANG MASUK</h3>
+      <form class="" action="<?php echo BASEURL; ?>/barang_masuk/cari/1" method="post">
+        <div class="d-flex mb-3">
+          <input type="text" class="form-control" style="width:20%" name="keyword" value="">
+          <button type="submit" class="btn btn-success" style="width:5%" name="srchbtn"><i class="fa fa-search"></i></button>
+        </div>
+      </form>
       <div class="overflow-auto">
       <table class="table table-bordered table-responsive table-striped table-hover text-center" id="tbDtlBa">
-        <h3 class="fs-4 mb-3">DAFTAR BARANG MASUK</h3>
         <thead class="table-warning">
           <tr>
             <th scope="col">No Masuk</th>
-            <th scope="col">Tanggal Diterima</th>
-            <th scope="col">Penerima</th>
             <th scope="col">No PO</th>
-            <th scope="col">Supplier</th>
-            <th scope="col">Barang</th>
-            <th scope="col">Quantity</th>
             <th scope="col">No. Surat Jalan</th>
+            <th scope="col">Penerima</th>
+            <th scope="col">Supplier</th>
+            <th scope="col">Tanggal Diterima</th>
             <th scope="col">Fitur</th>
           </tr>
        </thead>
 
        <tbody>
-         <?php foreach ( $data['barangMsk'] as $brgM) : ?>
+         <?php foreach ( $data['barangMsk']['data'] as $brgM) : ?>
             <tr>
               <td><?php print $brgM['NO_BCRA']; ?></td>
-              <td><?php print $brgM['TGL_BCRA']; ?></td>
-              <td><?php print $brgM['PENERIMA']; ?></td>
               <td><?php print $brgM['NO_PO']; ?></td>
-              <td><?php print $brgM['NAMA_SP']; ?></td>
-              <td><?php print $brgM['NAMA_BRG']; ?></td>
-              <td><?php print $brgM['QTY_TERIMA']; ?></td>
               <td><?php print $brgM['NO_SRJLN']; ?></td>
-              <td style="width:10%">
-                <div class="d-flex justify-content-around">
-                  <!--HAPUS DETAIL BARANG MASUK-->
-                    <div class="col">
-                      <a class="btn btn-danger hpsdtl" data-id="<?php echo $brgM['NO_BCRA']; ?>" data-kd="<?php echo $brgM['KODE_BRG']; ?>" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
-                    </div>
+              <td><?php print $brgM['PENERIMA']; ?></td>
+              <td><?php print $brgM['NAMA_SP']; ?></td>
+              <td><?php print $brgM['TGL_BCRA']; ?></td>
+              <td>
+                <div class="d-flex justify-content-evenly">
+                  <!--DETAIL BARANG MASUK-->
+                      <button type="button" class="btn btn-success dtlBa" data-id="<?php echo $brgM['NO_BCRA'] ?>" data-bs-toggle="modal" data-bs-target="#dtlBa" name="button"><i class="fa fa-file"></i></button>
                   <!--EDIT DETAIL BARANG MASUK-->
-                    <div class="col">
-                      <a class="btn btn-primary updDtlBrgMsk" data-bs-toggle="modal" data-bs-target="#detailBcra" data-date-id="<?php echo $brgM['TGL_BCRA'] ?>" data-id="<?php echo $brgM['NO_PO'] ?>" data-brg="<?php echo $brgM['KODE_BRG'] ?>" data-kd="<?php echo $brgM['NO_BCRA'] ?>"><i class="fa fa-pen"></i></a>
-                    </div>
+                      <a class="btn btn-primary edit" data-bs-toggle="modal" data-bs-target="#modalBrgMsk" data-id="<?php echo $brgM['NO_BCRA'] ?>"><i class="fa fa-pen"></i></a>
+                    <!--HAPUS DETAIL BARANG MASUK-->
+                      <a href="<?php echo BASEURL; ?>/barang_masuk/hapus/<?php echo $brgM['NO_BCRA'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
                 </div>
               </td>
             </tr>
          <?php endforeach; ?>
        </tbody>
       </table>
+      <nav>
+        <ul class="pagination justify-content-center">
+          <!--TOMBOL PREV-->
+            <?php if ( $data['barangMsk']['halamanAktif'] <= 1 ) { ?>
+              <li class="page-item disabled">
+                <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $data['barangMsk']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+              </li>
+            <?php } else { ?>
+              <li class="page-item">
+                <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $data['barangMsk']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+              </li>
+            <?php } ?>
+          <!--TOMBOL PAGE-->
+            <?php for ($i=1; $i <= $data['barangMsk']['banyakHal'] ; $i++) { ?>
+              <?php if ( $i == $data['barangMsk']['halamanAktif'] ) { ?>
+                <li class="page-item active">
+                  <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $i ?>" class="page-link pgNum"><?php echo $i ?></a>
+                </li>
+              <?php } else { ?>
+                <li class="page-item">
+                  <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $i ?>" class="page-link pgNum"><?php echo $i ?></a>
+                </li>
+              <?php } ?>
+            <?php } ?>
+          <!--TOMBOL NEXT-->
+            <?php if ( $data['barangMsk']['halamanAktif'] == $data['barangMsk']['banyakHal'] ) { ?>
+              <li class="page-item disabled">
+                <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $data['barangMsk']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+              </li>
+            <?php } else { ?>
+              <li class="page-item">
+                <a href="<?php echo BASEURL; ?>/barang_masuk/<?php echo $data['barangMsk']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+              </li>
+            <?php } ?>
+        </ul>
+      </nav>
     </div>
   </div>
 <!--END VIEW TABLE BERITA ACARA-->
+
+      <!--MODAL VIEW DETAIL BERITA ACARA-->
+      <div class="modal fade" id="dtlBa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">View Detail Berita Acara</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="" action="<?php echo BASEURL; ?>/barang_masuk/ubahDtl" method="post">
+                <table class="table table-borderless">
+                  <tr>
+                    <th class="table-warning col-3">No Masuk</th>
+                    <td class="table-info" id="nomsk"></td>
+                    <td style="display:none">
+                      <input type="hidden" id="no_msk" name="no_msk" value="">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="table-warning">No Po</th>
+                    <td class="table-info" id="nopo"></td>
+                  </tr>
+                  <tr>
+                    <th class="table-warning">No Surat Jalan</th>
+                    <td class="table-info" id="nosrjln"></td>
+                  </tr>
+                  <tr>
+                    <th class="table-warning">Penerima</th>
+                    <td class="table-info" id="pnrm"></td>
+                  </tr>
+                  <tr>
+                    <th class="table-warning">Supplier</th>
+                    <td class="table-info" id="sp"></td>
+                  </tr>
+                  <tr>
+                    <th class="table-warning">Tanggal Terima</th>
+                    <td class="table-info" id="tgltrm"></td>
+                  </tr>
+                </table>
+                <h3>Daftar Barang</h3>
+                <table class="table table-bordered table-striped text-center" id="tabBa">
+                  <thead class="table-info">
+                    <tr>
+                      <th>Nama Barang</th>
+                      <th style="display:none">Kode Barang</th>
+                      <th class="col-2">Quantity</th>
+                      <th>Satuan</th>
+                      <th>Harga</th>
+                      <th>Fitur</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"> Edit</i></button>
+                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"> Cetak</i></button>
+              </div>
+              </form>
+          </div>
+        </div>
+     </div>
+      <!--END MODAL VIEW DETAIL BERITA ACARA-->
 
 
       <!-- MODAL NOMOR BERITA ACARA -->
@@ -240,35 +253,14 @@
                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                  </div>
                  <div class="modal-body">
-                   <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambahTmp" method="post">
+                   <form class="" action="<?php echo BASEURL; ?>/barang_masuk/ubahTmp" method="post">
                     <!--HIDDEN INPUT NOMOR BCRA-->
-                     <input type="hidden" name="No_msk" id="No_msk" value="">
-                     <!--INPUT NOMOR PO-->
-                       <div class="row mb-3">
-                           <div class="form-group">
-                               <label for="poBa2">No. PO :</label>
-                                 <input type="text" name="poBa2" id="poBa2" value="" class="form-control" readonly>
-                           </div>
-                       </div>
-                      <!--INPUT NOMOR BCRA-->
-                       <div class="row mb-3">
-                           <div class="form-group">
-                               <label for="inputNoMsk2">No Masuk :</label>
-                               <input type="text" name="inputNoMsk2" id="inputNoMsk2" class="form-control" value="" readonly>
-                           </div>
-                       </div>
+                     <input type="text" name="nobcra" id="nobcra" value="">
                       <!--INPUT NOMOR SURAT JALAN-->
                        <div class="row mb-3">
                            <div class="form-group">
                                <label for="noSRJLN2">No. Surat Jalan :</label>
                                <input type="text" name="noSRJLN2" id="noSRJLN2" class="form-control">
-                           </div>
-                       </div>
-                      <!--INPUT PENERIMA-->
-                       <div class="row mb-3">
-                           <div class="form-group">
-                               <label for="penerima2">Penerima :</label>
-                               <input type="text" name="penerima2" id="penerima2" class="form-control">
                            </div>
                        </div>
                       <!--INPUT TANGGAL TERIMA-->
@@ -291,38 +283,5 @@
              </div>
         <!--END MODAL NOMOR BERITA ACARA-->
 
-             <!-- MODAL DETAIL BERITA ACARA -->
-                    <div class="modal fade" id="detailBcra" tabindex="-1" role="dialog" aria-labelledby="detailBcra" aria-hidden="true">
-                    <div class="modal-dialog" >
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="labelDtlBcra">Input List Barang Masuk</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form class="" action="<?php echo BASEURL; ?>/barang_masuk/tambah" method="post">
-                          <!--HIDEEN INPUT NOMOR BARANG-->
-                            <input type="text" name="NoBcra" id="NoBcra" value="">
-                          <!--HIDEEN INPUT NOMOR PO-->
-                            <input type="text" name="nopo" id="nopo" value="">
-                          <!--HIDEEN INPUT KODE BARANG-->
-                            <input type="text" name="brg" id="brg" value="">
-                            <!--INPUT QUANTITY DITERIMA-->
-                              <div class="row mb-3">
-                                <div class="form-group col">
-                                  <label for="qtyTerima">Diterima</label>
-                                  <input type="text" class="form-control" name="qtyTerima" id="qtyTerima" value="">
-                                </div>
-                              </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
-                        </form>
-                      </div>
-                    </div>
-                    </div>
-          <!---END MODAL DETAIL BERITA ACARA-->
 
 </div>

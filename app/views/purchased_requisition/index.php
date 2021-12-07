@@ -12,11 +12,11 @@
 
       <!--FORM PURCHASED REQUISITION-->
       <div class="col-md">
-        <div class="border border-dark rounded-3 bg-gradient p-3 m-3" style="width:70%">
+        <div class="border border-dark rounded-3 bg-gradient p-3 m-3">
           <div class="d-flex justify-content-around">
             <h3>FORM PURCHASED REQUISITION</h3>
             <div class="text-end">
-              <a href="<?php echo BASEURL; ?>/purchased_requisition/detail" class="btn btn-warning">View Table</a>
+              <a href="<?php echo BASEURL; ?>/purchased_requisition/detail/1" class="btn btn-warning">View Table</a>
             </div>
           </div>
           <hr>
@@ -74,36 +74,67 @@
 
 
         <div class="border border-dark rounded-3 bg-gradient p-3 mx-auto m-3">
+          <h3>DATA SR</h3>
+          <hr>
           <div class="overflow-auto">
             <table class="table table-striped table-hover text-center" id="tabSr">
-              <h3>DATA SR</h3>
-              <hr>
+              <div class="row mb-3">
+                <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/cari/1" method="post">
+                  <div class="d-flex">
+                    <input type="text" class="form-control" name="keyword" style="width:30%" placeholder="Type Number Of SR....." value="" autocomplete="off">
+                    <button type="submit" class="btn btn-success" style="width:6%" name="srchBtn"><i class="fa fa-search"></i></button>
+                  </div>
+                </form>
+              </div>
               <thead class="table-warning">
                 <tr>
-                  <th>Nomor SR</th>
-                  <th>Peminta</th>
-                  <th>Departement</th>
-                  <th>Supplier</th>
-                  <th>Tanggal SR</th>
-                  <th>Fitur</th>
+                  <th class="col">Nomor SR</th>
+                  <th class="col">Peminta</th>
+                  <th class="col">Departement</th>
+                  <th class="col">Supplier</th>
+                  <th class="col">Tanggal SR</th>
+                  <th class="col">Fitur</th>
                 </tr>
               </thead>
-
               <tbody>
-                  <?php foreach( $data['sr'] as $sr ) : ?>
-                    <tr>
-                      <td><?php print $sr['NO_SR'] ?></td>
-                      <td><?php print $sr['PEMINTA'] ?></td>
-                      <td><?php print $sr['NMDEF'] ?></td>
-                      <td><?php print $sr['NAMA_SP'] ?></td>
-                      <td><?php print $sr['TGL_SR'] ?></td>
-                      <td>
-                        <button type="button" class="btn btn-info btn" data-bs-toggle="modal" data-bs-target="#modalSr" data-id="<?php echo $sr['NO_SR'] ?>">Detail</button>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
+                <?php foreach( $data['sr']['data'] as $sr ) : ?>
+                  <tr>
+                    <td><?php print $sr['NO_SR'] ?></td>
+                    <td><?php print $sr['PEMINTA'] ?></td>
+                    <td><?php print $sr['NMDEF'] ?></td>
+                    <td><?php print $sr['NAMA_SP'] ?></td>
+                    <td><?php print $sr['TGL_SR'] ?></td>
+                    <td>
+                      <button type="button" class="btn btn-primary detail" data-id="<?php echo $sr['NO_SR'] ?>" data-bs-toggle="modal" data-bs-target="#modalSr" name="button">Detail</button>
+                    </td>
+                  </tr>
+              <?php endforeach; ?>
               </tbody>
             </table>
+            <nav>
+              <ul class="pagination justify-content-center">
+                <!--TOMBOL PREVIOUS-->
+                  <?php if ( $data['sr']['halamanAktif'] <= 1 ) { ?>
+                      <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['sr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+                  <?php } else { ?>
+                      <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['sr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+                  <?php } ?>
+                <!--TOMBOL PAGE-->
+                  <?php for ($i=1; $i < $data['sr']['banyakHal']; $i++) { ?>
+                    <?php if ( $data['sr']['halamanAktif'] == $i ) { ?>
+                      <li class="page-item active"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+                    <?php } else { ?>
+                      <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+                    <?php } ?>
+                  <?php } ?>
+                <!--TOMBOL NEXT-->
+                  <?php if ( $data['sr']['halamanAktif'] >= $data['sr']['banyakHal'] ) { ?>
+                    <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['sr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+                  <?php } else { ?>
+                    <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['sr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+                  <?php } ?>
+              </ul>
+            </nav>
           </div>
         </div>
 

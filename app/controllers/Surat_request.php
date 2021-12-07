@@ -1,10 +1,10 @@
 <?php
 class Surat_request extends Controller {
 
-  public function index() {
+  public function index($page) {
     $data['judul'] = 'Daftar Mahasiswa';
     $data['po'] = $this->model('Surat_request_model')->getAllDataSr();
-    $data['tmp'] = $this->model('Surat_request_model')->getAllDataTmp();
+    $data['tmp'] = $this->model('Surat_request_model')->getAllDataTmp($page);
     $data['sp'] = $this->model('Surat_request_model')->getDataSpl();
     $data['brg'] = $this->model('Surat_request_model')->getDataBrg();
     $data['counter'] = $this->model('Surat_request_model')->counter_sr();
@@ -13,6 +13,11 @@ class Surat_request extends Controller {
     $this->view('templates/header', $data);
     $this->view('surat_request/index', $data);
     $this->view('templates/footer');
+  }
+
+  //-------FUNGSI GET NOMOR SURAT DETAIL---------//
+  public function getSr() {
+    echo json_encode($this->model('Surat_request_model')->getDataSr($_POST));
   }
 
 
@@ -38,11 +43,11 @@ class Surat_request extends Controller {
       if ( $this->model('Surat_request_model')->tambahDataSr($_POST) == true) {
         $this->model('Surat_request_model')->updateCounter();
         Flasher::setFlash('Surat Request', 'berhasil', 'ditambahkan', 'success');
-          header('Location: ' . BASEURL . '/surat_request');
+          header('Location: ' . BASEURL . '/surat_request/1');
           exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'ditambahkan', 'danger');
-        header('Location: ' . BASEURL . '/surat_request');
+        header('Location: ' . BASEURL . '/surat_request/1');
         exit;
     }
   }
@@ -52,44 +57,73 @@ class Surat_request extends Controller {
   public function Update() {
     if ( $this->model('Surat_request_model')->ubahData($_POST) > 0) {
       Flasher::setFlash('Surat Request', 'berhasil', 'diubah', 'success');
-        header('Location: ' . BASEURL . '/surat_request');
+        header('Location: ' . BASEURL . '/surat_request/1');
         exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'diubah', 'danger');
-        header('Location: ' . BASEURL . '/surat_request');
+        header('Location: ' . BASEURL . '/surat_request/1');
         exit;
     }
   }
 
+  //---------GET DETAIL SR----------//
+  public function getSrDtl() {
+    echo json_encode($this->model('Surat_request_model')->getDataSrDtl($_POST));
+  }
+
 //---------FUNGSI UBAH DETAIL SR----------//
   public function ubah() {
-    if ( $this->model('Surat_request_model')->ubahDataSr($_POST) > 0) {
+    if ( $this->model('Surat_request_model')->ubahDataSr($_POST) == true ) {
       Flasher::setFlash('Surat Request', 'berhasil', 'diubah', 'success');
-        header('Location: ' . BASEURL . '/surat_request');
+        header('Location: ' . BASEURL . '/surat_request/1');
         exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'diubah', 'danger');
-        header('Location: ' . BASEURL . '/surat_request');
+        header('Location: ' . BASEURL . '/surat_request/1');
         exit;
     }
   }
 
   //---------FUNSGI HAPUS NOMOR SR-----------//
-  public function hapus() {
-    $this->model('Surat_request_model')->hapusSr($_POST);
-    $this->model('Surat_request_model')->ubahStat($_POST);
+  public function hapus($no_sr) {
+    if ( $this->model('Surat_request_model')->hapusSr(str_replace('-f', '/', ($no_sr))) > 0 ) {
+      Flasher::setFlash('Surat Request', 'berhasil', 'dihapus', 'primary');
+      header('Location: ' . BASEURL . '/surat_request/1');
+      exit;
+    } else {
+      Flasher::setFlash('Surat Request', 'gagal', 'dihapus', 'danger');
+      header('Location: ' . BASEURL . '/surat_request/1');
+      exit;
+    }
   }
 
 //---------FUNGSI HAPUS DETAIL SR----------//
   public function hapusSr() {
-    $this->model('Surat_request_model')->hapusData($_POST);
+    echo json_encode($this->model('Surat_request_model')->hapusData($_POST));
   }
 
 
 
 //---------FUNGSI CARI SR----------//
-  public function cari() {
-    echo json_encode($this->model('Surat_request_model')->cariDataSr($_POST['srchPo']));
+  public function cari($page) {
+
+    if ( isset($_POST['srchSr'])) {
+      $_SESSION['cari'] = $_POST['keyword'];
+    } else {
+      $_SESSION['cari'];
+    }
+
+
+    $data['po'] = $this->model('Surat_request_model')->getAllDataSr();
+    $data['tmp'] = $this->model('Surat_request_model')->cariDataSr($page);
+    $data['sp'] = $this->model('Surat_request_model')->getDataSpl();
+    $data['brg'] = $this->model('Surat_request_model')->getDataBrg();
+    $data['counter'] = $this->model('Surat_request_model')->counter_sr();
+
+    $this->akses();
+    $this->view('templates/header');
+    $this->view('surat_request/index', $data);
+    $this->view('templates/footer');
   }
 
 }

@@ -23,8 +23,14 @@
 
           <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
           <div class="overflow-auto">
-            <table class="table table-striped table-bordered table-hover text-center" id="tbBrg">
-              <h3 class="fs-4 mb-3">Daftar Barang</h3>
+            <h3 class="fs-4 mb-3">Daftar Barang</h3>
+            <form class="" action="<?php echo BASEURL; ?>/barang/cari/1" method="post">
+              <div class="d-flex">
+                <input type="text" class="form-control" style="width:30%" placeholder="Nama Barang....." name="keyword" value="">
+                <button type="submit" class="btn btn-success" style="width:6%" name="srchbtn"><i class="fa fa-search"></i></button>
+              </div>
+            </form>
+            <table class="table table-striped table-bordered table-hover text-center mt-3">
                 <thead class="table-warning">
                   <tr>
                     <th scope="col">Nama Barang</th>
@@ -38,7 +44,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ( $data['barang'] as $brg) : ?>
+                  <?php foreach ( $data['barang']['data'] as $brg) : ?>
                       <tr>
                         <td><?php print $brg['NAMA_BRG'] ?></td>
                         <td><?php print $brg['Jenis_brg'] ?></td>
@@ -48,7 +54,7 @@
                         <td><?php print $brg['Harga'] ?></td>
                         <td><?php print $brg['NAMA_SP'] ?></td>
                         <td>
-                          <div class="d-flex justify-content-around">
+                          <div class="d-flex justify-content-evenly">
                             <a href="#" class="btn btn-info btnUpdateBrg" data-bs-toggle="modal" data-bs-target="#modalBarang" data-id="<?php echo $brg['KODE_BRG'] ?>"><i class="fas fa-pen"></i></a>
                             <a href="<?php echo BASEURL; ?>/barang/hapus/<?php echo $brg['KODE_BRG'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></a>
                           </div>
@@ -57,6 +63,42 @@
                   <?php endforeach; ?>
                 </tbody>
           </table>
+          <nav>
+            <ul class="pagination justify-content-center">
+              <!--TOMBOL PREV-->
+                <?php if ( $data['barang']['halamanAktif'] <= 1 ) { ?>
+                  <li class="page-item disabled">
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+                  </li>
+                <?php } else { ?>
+                  <li class="page-item">
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+                  </li>
+                <?php } ?>
+              <!--TOMBOL PAGE-->
+                <?php for ($i=1; $i <= $data['barang']['banyakHal'] ; $i++) { ?>
+                  <?php if ( $i == $data['barang']['halamanAktif'] ) { ?>
+                    <li class="page-item active">
+                      <a href="<?php echo BASEURL; ?>/barang/<?php echo $i ?>" class="page-link pgNum"><?php echo $i ?></a>
+                    </li>
+                  <?php } else { ?>
+                    <li class="page-item">
+                      <a href="<?php echo BASEURL; ?>/barang/<?php echo $i ?>" class="page-link pgNum"><?php echo $i ?></a>
+                    </li>
+                  <?php } ?>
+                <?php } ?>
+              <!--TOMBOL NEXT-->
+                <?php if ( $data['barang']['halamanAktif'] == $data['barang']['banyakHal'] ) { ?>
+                  <li class="page-item disabled">
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                  </li>
+                <?php } else { ?>
+                  <li class="page-item">
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                  </li>
+                <?php } ?>
+            </ul>
+          </nav>
         </div>
       </div>
        <!--END OF TABLE VIEW BARANG-->
