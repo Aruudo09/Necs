@@ -2,7 +2,18 @@
 class Surat_request extends Controller {
 
   public function index($page) {
-    $data['judul'] = 'Daftar Mahasiswa';
+
+    $cek = $_SERVER['REQUEST_URI'];
+    if ( strpos($cek, '/surat_request/1/') ) {
+      $_SESSION['cari'] = '';
+    } else {
+      if ( isset($_POST['srchbtn'])) {
+        $_SESSION['cari'] = $_POST['keyword'];
+      } elseif ( empty($_SESSION['cari']) ) {
+        $_SESSION['cari'] = '';
+      }
+     }
+
     $data['po'] = $this->model('Surat_request_model')->getAllDataSr();
     $data['tmp'] = $this->model('Surat_request_model')->getAllDataTmp($page);
     $data['sp'] = $this->model('Surat_request_model')->getDataSpl();
@@ -44,10 +55,12 @@ class Surat_request extends Controller {
         $this->model('Surat_request_model')->updateCounter();
         Flasher::setFlash('Surat Request', 'berhasil', 'ditambahkan', 'success');
           header('Location: ' . BASEURL . '/surat_request/1');
+          unset($_SESSION['cari']);
           exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'ditambahkan', 'danger');
         header('Location: ' . BASEURL . '/surat_request/1');
+        unset($_SESSION['cari']);
         exit;
     }
   }
@@ -58,10 +71,12 @@ class Surat_request extends Controller {
     if ( $this->model('Surat_request_model')->ubahData($_POST) > 0) {
       Flasher::setFlash('Surat Request', 'berhasil', 'diubah', 'success');
         header('Location: ' . BASEURL . '/surat_request/1');
+        unset($_SESSION['cari']);
         exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'diubah', 'danger');
         header('Location: ' . BASEURL . '/surat_request/1');
+        unset($_SESSION['cari']);
         exit;
     }
   }
@@ -76,10 +91,12 @@ class Surat_request extends Controller {
     if ( $this->model('Surat_request_model')->ubahDataSr($_POST) == true ) {
       Flasher::setFlash('Surat Request', 'berhasil', 'diubah', 'success');
         header('Location: ' . BASEURL . '/surat_request/1');
+        unset($_SESSION['cari']);
         exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'diubah', 'danger');
         header('Location: ' . BASEURL . '/surat_request/1');
+        unset($_SESSION['cari']);
         exit;
     }
   }
@@ -89,6 +106,7 @@ class Surat_request extends Controller {
     if ( $this->model('Surat_request_model')->hapusSr(str_replace('-f', '/', ($no_sr))) > 0 ) {
       Flasher::setFlash('Surat Request', 'berhasil', 'dihapus', 'primary');
       header('Location: ' . BASEURL . '/surat_request/1');
+      unset($_SESSION['cari']);
       exit;
     } else {
       Flasher::setFlash('Surat Request', 'gagal', 'dihapus', 'danger');
@@ -100,30 +118,6 @@ class Surat_request extends Controller {
 //---------FUNGSI HAPUS DETAIL SR----------//
   public function hapusSr() {
     echo json_encode($this->model('Surat_request_model')->hapusData($_POST));
-  }
-
-
-
-//---------FUNGSI CARI SR----------//
-  public function cari($page) {
-
-    if ( isset($_POST['srchSr'])) {
-      $_SESSION['cari'] = $_POST['keyword'];
-    } else {
-      $_SESSION['cari'];
-    }
-
-
-    $data['po'] = $this->model('Surat_request_model')->getAllDataSr();
-    $data['tmp'] = $this->model('Surat_request_model')->cariDataSr($page);
-    $data['sp'] = $this->model('Surat_request_model')->getDataSpl();
-    $data['brg'] = $this->model('Surat_request_model')->getDataBrg();
-    $data['counter'] = $this->model('Surat_request_model')->counter_sr();
-
-    $this->akses();
-    $this->view('templates/header');
-    $this->view('surat_request/index', $data);
-    $this->view('templates/footer');
   }
 
 }

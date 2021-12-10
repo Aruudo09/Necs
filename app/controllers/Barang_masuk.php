@@ -3,6 +3,18 @@
   class Barang_masuk extends Controller {
 
       public function index($page) {
+
+          $cek = $_SERVER['REQUEST_URI'];
+          if ( strpos($cek, '/barang_masuk/1/') ) {
+            $_SESSION['cari'] = '';
+          } else {
+            if ( isset($_POST['srchbtn']) ) {
+              $_SESSION['cari'] = $_POST['keyword'];
+            } elseif ( empty($_SESSION['cari'])) {
+              $_SESSION['cari'] = '';
+            }
+          }
+
           $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk($page);
           $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
           $data['po1'] = $this->model('Barang_masuk_model')->getAllDataPo();
@@ -22,8 +34,20 @@
         $this->view('barang_masuk/report', $data);
       }
 
-      public function detail() {
-        $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra();
+      public function detail($page) {
+
+        $cek = $_SERVER['REQUEST_URI'];
+        if ( strpos($cek, '/barang_masuk/detail/1/')) {
+          $_SESSION['cari'] = '';
+        } else {
+          if ( isset($_POST['srchbtn'])) {
+            $_SESSION['cari'] = $_POST['keyword'];
+          } elseif ( empty($_SESSION['cari'])) {
+            $_SESSION['cari'] = '';
+          }
+        }
+
+        $data['po'] = $this->model('Barang_masuk_model')->getAllPoBcra($page);
 
         $this->view('templates/header');
         $this->view('barang_masuk/detail', $data);
@@ -108,27 +132,6 @@
             header('Location: ' . BASEURL . '/barang_masuk');
             exit;
         }
-      }
-
-
-      public function cari($page) {
-        if ( isset($_POST['srchbtn'])) {
-          $_SESSION['cari'] = $_POST['keyword'];
-        } else {
-          $_SESSION['cari'];
-        }
-
-        $data['barangMsk'] = $this->model('Barang_masuk_model')->cariData($page);
-        $data['bcraTmp'] = $this->model('Barang_masuk_model')->getDataBcraTmp();
-        $data['po1'] = $this->model('Barang_masuk_model')->getAllDataPo();
-        $data['sp'] = $this->model('Barang_masuk_model')->getOptionSpl();
-        // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
-        $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
-
-        $this->akses();
-        $this->view('templates/header');
-        $this->view('barang_masuk/index', $data);
-        $this->view('templates/footer');
       }
 
   }

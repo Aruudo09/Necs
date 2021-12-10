@@ -67,7 +67,9 @@ class Surat_request_model {
   }
 
   public function getAllDataTmp($page) {
-    $this->dbh->query('SELECT * FROM surat_request_tmp WHERE kodef = :kodef');
+    $key = $_SESSION['cari'];
+    $this->dbh->query('SELECT * FROM surat_request_tmp WHERE NO_SR LIKE :key AND kodef = :kodef');
+    $this->dbh->bind('key', "%$key%");
     $this->dbh->bind('kodef', $_SESSION['login']['KODEF']);
     $this->dbh->execute();
 
@@ -86,10 +88,10 @@ class Surat_request_model {
                       FROM surat_request_tmp a
                       INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP
                       INNER JOIN tarif c ON a.KODEF = c.KODEF
-                      WHERE status != 1 AND a.KODEF = :kodef ORDER BY NO_SR
+                      WHERE NO_SR LIKE :key AND status != 1 AND a.KODEF = :kodef ORDER BY NO_SR
                       LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
-
+    $this->db->bind('key', "%$key%");
     $this->db->bind('kodef', $_SESSION['login']['KODEF']);
 
     $dt = array(
@@ -246,47 +248,6 @@ class Surat_request_model {
         continue;
       }
     }
-
-  }
-
-  public function cariDataSr($page) {
-
-    $key = $_SESSION['cari'];
-    $this->dbh->query('SELECT * FROM surat_request_tmp WHERE kodef = :kodef AND NO_SR LIKE :keyword');
-    $this->dbh->bind('kodef', $_SESSION['login']['KODEF']);
-    $this->dbh->bind('keyword', "%$key%");
-    $this->dbh->execute();
-
-    $banyakDataPerHal = 5;
-    $banyakData = $this->dbh->rowCount();
-    $banyakHal = ceil($banyakData/$banyakDataPerHal);
-
-    if ( $page >= 1) {
-      $halamanAktif = $page;
-    } else {
-      $halamanAktif = 1;
-    }
-
-    $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
-    $query = "SELECT a.NO_SR, a.TGL_SR, a.PEMINTA, a.KODE_SP, b.NAMA_SP , a.KODEF, c.NMDEF
-                      FROM surat_request_tmp a
-                      INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP
-                      INNER JOIN tarif c ON a.KODEF = c.KODEF
-                      WHERE status != 1 AND a.KODEF = :kodef
-                      AND a.NO_SR LIKE :keyword
-                      ORDER BY NO_SR
-                      LIMIT $dataAwal, $banyakDataPerHal";
-    $this->db->query($query);
-    $this->db->bind('keyword', "%$key%");
-    $this->db->bind('kodef', $_SESSION['login']['KODEF']);
-
-    $dt = array(
-      "data" => $this->db->resultSet(),
-      "halamanAktif" => $halamanAktif,
-      "banyakHal" => $banyakHal
-    );
-
-    return $dt;
   }
 
 }

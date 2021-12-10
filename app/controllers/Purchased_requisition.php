@@ -3,6 +3,18 @@
   class Purchased_requisition extends Controller {
 
     public function index($page) {
+
+      $cek = $_SERVER['REQUEST_URI'];
+      if ( strpos($cek, '/purchased_requisition/1/') ) {
+        $_SESSION['cari'] = '';
+      } else {
+        if ( isset($_POST['srchBtn']) ) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } elseif (empty($_SESSION['cari'])) {
+          $_SESSION['cari'] = '';
+        }
+      }
+
       $data['selectSr'] = $this->model('Purchased_requisition_model')->getSr();
       $data['sr'] = $this->model('Purchased_requisition_model')->getAllSr($page);
 
@@ -12,41 +24,19 @@
       $this->view('templates/footer');
     }
 
-    public function cari($page) {
-
-      if (isset($_POST['srchBtn'])) {
-        $_SESSION['cari'] = $_POST['keyword'];
-      } else {
-        $_SESSION['cari'];
-      }
-
-      $data['selectSr'] = $this->model('Purchased_requisition_model')->getSr();
-      $data['sr'] = $this->model('Purchased_requisition_model')->getAllSr2($page);
-
-      $this->akses();
-      $this->view('templates/header', $data);
-      $this->view('purchased_requisition/index', $data);
-      $this->view('templates/footer');
-    }
-
     public function detail($page) {
-      $data['pr'] = $this->model('Purchased_requisition_model')->getPr($page);
 
-      $this->akses();
-      $this->view('templates/header', $data);
-      $this->view('purchased_requisition/detail', $data);
-      $this->view('templates/footer');
-    }
-
-    public function cariDtl($page) {
-
-      if (isset($_POST['srchBtn'])) {
-        $_SESSION['cari'] = $_POST['keyword'];
+      $cek = $_SERVER['REQUEST_URI'];
+      if ( strpos($cek, '/purchased_requisition/detail/1/') ) {
+        $_SESSION['cari'] = '';
       } else {
-        $_SESSION['cari'];
+        if ( isset($_POST['srchbtn']) ) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } elseif ( empty($_SESSION['cari']) ) {
+          $_SESSION['cari'] = '';
+        }
       }
-
-      $data['pr'] = $this->model('Purchased_requisition_model')->getPr2($page);
+      $data['pr'] = $this->model('Purchased_requisition_model')->getPr($page);
 
       $this->akses();
       $this->view('templates/header', $data);
@@ -58,10 +48,12 @@
       if ( $this->model('Purchased_requisition_model')->tambah($_POST) > 0 && $this->model('Purchased_requisition_model')->tambahpr($_POST) > 0) {
         Flasher::setFlash('Purchased Requisition', 'berhasil', 'ditambahkan', 'success');
         header('Location: ' . BASEURL . '/purchased_requisition/1');
+        unset($_SESSION['cari']);
         exit;
       } else {
         Flasher::setFlash('Purchased Requisition', 'Gagal', 'ditambahkan', 'warning');
         header('Location: ' . BASEURL . '/purchased_requisition/1');
+        unset($_SESSION['cari']);
         exit;
       }
     }
@@ -70,10 +62,12 @@
         if ( $this->model('Purchased_requisition_model')->hapus(str_replace('-F', '/', $data)) > 0 ) {
           Flasher::setFlash('Purchased Requisition', 'berhasil', 'dihapus', 'success');
           header('Location: ' . BASEURL . '/purchased_requisition/detail/1');
+          unset($_SESSION['cari']);
           exit;
         } else {
           Flasher::setFlash('Purchased Requisition', 'gagal', 'dihapus', 'danger');
           header('Location: ' . BASEURL . '/purchased_requisition/detail/1');
+          unset($_SESSION['cari']);
           exit;
         }
     }

@@ -31,9 +31,9 @@
                         Barang
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang/1">Data Barang</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_masuk/1">Barang Masuk</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_keluar">Barang Keluar</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang/1/">Data Barang</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_masuk/1/">Barang Masuk</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/barang_keluar/1/">Barang Keluar</a></li>
                       </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -41,9 +41,9 @@
                         Pengadaan Barang
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/surat_request/1">Surat Request</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_requisition/1">Purchase Requisition</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_order/1">Purchase Order</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/surat_request/1/">Surat Request</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_requisition/1/">Purchase Requisition</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASEURL; ?>/purchased_order/1/">Purchase Order</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
@@ -68,9 +68,9 @@
             <script type="text/javascript">
               const currentLocation = location.href;
               const menuItem = document.querySelectorAll('a');
-              const menuLength = menuItem.length
+              const menuLength = menuItem.length;
               for (let i = 0; i<menuLength; i++){
-                if(menuItem[i].href == currentLocation){
+                if(menuItem[i].href == currentLocation ){
                   menuItem[i].classList.add('active');
                 }
               }

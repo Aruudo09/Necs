@@ -75,10 +75,10 @@
               <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
               <div class="overflow-auto">
                 <h3>LIST SURAT REQUEST</h3>
-                  <form class="" action="<?php echo BASEURL; ?>/surat_request/cari/1" method="post">
+                  <form class="" action="<?php echo BASEURL; ?>/surat_request/1" method="post">
                     <div class="d-flex mt-2 mb-2">
                         <input type="text" name="keyword" placeholder="Nomor PO...." class="form-control" style="width:30%">
-                        <button type="submit" name="srchSr" class="btn btn-success" onclick="" style="width:6%"><i class="fas fa-search"></i></button>
+                        <button type="submit" name="srchbtn" class="btn btn-success" onclick="" style="width:6%"><i class="fas fa-search"></i></button>
                     </div>
                   </form>
                   <table class="table table-striped text-center" id="tbSr">

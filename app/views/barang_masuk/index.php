@@ -15,7 +15,7 @@
           <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
             <div class="d-flex justify-content-around">
               <h3>FORM INPUT BERITA ACARA</h3>
-              <a href="<?php echo BASEURL; ?>/barang_masuk/detail">
+              <a href="<?php echo BASEURL; ?>/barang_masuk/detail/1">
                 <button type="button" class="btn btn-warning" id="detail" name="button">View Table</button>
               </a>
             </div>
@@ -96,7 +96,7 @@
 <!--VIEW TABLE DETAIL BERITA ACARA-->
     <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
       <h3 class="fs-4 mb-3">DAFTAR BARANG MASUK</h3>
-      <form class="" action="<?php echo BASEURL; ?>/barang_masuk/cari/1" method="post">
+      <form class="" action="<?php echo BASEURL; ?>/barang_masuk/1" method="post">
         <div class="d-flex mb-3">
           <input type="text" class="form-control" style="width:20%" name="keyword" value="">
           <button type="submit" class="btn btn-success" style="width:5%" name="srchbtn"><i class="fa fa-search"></i></button>

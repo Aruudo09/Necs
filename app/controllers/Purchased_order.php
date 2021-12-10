@@ -12,6 +12,18 @@
     }
 
     public function detail($page) {
+
+      $cek = $_SERVER['REQUEST_URI'];
+      if ( strpos($cek, '/purchased_order/detail/1/')) {
+        $_SESSION['cari'] = '';
+      } else {
+        if ( isset($_POST['srchbtn'])) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } elseif ( empty($_SESSION['cari']) ) {
+          $_SESSION['cari'] = '';
+        }
+      }
+
       $data['po'] = $this->model('Purchased_order_model')->getAllPo($page);
 
       $this->view('templates/header', $data);

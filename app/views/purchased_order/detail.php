@@ -15,10 +15,10 @@
       <h3>PURCHASED ORDER</h3>
       <hr>
       <div class="row mb-3">
-        <form class="" action="index.html" method="post">
+        <form class="" action="<?php echo BASEURL; ?>/purchased_order/detail/1" method="post">
           <div class="d-flex">
             <input type="text" class="form-control" style="width:30%" name="keyword" value="">
-            <button type="submit" class="btn btn-success" style="width:6%" name="button"><i class="fa fa-search"></i></button>
+            <button type="submit" class="btn btn-success" style="width:6%" name="srchbtn"><i class="fa fa-search"></i></button>
           </div>
         </form>
       </div>

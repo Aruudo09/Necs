@@ -16,10 +16,10 @@
       <h3>DAFTAR PURCHASED REQUISITION</h3>
       <hr>
       <div class="row mb-3">
-        <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/cariDtl/1" method="post">
+        <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/detail/1" method="post">
           <div class="d-flex">
             <input type="text" class="form-control" style="width:30%" placeholder="Type Number Of PR....." name="keyword" value="">
-            <button type="submit" class="btn btn-success" style="width:6%" name="srchBtn"><i class="fa fa-search"></i></button>
+            <button type="submit" class="btn btn-success" style="width:6%" name="srchbtn"><i class="fa fa-search"></i></button>
           </div>
         </form>
       </div>

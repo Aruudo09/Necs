@@ -16,7 +16,7 @@
           <div class="d-flex justify-content-around">
             <h3>FORM PURCHASED REQUISITION</h3>
             <div class="text-end">
-              <a href="<?php echo BASEURL; ?>/purchased_requisition/detail/1" class="btn btn-warning">View Table</a>
+              <a href="<?php echo BASEURL; ?>/purchased_requisition/detail/1/" class="btn btn-warning">View Table</a>
             </div>
           </div>
           <hr>
@@ -79,7 +79,7 @@
           <div class="overflow-auto">
             <table class="table table-striped table-hover text-center" id="tabSr">
               <div class="row mb-3">
-                <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/cari/1" method="post">
+                <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/1" method="post">
                   <div class="d-flex">
                     <input type="text" class="form-control" name="keyword" style="width:30%" placeholder="Type Number Of SR....." value="" autocomplete="off">
                     <button type="submit" class="btn btn-success" style="width:6%" name="srchBtn"><i class="fa fa-search"></i></button>

@@ -20,7 +20,11 @@
     }
 
     public function getAllPo($page) {
-      $this->dbh->query('SELECT * FROM purchased_order_tmp');
+      $key = $_SESSION['cari'];
+
+      $query2 = "SELECT * FROM purchased_order_tmp WHERE NO_PO LIKE :key AND status != '1'";
+      $this->dbh->query($query2);
+      $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
 
       $banyakDataPerHal = 5;
@@ -39,11 +43,12 @@
                 FROM purchased_order_tmp a
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE status != '1'
+                WHERE a.NO_PO LIKE :key AND status != '1'
                 ORDER BY a.NO_PO
                 LIMIT $dataAwal, $banyakDataPerHal";
 
       $this->db->query($query);
+      $this->db->bind('key', "%$key%");
 
       $dt = array(
         "data" => $this->db->resultSet(),

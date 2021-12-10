@@ -46,8 +46,9 @@
       }
 
       public function getAllBarangMsk($page) {
-
-        $this->dbh->query('SELECT * FROM berita_acara_tmp');
+        $key = $_SESSION['cari'];
+        $this->dbh->query('SELECT * FROM berita_acara_tmp WHERE NO_BCRA LIKE :key');
+        $this->dbh->bind('key', "%$key%");
         $this->dbh->execute();
 
         $banyakData = $this->dbh->rowCount();
@@ -62,9 +63,10 @@
 
         $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP ORDER BY a.TGL_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
+        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA LIKE :key ORDER BY a.TGL_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
 
         $this->db->query($query);
+        $this->db->bind('key', "%$key%");
 
         $dt = array(
           "data" => $this->db->resultSet(),
@@ -75,15 +77,46 @@
         return $dt;
       }
 
-      public function getAllPoBcra() {
-        $this->db->query('SELECT a.NO_PO, a.TGL_PO, c.KODE_SP, c.NAMA_SP, b.KODE_BRG, b.NAMA_BRG, b.Jenis_brg, b.Stock_brg, a.QTY_ORDER, a.QTY_TERIMA, b.Satuan, a.HARGA_PO, a.TOT_HARGA
-        FROM purchased_order a
-        LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
-        LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-        WHERE a.QTY_ORDER > a.QTY_TERIMA AND status != "1"
-        ORDER BY a.NO_PO DESC');
+      public function getAllPoBcra($page) {
 
-        return $this->db->resultSet();
+        $key = $_SESSION['cari'];
+        $query2 = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP
+                    FROM purchased_order_tmp a
+                    LEFT JOIN purchased_order b ON a.NO_PO = b.NO_PO
+                    LEFT JOIN tarif c ON a.KODEF = c.KODEF
+                    LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
+                    WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND b.status != '1'";
+        $this->dbh->query($query2);
+        $this->dbh->bind('key', "%$key%");
+
+        $banyakData = $this->dbh->rowCount();
+        $banyakDataPerHal = 5;
+        $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+        if ( $page >= 1 ) {
+          $halamanAktif = $page;
+        } else {
+          $halamanAktif = 1;
+        }
+
+        $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+        $query = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP
+                    FROM purchased_order_tmp a
+                    LEFT JOIN purchased_order b ON a.NO_PO = b.NO_PO
+                    LEFT JOIN tarif c ON a.KODEF = c.KODEF
+                    LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
+                    WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND b.status != '1' ORDER BY a.NO_PO ASC";
+        $this->db->query($query);
+        $this->db->bind('key', "%$key%");
+
+        $dt = array(
+          "data" => $this->db->resultSet(),
+          "banyakHal" => $banyakHal,
+          "halamanAktif" => $halamanAktif
+        );
+
+        return $dt;
       }
 
       public function getAllDataPo() {
@@ -325,44 +358,6 @@
         $this->db->execute();
 
         return $this->db->rowCount();
-      }
-
-      public function cariData($page) {
-      $keyword = $_SESSION['cari'];
-
-      $query2 = "SELECT * FROM berita_acara_tmp WHERE NO_PO LIKE :keyword OR NO_BCRA LIKE :keyword";
-      $this->dbh->query($query2);
-      $this->dbh->bind('keyword', "%$keyword%");
-      $this->dbh->execute();
-
-      $banyakData = $this->dbh->rowCount();
-      $banyakDataPerHal = 5;
-      $banyakHal = ceil($banyakData/$banyakDataPerHal);
-
-      if ( $page >= 1 ) {
-        $halamanAktif = $page;
-      } else {
-        $halamanAktif = 1;
-      }
-
-      $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
-
-      $query = "SELECT a.NO_BCRA, a.NO_PO, a.NO_SRJLN, a.NO_SRJLN, b.NAMA_SP, a.KODE_SP, a.TGL_BCRA, a.PENERIMA
-                FROM berita_acara_tmp a
-                JOIN supplier b ON a.KODE_SP = b.KODE_SP
-                WHERE NO_PO LIKE :keyword OR NO_BCRA LIKE :keyword
-                ORDER BY NO_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal
-                ";
-      $this->db->query($query);
-      $this->db->bind('keyword', "%$keyword%");
-
-      $dt = array(
-        "data" => $this->db->resultSet(),
-        "banyakHal" => $banyakHal,
-        "halamanAktif" => $halamanAktif
-      );
-
-      return $dt;
       }
 
     }

@@ -16,8 +16,10 @@ class Barang_model {
   }
 
   public function getAllBarang($page) {
+    $key = $_SESSION['cari'];
 
-    $this->dbh->query('SELECT * FROM barang');
+    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key');
+    $this->dbh->bind('key', "%$key%");
     $this->dbh->execute();
 
     $banyakData = $this->dbh->rowCount();
@@ -32,8 +34,9 @@ class Barang_model {
 
     $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP ORDER BY NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
+    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :key ORDER BY NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
+    $this->db->bind('key', "%$key%");
 
     $dt = array(
       "data" => $this->db->resultSet(),
@@ -135,7 +138,6 @@ class Barang_model {
 
     $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-    $keyword = $_POST['keyword'];
     $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :key LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
     $this->db->bind('key', "%$key%");

@@ -7,19 +7,54 @@
 
     public function __construct() {
       $this->db = new Database;
+      $this->dbh = new Database;
     }
 
-    public function getAllBarangKlr() {
-      $this->db->query('SELECT NOMOR_SLIP, a.KODE_BRG, b.NAMA_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, b.Stock_brg, QUANTITY_MINTA FROM barang_keluar a JOIN barang b ON a.KODE_BRG = b.KODE_BRG');
+    public function getAllBarangKlr($page) {
+      $this->dbh->query('SELECT a.NOMOR_SLIP, a.KODEF, b.NMDEF, a.SHIFT, a.POSTING, a.NO_REF, a.NAMA_USER, a.TANGGAL_OUT FROM barang_keluar_tmp a LEFT JOIN tarif b ON a.KODEF = b.KODEF');
 
-      return $this->db->resultSet();
+      $this->dbh->execute();
+
+      $banyakData = $this->dbh->rowCount();
+      $banyakDataPerHal = 5;
+      $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+      if ( $page >= 1 ) {
+        $halamanAktif = $page;
+      } else {
+        $halamanAktif = 1;
+      }
+
+      $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+      $query = "SELECT a.NOMOR_SLIP, a.KODEF, b.NMDEF, a.SHIFT, a.POSTING, a.NO_REF, a.NAMA_USER, a.TANGGAL_OUT FROM barang_keluar_tmp a LEFT JOIN tarif b ON a.KODEF = b.KODEF LIMIT $dataAwal, $banyakDataPerHal";
+      $this->db->query($query);
+
+      $dt = array(
+        "data" => $this->db->resultSet(),
+        "banyakHal" => $banyakHal,
+        "halamanAktif" => $halamanAktif
+      );
+
+      return $dt;
     }
 
     public function getBrgKlrUbah($data) {
-      $this->db->query('SELECT * FROM barang_keluar WHERE NOMOR_SLIP=:No_pakai AND KODE_BRG = :kode_brg');
-      $this->db->bind('No_pakai', $data['No_pakai']);
-      $this->db->bind('kode_brg', $data['kode_brg']);
+      $this->db->query('SELECT NOMOR_SLIP, TANGGAL_OUT FROM barang_keluar_tmp WHERE NOMOR_SLIP = :id');
+      $this->db->bind('id', $data['id']);
       return $this->db->single();
+    }
+
+    public function getDtl($data) {
+      $query = "SELECT a.NOMOR_SLIP, a.KODEF, b.NMDEF, a.SHIFT, a.POSTING, a.NO_REF, a.NAMA_USER, a.TANGGAL_OUT, a.KODE_BRG, c.NAMA_BRG, a.QUANTITY_MINTA, c.satuan
+      FROM barang_keluar a
+      LEFT JOIN tarif b ON a.KODEF = b.KODEF
+      LEFT JOIN barang c ON a.KODE_BRG = c.KODE_BRG WHERE a.NOMOR_SLIP = :id";
+
+      $this->db->query($query);
+      $this->db->bind('id', $data['id']);
+
+      return $this->db->resultSet();
     }
 
     public function getBarangItem() {
@@ -48,99 +83,157 @@
       $this->db->bind('kdBrg' .$i , $data['kdBrg'][$i]);
       $stk = $this->db->single();
 
-    if (  $data['qtyMinta'][$i] <= $stk['Stock_brg']) {
-        if ( $y == count($data['nmBrg'])) {
-          return true;
-        }
-        else {
-          $i++;
-          $y++;
-          continue;
-        }
-      } elseif( $data['qtyMinta'][$i] > $stk['Stock_brg']) {
-        return false;
+        if (  $data['qtyMinta'][$i] <= $stk['Stock_brg']) {
+            if ( $y == count($data['nmBrg'])) {
+              return true;
+            }
+            else {
+              $i++;
+              $y++;
+              continue;
+            }
+          } elseif( $data['qtyMinta'][$i] > $stk['Stock_brg']) {
+            return false;
+          }
       }
-
     }
+
+    public function tambahKlr($data) {
+      $query = "INSERT INTO barang_keluar_tmp (NOMOR_SLIP ,KODEF, SHIFT, POSTING, NO_REF, NAMA_USER, TANGGAL_OUT)
+                VALUES (:inputNoPk, :kodef, :shift, :posting, :noRef, :nama, :tanggalKeluar)";
+
+      $this->db->query($query);
+      $this->db->bind('inputNoPk', $data['inputNoPk']);
+      $this->db->bind('kodef', $_SESSION['login']['KODEF']);
+      $this->db->bind('shift', $data['shift']);
+      $this->db->bind('posting', $data['posting']);
+      $this->db->bind('noRef', $data['noRef']);
+      $this->db->bind('nama', $data['nama']);
+      $this->db->bind('tanggalKeluar', $data['tanggalKeluar']);
+
+      $this->db->execute();
+
+      return $this->db->rowCount();
     }
 
     public function tambahBrgKlr($data) {
       $i = 0;
       $y = 1;
       foreach( $data['nmBrg'] as $brg) {
-      $query = "INSERT INTO barang_keluar (NOMOR_SLIP, KODE_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, QUANTITY_MINTA) VALUES (:inputNoPk, :kdBrg" .$i. ", :shift, :posting, :tanggalKeluar, :keterangan" .$i. ", :nama, :noRef, :qtyMinta" .$i. ")";
+        if ( $data['qtyMinta'][$i] == NULL || $data['qtyMinta'] == '' && $y == count($data['nmBrg'])) {
+          return true;
+        } elseif ( $data['qtyMinta'][$i] == NULL || $data['qtyMinta'] == '' ) {
+          $i++;
+          $y++;
+          continue;
+        } else {
+          $query = "INSERT INTO barang_keluar (NOMOR_SLIP, KODE_BRG, SHIFT, POSTING, KODEF, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, QUANTITY_MINTA) VALUES (:inputNoPk, :kdBrg" .$i. ", :shift, :posting, :kodef, :tanggalKeluar, :keterangan" .$i. ", :nama, :noRef, :qtyMinta" .$i. ")";
 
-      $this->db->query($query);
-      $this->db->bind('inputNoPk', $data['inputNoPk']);
-      $this->db->bind('kdBrg' .$i, $data['kdBrg'][$i]);
-      $this->db->bind('shift', $data['shift']);
-      $this->db->bind('posting', $data['posting']);
-      $this->db->bind('tanggalKeluar', $data['tanggalKeluar']);
-      $this->db->bind('keterangan' .$i, $data['keterangan'][$i]);
-      $this->db->bind('nama', $data['nama']);
-      $this->db->bind('noRef', $data['noRef']);
-      $this->db->bind('qtyMinta' .$i, $data['qtyMinta'][$i]);
+          $this->db->query($query);
+          $this->db->bind('inputNoPk', $data['inputNoPk']);
+          $this->db->bind('kdBrg' .$i, $data['kdBrg'][$i]);
+          $this->db->bind('shift', $data['shift']);
+          $this->db->bind('posting', $data['posting']);
+          $this->db->bind('kodef', $_SESSION['login']['KODEF']);
+          $this->db->bind('tanggalKeluar', $data['tanggalKeluar']);
+          $this->db->bind('keterangan' .$i, $data['keterangan'][$i]);
+          $this->db->bind('nama', $data['nama']);
+          $this->db->bind('noRef', $data['noRef']);
+          $this->db->bind('qtyMinta' .$i, $data['qtyMinta'][$i]);
 
-      $this->db->execute();
-      if ( $y == count($data['nmBrg'])) {
-        return true;
-      } else {
-        $i++;
-        $y++;
-        continue;
-      }
-    }
-      // return $this->db->rowCount();
+          $this->db->execute();
+          if ( $y == count($data['nmBrg'])) {
+            return true;
+          } else {
+            $i++;
+            $y++;
+            continue;
+          }
+        }
+     }
     }
 
     public function hapusDataKlr($data) {
-      $query = "DELETE FROM barang_keluar WHERE NOMOR_SLIP = :id AND KODE_BRG = :brg";
+      $query = "UPDATE barang_keluar_tmp SET status = 1 WHERE NOMOR_SLIP = :id";
       $this->db->query($query);
       $this->db->bind('id', $data['id']);
-      $this->db->bind('brg', $data['brg']);
       $this->db->execute();
       return $this->db->rowCount();
     }
 
-
-    public function ubahBrgKlr($data) {
-      $query = "UPDATE barang_keluar SET
-                  KODE_BRG = :namaBrg2,
-                  SHIFT = :shift2,
-                  POSTING = :posting2,
-                  TANGGAL_OUT = :tanggalkeluar2,
-                  KETERANGAN = :keterangan2,
-                  NAMA_USER = :nama2,
-                  NO_REF = :noRef2,
-                  QUANTITY_MINTA = :qtyMinta2
-                  WHERE NOMOR_SLIP = :inputNoPk2 AND KODE_BRG = :kd_brg";
+    public function ubahKlr($data) {
+      var_dump($data);
+      $query = "UPDATE barang_keluar_tmp SET
+                TANGGAL_OUT = :tglKlr WHERE NOMOR_SLIP = :inputNoKlr";
 
       $this->db->query($query);
-      $this->db->bind('namaBrg2', $data['namaBrg2']);
-      $this->db->bind('shift2', $data['shift2']);
-      $this->db->bind('posting2', $data['posting2']);
-      $this->db->bind('tanggalkeluar2', $data['tanggalkeluar2']);
-      $this->db->bind('keterangan2', $data['keterangan2']);
-      $this->db->bind('nama2', $data['nama2']);
-      $this->db->bind('noRef2', $data['noRef2']);
-      $this->db->bind('qtyMinta2', $data['qtyMinta2']);
-      $this->db->bind('inputNoPk2', $data['inputNoPk2']);
-      $this->db->bind('kd_brg', $data['kd_brg']);
-
+      $this->db->bind('tglKlr', $data['tglKlr']);
+      $this->db->bind('inputNoKlr', $data['inputNoKlr']);
       $this->db->execute();
 
       return $this->db->rowCount();
+    }
 
+    public function ubahBrgKlr($data) {
+
+      $i = 0;
+      $y = 1;
+      foreach ($data['brg'] as $brg) {
+        $query = "UPDATE barang_keluar SET
+                    QUANTITY_MINTA = :qty" .$i. "
+                    WHERE NOMOR_SLIP = :noslip AND KODE_BRG = :brg" .$i. "";
+
+        $this->db->query($query);
+        $this->db->bind('qty' .$i, $data['qty'][$i]);
+        $this->db->bind('brg' .$i, $data['brg'][$i]);
+        $this->db->bind('noslip', $data['noslip']);
+
+        $this->db->execute();
+        if ( $y == count($data['brg']) ) {
+          return true;
+        } else {
+          $i++;
+          $y++;
+          continue;
+        }
+
+      }
 
     }
 
-    public function cariData() {
-    $keyword = $_POST['keyword'];
-    $query = "SELECT NOMOR_SLIP, b.NAMA_BRG, SHIFT, POSTING, TANGGAL_OUT, KETERANGAN, NAMA_USER, NO_REF, b.Stock_brg, QUANTITY_MINTA FROM barang_keluar a JOIN barang b ON a.KODE_BRG = b.KODE_BRG WHERE NAMA_USER LIKE :keyword";
+    public function cariData($page) {
+    $keyword = $_SESSION['cari'];
+
+    $query2 = "SELECT a.NOMOR_SLIP, a.SHIFT, a.POSTING, a.KODEF, b.NMDEF, a.TANGGAL_OUT, a.NAMA_USER, a.NO_REF FROM barang_keluar_tmp a LEFT JOIN tarif b ON a.KODEF = b.KODEF WHERE NOMOR_SLIP LIKE :keyword";
+    $this->dbh->query($query2);
+    $this->dbh->bind('keyword', "%$keyword%");
+    $this->dbh->execute();
+
+    $banyakData = $this->dbh->rowCount();
+    $banyakDataPerHal = 5;
+    $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+    if ( $page >= 1 ) {
+      $halamanAktif = $page;
+    } else {
+      $halamanAktif = 1;
+    }
+
+    $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+    $query = "SELECT a.NOMOR_SLIP, a.SHIFT, a.POSTING, a.KODEF, b.NMDEF, a.TANGGAL_OUT, a.NAMA_USER, a.NO_REF FROM barang_keluar_tmp a LEFT JOIN tarif b ON a.KODEF = b.KODEF WHERE NOMOR_SLIP LIKE :keyword LIMIT $dataAwal, $banyakDataPerHal";
+
     $this->db->query($query);
     $this->db->bind('keyword', "%$keyword%");
-    return $this->db->resultSet();
-  }
+
+    $dt = array(
+      "data" => $this->db->resultSet(),
+      "banyakHal" => $banyakHal,
+      "halamanAktif" => $halamanAktif
+    );
+
+    return $dt;
+   }
 
   }
 

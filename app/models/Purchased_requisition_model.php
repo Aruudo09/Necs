@@ -22,7 +22,9 @@
     }
 
     public function getPr($page) {
-      $this->dbh->query('SELECT * FROM purchased_requisition');
+      $key = $_SESSION['cari'];
+      $this->dbh->query('SELECT * FROM purchased_requisition WHERE NO_PR LIKE :key');
+      $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
 
       $banyakDataPerHal = 5;
@@ -41,49 +43,12 @@
                 FROM purchased_requisition a
                 INNER JOIN tarif b ON a.KODEF = b.KODEF
                 INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE status != '1'
+                WHERE a.NO_PR LIKE :key AND status != '1'
                 ORDER BY a.NO_PR
                 LIMIT $dataAwal, $banyakDataPerHal";
 
       $this->db->query($query);
-
-      $dt = array(
-        "data" => $this->db->resultSet(),
-        "halamanAktif" => $halamanAktif,
-        "banyakHal" => $banyakHal
-      );
-
-      return $dt;
-    }
-
-    public function getPr2($page) {
-      $this->dbh->query('SELECT * FROM purchased_requisition');
-      $this->dbh->execute();
-
-      $banyakDataPerHal = 5;
-      $banyakData = $this->dbh->rowCount();
-      $banyakHal = ceil($banyakData/$banyakDataPerHal);
-      $keyword = $_SESSION['cari'];
-
-      if ( $page >= 1) {
-        $halamanAktif = $page;
-      } else {
-        $halamanAktif = 1;
-      }
-
-      $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
-
-      $query = "SELECT a.NO_PR, a.USER, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP, a.TGL_PR
-                FROM purchased_requisition a
-                INNER JOIN tarif b ON a.KODEF = b.KODEF
-                INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE status != '1' AND
-                a.NO_PR LIKE :keyword
-                ORDER BY a.NO_PR
-                LIMIT $dataAwal, $banyakDataPerHal";
-
-      $this->db->query($query);
-      $this->db->bind('keyword', "%$keyword%");
+      $this->db->bind('key', "%$key%");
 
       $dt = array(
         "data" => $this->db->resultSet(),
@@ -121,7 +86,10 @@
     }
 
     public function getAllSr($page) {
-      $this->dbh->query('SELECT *FROM surat_request_tmp');
+      $key = $_SESSION['cari'];
+      $query2 = "SELECT *FROM surat_request_tmp WHERE NO_SR LIKE :key";
+      $this->dbh->query($query2);
+      $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
 
       $banyakDataPerHal = 5;
@@ -140,10 +108,11 @@
                 FROM surat_request_tmp a
                 INNER JOIN tarif b ON a.KODEF = b.KODEF
                 INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE status != '1' AND a.NO_PR IS NULL
+                WHERE NO_SR LIKE :key AND status != '1' AND a.NO_PR IS NULL
                 ORDER BY NO_SR
                 LIMIT $dataAwal, $banyakDataPerHal";
       $this->db->query($query);
+      $this->db->bind('key', "%$key%");
 
       $dt = array(
         "data" => $this->db->resultSet(),

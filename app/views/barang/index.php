@@ -24,7 +24,7 @@
           <div class="border border-dark rounded-3 bg-white mt-4 mb-3 p-3">
           <div class="overflow-auto">
             <h3 class="fs-4 mb-3">Daftar Barang</h3>
-            <form class="" action="<?php echo BASEURL; ?>/barang/cari/1" method="post">
+            <form class="" action="<?php echo BASEURL; ?>/barang/1" method="post">
               <div class="d-flex">
                 <input type="text" class="form-control" style="width:30%" placeholder="Nama Barang....." name="keyword" value="">
                 <button type="submit" class="btn btn-success" style="width:6%" name="srchbtn"><i class="fa fa-search"></i></button>
@@ -68,11 +68,11 @@
               <!--TOMBOL PREV-->
                 <?php if ( $data['barang']['halamanAktif'] <= 1 ) { ?>
                   <li class="page-item disabled">
-                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link pgPrev">Prev</a>
                   </li>
                 <?php } else { ?>
                   <li class="page-item">
-                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link">Prev</a>
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] - 1 ?>" class="page-link pgPrev">Prev</a>
                   </li>
                 <?php } ?>
               <!--TOMBOL PAGE-->
@@ -90,11 +90,11 @@
               <!--TOMBOL NEXT-->
                 <?php if ( $data['barang']['halamanAktif'] == $data['barang']['banyakHal'] ) { ?>
                   <li class="page-item disabled">
-                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link pgNext">Next</a>
                   </li>
                 <?php } else { ?>
                   <li class="page-item">
-                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                    <a href="<?php echo BASEURL; ?>/barang/<?php echo $data['barang']['halamanAktif'] + 1 ?>" class="page-link pgNext">Next</a>
                   </li>
                 <?php } ?>
             </ul>

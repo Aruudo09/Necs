@@ -1,12 +1,12 @@
 // PLUGIN FOR JAVASCRIPT --> select2(), DataTables
 
 //----DATA TABLES-----//
-$(document).ready(function() {
-  $('#tbSp').DataTable();
-  $('#tbPo').DataTable();
-  $('.tbPo2').DataTable();
-  $('.tblBon').DataTable();
-});
+// $(document).ready(function() {
+//   $('#tbSp').DataTable();
+//   $('#tbPo').DataTable();
+//   $('.tbPo2').DataTable();
+//   $('.tblBon').DataTable();
+// });
 
 $(function() {
 
@@ -244,12 +244,6 @@ if (window.location.href.indexOf('/Necs/public/purchased_requisition/cari') > 0 
 //-----PENCARIAN SAAT DI DETAIL PR------//
 if (window.location.href.indexOf('/Necs/public/purchased_requisition/detail') > 0 || window.location.href.indexOf('/Necs/public/purchased_requisition/cariDtl') > 0) {
 
-  //----------PAGINATION-----------//
-  $('.pgNum').click(function(){
-    var page = $(this).text();
-    $('.pgNum').attr("href", "http://localhost/Necs/public/purchased_requisition/cariDtl/" +page+ "");
-  });
-
   $('.hps').click(function(){
     if (confirm("Apa anda yakin?")) {
       const id = $(this).data('id');
@@ -329,7 +323,7 @@ if (window.location.href.indexOf('/Necs/public/purchased_requisition/detail') > 
 
   //--------TOMBOL KEMBALI----------//
   $('#back').click(function(){
-    location.replace('http://localhost/Necs/public/purchased_requisition/1');
+    location.replace('http://localhost/Necs/public/purchased_requisition/1/');
   });
 }
 
@@ -513,16 +507,9 @@ if (window.location.href.indexOf('/Necs/public/barang') > 0 && window.location.h
   });
 }
 
-if ( window.location.href.indexOf('/Nces/public/barang/cari') > 0 ) {
-  $('.pgNum').click(function(){
-    var page = $(this).text();
-    $('.pgNum').attr("href", "http://localhost/Necs/public/barang/cari/" +page+ "");
-  });
-}
-
 //BARANG MASUK
 
-if (window.location.href.indexOf('/Necs/public/barang_masuk') > 0 ) {
+if (window.location.href.indexOf('/Necs/public/barang_masuk') > -1 ) {
 
   //------SELECT2() TAMBAH BARANG------//
   $(document).ready(function(){
@@ -692,7 +679,7 @@ if (window.location.href.indexOf('/Necs/public/barang_masuk') > 0 ) {
 
 //BARANG KELUAR
 
-if (window.location.pathname=='/Necs/public/barang_keluar') {
+if (window.location.href.indexOf('/Necs/public/barang_keluar') > 0 ) {
 
   //------COMBOBOX BARANG-------//
   $(document).ready(function() {
@@ -706,66 +693,45 @@ if (window.location.pathname=='/Necs/public/barang_keluar') {
 
       var new_row = parseInt($('#num_row').val()) + 1;
       // console.log(new_row);
-      var new_input1 = "<div class='row'><div class='col-3'><label for='namaBrg' id='lblNamaBrg" + new_row + "'>Barang :</label><input type='text' placeholder='Barang...' name='nmBrg[]' id='nmBrg" + new_row + "' class='form-control' value='" + nama +"'></div>";
+      var new_input1 = "<tbody id='bodyRow" + new_row + "'><tr><td><input type='text' placeholder='Barang...' name='nmBrg[]' class='form-control' value='" + nama +"'></td>";
 
-      var new_input2 = "<div class='col-4'><label for='qtyMinta' id='lblQtyMinta" + new_row + "'>Jumlah Minta :</label><input type='number' placeholder='Quantity...' name='qtyMinta[]' id='qtyMinta" + new_row + "' class='form-control'></div>";
+      var new_input2 = "<td><input type='number' placeholder='Quantity...' name='qtyMinta[]' class='form-control'></td>";
 
-      var new_input3 = "<div class='col-4'><label for='keterangan' id='lblKeterangan" + new_row + "'>Keterangan :</label><input type='text' placeholder='Keterangan...' name='keterangan[]' id='keterangan" + new_row + "' class='form-control'></div>";
+      var new_input3 = "<td><input type='text' placeholder='Keterangan...' name='keterangan[]' class='form-control'></td>";
 
-      var new_input = "<div class='col-3'><input type='hidden' placeholder='Kode Barang...' name='kdBrg[]' id='kdBrg" + new_row + "' class='form-control' value='" + value +"'></div></div>";
+      var new_input4 = "<td><button type='button' class='btn btn-danger delRow'><i class='fa fa-minus'></i></button></td>";
+
+      var new_input5 = "<td style='display:none'><input type='hidden' placeholder='Kode Barang...' name='kdBrg[]'  class='form-control' value='" + value +"'></td></tr></tbody>";
 
 
-       $('#add_row').append(new_input1 + new_input2 + new_input3 + new_input);
+       $('#tabKlr').append(new_input1 + new_input2 + new_input3 + new_input4 + new_input5);
 
        $('#num_row').val(new_row);
     });
 
   //-----MENGURANGI FIELD BARANG-----//
-  $('.remove').click(function() {
+  $('#tabKlr').on('click', '.delRow',function() {
     var old_row = $('#num_row').val();
 
      if (old_row > 0) {
-       $('#nmBrg' + old_row).remove();
-       $('#qtyMinta' + old_row).remove();
-       $('#keterangan' + old_row).remove();
-       $('#kdBrg' + old_row).remove();
-       $('#lblNamaBrg' + old_row).remove();
-       $('#lblQtyMinta' + old_row).remove();
-       $('#lblKeterangan' + old_row).remove();
+       $('#bodyRow' + old_row).remove();
        $('#num_row').val(old_row - 1);
      }
   });
 
   //----------EDIT BARANG KELUAR-----------//
   $('.editBrgKlr').on('click', function() {
-
-    $('#modalLabelBrgKlr').html('Edit Data Keluar Barang');
-    $('.modal-footer button[type=submit]').html('Ubah Data');
-    $('.modal-body form').attr('action', 'http://localhost/Necs/public/Barang_keluar/ubah');
-
     const id = $(this).data('id');
-    const kd = $(this).data('kd');
     console.log(id);
-    console.log(kd);
 
     $.ajax({
         url: 'http://localhost/Necs/public/Barang_keluar/getUbah',
-        data: {No_pakai : id, kode_brg : kd},
-        method: 'post',
+        data: {id : id},
+        type: 'post',
         dataType: 'json',
         success: function(data) {
-          console.log(data);
-            $('#inputNoPk2').val(data.NOMOR_SLIP);
-            $('#kd_brg').val(data.KODE_BRG);
-            $('#namaBrg2').val(data.KODE_BRG);
-            $('#shift2').val(data.SHIFT);
-            $('#posting2').val(data.POSTING);
-            $('#tanggalkeluar2').val(data.TANGGAL_OUT);
-            $('#keterangan2').val(data.KETERANGAN);
-            $('#nama2').val(data.NAMA_USER);
-            $('#noRef2').val(data.NO_REF);
-            $('#qtyMinta2').val(data.QUANTITY_MINTA);
-            $('#No_pk').val(data.NOMOR_SLIP);
+          $('#inputNoKlr').val(data.NOMOR_SLIP);
+          $('#tglKlr').val(data.TANGGAL_OUT);
         }
     });
   });
@@ -789,6 +755,66 @@ if (window.location.pathname=='/Necs/public/barang_keluar') {
       }
     });
   });
+
+  //------MENAMPILKAN DETAIL BARANG KELUAR------//
+  $('.detail').click(function(){
+    const id = $(this).data('id');
+    $('.rowDtl').remove();
+    $('#noslip').text('');
+    $('#namaDtl').text('');
+    $('#dept').text('');
+    $('#shiftDtl').text('');
+    $('#post').text('');
+    $('#noref').text('');
+    $('#tgl').text('');
+    $('#editDtl').prop("disabled", true);
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Barang_keluar/getDtl',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        $('#noslip').text(data[0].NOMOR_SLIP);
+        $('#hdnnoslip').val(data[0].NOMOR_SLIP);
+        $('#namaDtl').text(data[0].NAMA_USER);
+        $('#dept').text(data[0].NMDEF);
+        $('#shiftDtl').text(data[0].SHIFT);
+        $('#post').text(data[0].POSTING);
+        $('#noref').text(data[0].NO_REF);
+        $('#tgl').text(data[0].TANGGAL_OUT);
+
+        for (var i = 0; i < data.length; i++) {
+          var row = "<tbody class='rowDtl'><tr><td>" +data[i].NAMA_BRG+ "</td>";
+          var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value=" +data[i].KODE_BRG+ "></td>";
+          var row1 = "<td><input type='number' class='form-control qty' name='qty[]' value='" +data[i].QUANTITY_MINTA+ "'></td>";
+          var row2 = "<td>" +data[i].satuan+ "</td>";
+          var row3 = "<td><button type='button' class='btn btn-danger delete'><i class='fa fa-trash'></i></button></td>";
+
+          $('#tabDtl').append(row + row0 + row1 + row2 + row3);
+        }
+      }
+    });
+  });
+
+  //--------EDIT DETAIL BARANG KELUAR---------//
+  $('#tabDtl').on('click', '.qty', function(){
+    $('#editDtl').prop("disabled", false);
+  });
+
+  //-------PAGINATION FOR CARI--------//
+  if ( window.location.href.indexOf('/cari') > 0 ) {
+    alert("Hallo");
+    $('.page').click(function(){
+      var page = $('.pgNum').text();
+      var prev = page - 1;
+      var next = page + 1;
+      console.log(page);
+      $('.pgNum').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +page+ "");
+      $('.pgPrev').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +prev+ "");
+      $('.pgNext').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +next+ "");
+    });
+  }
 
 }
 
