@@ -13,6 +13,12 @@
       return $this->db->resultSet();
     }
 
+    public function getSp() {
+      $query = "SELECT * FROM supplier";
+      $this->db->query($query);
+      return $this->db->resultSet();
+    }
+
     public function updtCnt() {
       $query = "UPDATE counter SET po = po + 1";
       $this->db->query($query);
@@ -22,7 +28,7 @@
     public function getAllPo($page) {
       $key = $_SESSION['cari'];
 
-      $query2 = "SELECT * FROM purchased_order_tmp WHERE NO_PO LIKE :key AND status != '1'";
+      $query2 = "SELECT * FROM purchased_order_tmp WHERE NO_PO LIKE :key AND status != 1";
       $this->dbh->query($query2);
       $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
@@ -43,7 +49,7 @@
                 FROM purchased_order_tmp a
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE a.NO_PO LIKE :key AND status != '1'
+                WHERE a.NO_PO LIKE :key AND a.status != 1
                 ORDER BY a.NO_PO
                 LIMIT $dataAwal, $banyakDataPerHal";
 
@@ -63,14 +69,6 @@
       $query = "SELECT NO_PR FROM surat_request_tmp WHERE NO_PR IS NOT NULL AND NO_PO IS NULL";
       $this->db->query($query);
       return $this->db->resultSet();
-    }
-
-    public function getSp($data) {
-      $query = "SELECT a.KODE_SP, b.NAMA_SP FROM surat_request_tmp a INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NO_PR = :id";
-
-      $this->db->query($query);
-      $this->db->bind('id', $data['id']);
-      return $this->db->single();
     }
 
     public function getBrg($data) {
@@ -106,14 +104,15 @@
 
     public function tmbhPo($data) {
       $query = "INSERT INTO purchased_order_tmp (NO_PO, TGL_PO, PEMESAN, KODEF, KODE_SP, status)
-                VALUES (:noPo, :tgl_po, :pmsn, :kodef, :hdnSp, DEFAULT)";
+                VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', :initial, '/'. DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_po, :pmsn, :kodef, :Sp, DEFAULT)";
 
       $this->db->query($query);
       $this->db->bind('noPo', $data['noPo']);
+      $this->db->bind('initial', $data['login']['Initial']);
       $this->db->bind('tgl_po', $data['tgl_po']);
       $this->db->bind('pmsn', $data['pmsn']);
       $this->db->bind('kodef', $_SESSION['login']['KODEF']);
-      $this->db->bind('hdnSp', $data['hdnSp']);
+      $this->db->bind('Sp', $data['Sp']);
 
       $this->db->execute();
       return $this->db->rowCount();
@@ -134,14 +133,14 @@
         } else {
           $query = "INSERT INTO purchased_order (NO_PO, PEMESAN, TGL_PO, KODEF, KODE_SP, KODE_BRG, QTY_ORDER, HARGA_PO, TOT_HARGA, QTY_TERIMA, status)
                     VALUES
-                    (:noPo, :pmsn, :tgl_po, :kodef, :hdnSp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
+                    (:noPo, :pmsn, :tgl_po, :kodef, :Sp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
 
           $this->db->query($query);
           $this->db->bind('noPo', $data['noPo']);
           $this->db->bind('pmsn', $data['pmsn']);
           $this->db->bind('tgl_po', $data['tgl_po']);
           $this->db->bind('kodef', $_SESSION['login']['KODEF']);
-          $this->db->bind('hdnSp', $data['hdnSp']);
+          $this->db->bind('Sp', $data['Sp']);
           $this->db->bind('kd' .$i, $data['kd'][$i]);
           $this->db->bind('qty' .$i, $data['qty'][$i]);
           $this->db->bind('hrg' .$i, $data['hrg'][$i]);
@@ -157,6 +156,16 @@
           }
         }
       }
+    }
+
+    public function ubah($data) {
+      $query = "UPDATE purchased_order_tmp SET TGL_PO = :tgl_po WHERE NO_PO = :noPo";
+      $this->db->query($query);
+      $this->db->bind('noPo', $data['noPo']);
+      $this->db->bind('tgl_po', $data['tgl_po']);
+      $this->db->execute();
+
+      return $this->db->rowCount();
     }
 
     public function ubahDtl($data) {
@@ -181,10 +190,11 @@
     }
 
     public function setPo($data) {
-      $query = "UPDATE surat_request_tmp SET NO_PO = :noPo WHERE NO_PR = :noPr";
+      $query = "UPDATE surat_request_tmp SET NO_PO = :noPo, KODE_SP = :Sp WHERE NO_PR = :noPr";
 
       $this->db->query($query);
       $this->db->bind('noPo', $data['noPo']);
+      $this->db->bind('Sp', $data['Sp']);
       $this->db->bind('noPr', $data['noPr']);
       $this->db->execute();
     }

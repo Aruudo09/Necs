@@ -30,7 +30,6 @@
               <th class="col">Nomor PR</th>
               <th class="col">User</th>
               <th class="col">Departement</th>
-              <th class="col">Supplier</th>
               <th class="col">Tanggal PR</th>
               <th class="col-2">Fitur</th>
             </tr>
@@ -41,7 +40,6 @@
                 <td><?php print $pr['NO_PR'] ?></td>
                 <td><?php print $pr['USER'] ?></td>
                 <td><?php print $pr['NMDEF'] ?></td>
-                <td><?php print $pr['NAMA_SP'] ?></td>
                 <td><?php print $pr['TGL_PR'] ?></td>
                 <td class="d-flex justify-content-evenly">
                   <!--TOMBOL DETAIL-->
@@ -49,7 +47,7 @@
                   <!--TOMBOL EDIT-->
                     <button type="button" class="btn btn-primary edit" data-id="<?php echo $pr['NO_PR'] ?>" data-bs-toggle="modal" data-bs-target="#modalpr" name="button"><i class="fa fa-pen"></i></button>
                   <!--TOMBOL HAPUS-->
-                    <a href="<?php echo BASEURL; ?>/purchased_requisition/hapus/<?php echo str_replace('/', '-F', $pr['NO_PR']) ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    <a href="<?php echo BASEURL; ?>/purchased_requisition/hapus/<?php echo str_replace('/', '-F', $pr['NO_PR']) ?>" class="btn btn-danger" onclick="return confirm('Apa anda yakin?')"><i class="fa fa-trash"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -91,7 +89,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <table class="table table-borderless">
+          <table class="table table-bordered">
             <tr>
               <th class="table-warning col-2">Nomor PR</th>
               <td class="table-info" id="tbSr"></td>
@@ -109,7 +107,7 @@
               <td class="table-info" id="tbSpr"></td>
             </tr>
           </table>
-          <h3>DAFTAR DETAIL PR</h3>
+          <h3>INFO DETAIL PR</h3>
           <div class="overflow-auto">
             <table class="table table-bordered text-center" id="myTabs">
               <thead class="table-info">
@@ -126,7 +124,6 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -141,11 +138,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form class="" action="index.html" method="post">
+          <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/ubah" method="post">
             <div class="row mb-2">
               <div class="col">
                 <label for="nmPr">Nomor PR :</label>
-                <input type="text" class="form-control" id="nmPr" name="nmPr" value="">
+                <input type="text" class="form-control" id="nmPr" name="nmPr" value="" readonly>
               </div>
             </div>
             <div class="row mb-2">
@@ -160,14 +157,14 @@
                 <input type="date" class="form-control" id="tgl_pr" name="tgl_pr" value="">
               </div>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
       </div>
     </div>
-</div>
+  </div>
 
 </div>

@@ -59,8 +59,7 @@
                 </div>
             </div>
           <!--FIELD INPUT BARANG-->
-          <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
-           <h6>FIELD INPUT BARANG</h6>
+           <h4>FIELD INPUT BARANG</h4>
               <div class="row mb-3">
                 <select id="selectBrg" class="selectBrg" name="namaBrg[]" style="width:30%">
                   <option value="" selected>choose....</option>
@@ -69,8 +68,7 @@
                 <?php endforeach; ?>
                 </select>
               </div>
-              <div class="row">
-                <table class="table table-bordered text-center" id="tabKlr">
+                <table class="table table-bordered text-center m-1 mb-4" id="tabKlr">
                   <thead class="table-info">
                     <tr>
                       <th>Nama Barang</th>
@@ -79,10 +77,11 @@
                       <th>Fitur</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    <!--GENERATE ROW TABLE DATA-->
+                  </tbody>
                 </table>
-              </div>
              <input type="hidden" value="0" id="num_row">
-           </div>
           <!--FIELD INPUT BARANG-->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

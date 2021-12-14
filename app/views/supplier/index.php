@@ -20,51 +20,67 @@
 
 
   <!--TABLE VIEW SUPPLIER-->
-  <h3 class="fs-4 mb-3">Daftar Supplier</h3>
-    <div class="border border-dark rounded-3 bg-white mt-3 p-3">
+    <div class="border border-dark rounded-3 bg-white mx-auto mb-3 p-3">
+     <h3 class="fs-4 mb-2">Daftar Supplier</h3>
+      <form class="" action="<?php echo BASEURL; ?>/supplier/index/1" method="post">
+        <div class="d-flex mb-2">
+          <input type="text" class="form-control" style="width:30%" name="keyword" value="">
+          <button type="submit" class="btn btn-success" style="width:6%" name="srchBtn"><i class="fa fa-search"></i></button>
+        </div>
+      </form>
       <div class="overflow-auto">
-          <table class="table table-hover text-center" id="tbSp">
-              <thead>
+          <table class="table table-hover table-bordered table-striped text-center" id="tbSp">
+              <thead class="table-warning">
                 <tr>
                   <th class="col">Supplier</th>
                   <th class="col">No Telp</th>
                   <th class="col">Email</th>
-                  <th class="col">Contact Person</th>
-                  <th class="col">NPWP</th>
-                  <th class="col">Tanggal Input</th>
-                  <th class="col">Qty Bulan</th>
-                  <th class="col" style="width:100%">Alamat</th>
-                  <th class="col">Fitur</th>
+                  <th class="col-2">Fitur</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ( $data['supplier'] as $spl) : ?>
+                <?php foreach ( $data['supplier']['data'] as $spl) : ?>
                 <tr>
                   <td><?php echo $spl['NAMA_SP']; ?></td>
                   <td><?php echo $spl['TELEPON']; ?></td>
                   <td><?php echo $spl['email']; ?></td>
-                  <td><?php echo $spl['HUBUNGAN']; ?></td>
-                  <td><?php echo $spl['npwp']; ?></td>
-                  <td><?php echo $spl['Tanggal_input']; ?></td>
-                  <td><?php echo $spl['quantity_perbulan']; ?></td>
-                  <td><?php echo $spl['ALAMAT_SP']; ?></td>
-                  <td style="width:10%">
-                    <div class="d-flex justify-content-evenly">
-                      <div class="col">
+                  <td class="d-flex justify-content-evenly">
+                        <!--DETAIL SUPPLIER-->
+                          <button type="button" class="btn btn-success dtlSp" name="button" data-bs-toggle="modal" data-bs-target="#DtlSp" data-id="<?php echo $spl['KODE_SP'] ?>"><i class="fa fa-file"></i></button>
+                        <!--EDIT SUPPLIER-->
+                          <a href="<?php echo BASEURL; ?>/Supplier/ubah" class="btn btn-primary editSpl" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['KODE_SP']; ?>"><i class="fa fa-pen"></i></a>
                         <!--HAPUS SUPPLIER-->
                           <a href="<?php echo BASEURL; ?>/Supplier/hapus/<?php echo $spl['KODE_SP']; ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
-                      </div>
-                      <div class="col">
-                        <!--EDIT SUPPLIER-->
-                          <a href="<?php echo BASEURL; ?>/Supplier/ubah" class="btn btn-success editSpl" data-bs-toggle="modal" data-bs-target="#modalSpl" data-id="<?php echo $spl['KODE_SP']; ?>"><i class="fa fa-pen"></i></a>
-                      </div>
-                    </div>
                   </td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
           </table>
       </div>
+      <nav>
+        <ul class="pagination justify-content-center">
+          <!--TOMBOL PREVIOUS-->
+            <?php if ( $data['supplier']['halamanAktif'] <= 1 ) { ?>
+                <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['supplier']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+            <?php } else { ?>
+                <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['supplier']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+            <?php } ?>
+          <!--TOMBOL PAGE-->
+            <?php for ($i=1; $i < $data['supplier']['banyakHal']; $i++) { ?>
+              <?php if ( $data['supplier']['halamanAktif'] == $i ) { ?>
+                <li class="page-item active"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+              <?php } else { ?>
+                <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+              <?php } ?>
+            <?php } ?>
+          <!--TOMBOL NEXT-->
+            <?php if ( $data['supplier']['halamanAktif'] >= $data['supplier']['banyakHal'] ) { ?>
+              <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['supplier']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+            <?php } else { ?>
+              <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['supplier']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+            <?php } ?>
+        </ul>
+      </nav>
     </div>
   </div>
 
@@ -158,4 +174,45 @@
                 </form>
               </div>
             </div>
+          </div>
+
+      <!--MODAL VIEW DETAIL SUPPLIER-->
+      <div class="modal fade" id="DtlSp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">View Detail Supplier</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th class="table-warning col-2">NPWP</th>
+                  <td class="table-info" id="npwpInfo"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning">Contact Person</th>
+                  <td class="table-info" id="cp"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning">Tanggal Input</th>
+                  <td class="table-info" id="tgl_inpt"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning">Qty/Perbulan</th>
+                  <td class="table-info" id="qty"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning">Alamat</th>
+                  <td class="table-info" id="alamat"></td>
+                </tr>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>

@@ -29,7 +29,6 @@
               <td class="col">Nomor PO</td>
               <td class="col">Pemesan</td>
               <td class="col">Departement</td>
-              <td class="col">Supplier</td>
               <td class="col">Tanggal PO</td>
               <td class="col" style="width:15%">Fitur</td>
             </tr>
@@ -40,7 +39,6 @@
                 <td><?php print $po['NO_PO'] ?></td>
                 <td><?php print $po['PEMESAN'] ?></td>
                 <td><?php print $po['NMDEF'] ?></td>
-                <td><?php print $po['NAMA_SP'] ?></td>
                 <td><?php print $po['TGL_PO'] ?></td>
                 <td class="d-flex justify-content-evenly">
                   <!--BUTTON DETAIL-->
@@ -102,7 +100,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="" action="index.html" method="post">
+            <form class="" action="<?php echo BASEURL; ?>/purchased_order/ubah" method="post">
               <div class="row">
                 <div class="col">
                   <label for="noPo">Nomor PO</label>
@@ -115,15 +113,15 @@
                   <input type="date" name="tgl_po" id="tgl_po" class="form-control" value="">
                 </div>
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+           </form>
           </div>
         </div>
       </div>
-    </div>
 
 
     <!--MODAL TABEL DETAIL-->
@@ -136,36 +134,27 @@
             </div>
             <div class="modal-body">
               <form class="" action="<?php echo BASEURL; ?>/purchased_order/ubahDtl" method="post">
-                <table class="table table-borderless">
+                <table class="table table-bordered">
                   <tr>
                     <th class="table-warning col-2">Nomor PO</th>
-                    <td class="table-info">
-                      <input type="text" class="form-control" name="Po" id="Po" value="" readonly>
-                    </td>
+                    <td class="table-info" id="Po"></td>
+                    <td style="display:none"><input type="hidden" name="Po" id="hdnPo" value=""></td>
                   </tr>
                   <tr>
                     <th class="table-warning col-2">Pemesan</th>
-                    <td class="table-info">
-                      <input type="text" class="form-control" name="tbPmsn" id="tbPmsn" value="" readonly>
-                    </td>
+                    <td class="table-info" id="tbPmsn"></td>
                   </tr>
                   <tr>
                     <th class="table-warning col-2">Departement</th>
-                    <td class="table-info">
-                      <input type="text" class="form-control" name="tbDept" id="tbDept" value="" readonly>
-                    </td>
+                    <td class="table-info" id="tbDept"></td>
                   </tr>
                   <tr>
                     <th class="table-warning col-2">Supplier</th>
-                    <td class="table-info">
-                      <input type="text" class="form-control" name="tbSpr" id="tbSpr" value="" readonly>
-                    </td>
+                    <td class="table-info" id="tbSpr"></td>
                   </tr>
                   <tr>
                     <th class="table-warning" col-2>Tanggal PO</th>
-                    <td class="table-info">
-                      <input type="text" class="form-control" name="tbTgl" id="tbTgl" value="" readonly>
-                    </td>
+                    <td class="table-info" id="tbTgl"></td>
                   </tr>
                 </table>
                 <h4>DETAIL PURCHASED ORDER</h4>

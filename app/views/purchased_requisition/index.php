@@ -51,18 +51,26 @@
             </div>
             <div class="row mb-3">
               <div class="col">
-                <label for="sp">Supplier :</label>
-                <input type="text" class="form-control" id="sp" name="sp" value="" readonly>
-                <input type="hidden" id="hdnSp" name="hdnSp" value="">
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col">
                 <?php $date = date("Y/m/d");
                 $newDate = date("Y-m-d", strtotime($date)); ?>
                 <label for="tgl_pr">Tanggal PR :</label>
                 <input type="date" class="form-control" name="tgl_pr" value="<?php echo $newDate; ?>">
               </div>
+            </div>
+            <div>
+              <h3>Info Barang</h3>
+              <table class="table table-bordered text-center" id="dftrBrg">
+                <thead class="table-warning">
+                  <th class="col-3">Nama Barang</th>
+                  <th class="col">Quantity</th>
+                  <th class="col">Satuan</th>
+                  <th class="col">Harga</th>
+                  <th class="col">Total</th>
+                </thead>
+                <tbody>
+                  <!--GENERATE ROW TABLE DATA-->
+                </tbody>
+              </table>
             </div>
             <hr>
             <div class="text-end">
@@ -77,7 +85,7 @@
           <h3>DATA SR</h3>
           <hr>
           <div class="overflow-auto">
-            <table class="table table-striped table-hover text-center" id="tabSr">
+            <table class="table table-bordered table-striped table-hover text-center" id="tabSr">
               <div class="row mb-3">
                 <form class="" action="<?php echo BASEURL; ?>/purchased_requisition/1" method="post">
                   <div class="d-flex">
@@ -91,7 +99,6 @@
                   <th class="col">Nomor SR</th>
                   <th class="col">Peminta</th>
                   <th class="col">Departement</th>
-                  <th class="col">Supplier</th>
                   <th class="col">Tanggal SR</th>
                   <th class="col">Fitur</th>
                 </tr>
@@ -102,7 +109,6 @@
                     <td><?php print $sr['NO_SR'] ?></td>
                     <td><?php print $sr['PEMINTA'] ?></td>
                     <td><?php print $sr['NMDEF'] ?></td>
-                    <td><?php print $sr['NAMA_SP'] ?></td>
                     <td><?php print $sr['TGL_SR'] ?></td>
                     <td>
                       <button type="button" class="btn btn-primary detail" data-id="<?php echo $sr['NO_SR'] ?>" data-bs-toggle="modal" data-bs-target="#modalSr" name="button">Detail</button>
@@ -147,7 +153,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <table class="table table-borderless">
+                  <table class="table table-bordered">
                     <tr>
                       <th class="table-warning col-2">Nomor SR</th>
                       <td class="table-info" id="tbSr"></td>

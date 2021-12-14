@@ -35,7 +35,6 @@
         return $this->db->resultSet();
       }
 
-
       public function getDataBcraTmp() {
         $this->db->query('SELECT NO_BCRA, NO_PO, NO_SRJLN, a.KODE_SP, b.NAMA_SP, TGL_BCRA, PENERIMA
                           FROM berita_acara_tmp a
@@ -47,7 +46,7 @@
 
       public function getAllBarangMsk($page) {
         $key = $_SESSION['cari'];
-        $this->dbh->query('SELECT * FROM berita_acara_tmp WHERE NO_BCRA LIKE :key');
+        $this->dbh->query('SELECT * FROM berita_acara_tmp WHERE NO_BCRA LIKE :key AND status != 1');
         $this->dbh->bind('key', "%$key%");
         $this->dbh->execute();
 
@@ -63,7 +62,7 @@
 
         $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA LIKE :key ORDER BY a.TGL_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
+        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA LIKE :key AND status != 1 ORDER BY a.TGL_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
 
         $this->db->query($query);
         $this->db->bind('key', "%$key%");
@@ -88,6 +87,7 @@
                     WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND b.status != '1'";
         $this->dbh->query($query2);
         $this->dbh->bind('key', "%$key%");
+        $this->dbh->execute();
 
         $banyakData = $this->dbh->rowCount();
         $banyakDataPerHal = 5;
@@ -199,7 +199,7 @@
 
       public function tambahBrgMskTmp($data) {
         $query = "INSERT INTO berita_acara_tmp (NO_BCRA, NO_PO, NO_SRJLN, KODE_SP, KODEF, TGL_BCRA, PENERIMA)
-                  SELECT :inputNoMsk, :poBa, :noSRJLN, KODE_SP, :kodef, :tanggalTerima, :penerima FROM purchased_order_tmp WHERE NO_PO = :poBa";
+                  SELECT CONCAT('GA-', (SELECT ba FROM counter), '/', DATE_FORMAT(NOW(), '$y')), :poBa, :noSRJLN, KODE_SP, :kodef, :tanggalTerima, :penerima FROM purchased_order_tmp WHERE NO_PO = :poBa";
         $this->db->query($query);
         $this->db->bind('inputNoMsk', $data['inputNoMsk']);
         $this->db->bind('noSRJLN', $data['noSRJLN']);
@@ -226,7 +226,7 @@
           continue;
         } else {
           $query = "INSERT INTO berita_acara (NO_BCRA, PENERIMA, TGL_BCRA, NO_PO, KODEF, KODE_SP, KODE_BRG, HARGA_BL, QTY_TERIMA, NO_SRJLN)
-                    SELECT :inputNoMsk, :penerima, :tanggalTerima, :poBa, :kodef, KODE_SP, :kdBrg" .$i. ", :hrgBl" .$i. ", :qty" .$i. ", :noSRJLN FROM purchased_order_tmp WHERE NO_PO = :poBa";
+                    SELECT CONCAT('GA-', (SELECT ba FROM counter), '/', DATE_FORMAT(NOW(), '%y')), :penerima, :tanggalTerima, :poBa, :kodef, KODE_SP, :kdBrg" .$i. ", :hrgBl" .$i. ", :qty" .$i. ", :noSRJLN FROM purchased_order_tmp WHERE NO_PO = :poBa";
 
           $this->db->query($query);
           $this->db->bind('inputNoMsk', $data['inputNoMsk']);
@@ -253,9 +253,10 @@
       }
 
       public function hpsBcra($data) {
+        var_dump($data);
         $query = "UPDATE berita_acara_tmp SET status = '1' WHERE NO_BCRA = :id";
         $this->db->query($query);
-        $this->db->bind('id', $data['id']);
+        $this->db->bind('id', $data);
 
         $this->db->execute();
         return $this->db->rowCount();
@@ -264,7 +265,7 @@
       public function ubahStat($data) {
         $query = "UPDATE berita_acara SET status = '1' WHERE NO_BCRA = :id";
         $this->db->query($query);
-        $this->db->bind('id', $data['id']);
+        $this->db->bind('id', $data);
 
         $this->db->execute();
         return $this->db->rowCount();

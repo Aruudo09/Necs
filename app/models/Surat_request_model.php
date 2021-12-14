@@ -27,7 +27,7 @@ class Surat_request_model {
       FROM surat_request a
       LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
       LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
-      WHERE a.KODEF = :kodef AND status != "1" AND a.QTY_MINTA > a.QTY_TERIMA
+      WHERE a.KODEF = :kodef AND a.status != "1" AND a.QTY_MINTA > a.QTY_TERIMA
       ORDER BY a.NO_SR DESC;');
 
     $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -35,35 +35,15 @@ class Surat_request_model {
   }
 
   public function getDataSr($data) {
-    $query = "SELECT * FROM surat_request_tmp WHERE NO_SR = :id";
+    $query = "SELECT a.NO_SR, a.NO_PR, a.NO_PO, a.TGL_SR, a.PEMINTA, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
+              FROM surat_request_tmp a
+              LEFT JOIN tarif b ON a.KODEF = b.KODEF
+              LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+              WHERE NO_SR = :id";
     $this->db->query($query);
     $this->db->bind('id', $data['id']);
 
     return $this->db->single();
-  }
-
-  public function getAlldataPoCtkTmp($No_po, $No_po1, $No_po2, $No_po3) {
-    $this->db->query('SELECT a.NO_PO, a.PEMESAN, a.TGL_PO, a.KODE_SP, b.NAMA_SP, a.QTY_ORDER, a.QTY_TERIMA, a.HARGA_PO, a.TOT_HARGA FROM purchased_order a LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NO_PO = :No_po"/":No_po1"/":No_po2"/":No_po3 LIMIT 1');
-
-    $this->db->bind('No_po', $No_po);
-    $this->db->bind('No_po1', $No_po1);
-    $this->db->bind('No_po2', $No_po2);
-    $this->db->bind('No_po3', $No_po3);
-    // echo $No_po ."/". $No_po1. "/" .$No_po2. "/" .$No_po3;
-
-    return $this->db->resultSet();
-  }
-
-  public function getAlldataPoCtkDtl($No_po, $No_po1, $No_po2, $No_po3) {
-    $this->db->query('SELECT a.NO_PO, a.PEMESAN, a.TGL_PO, c.NAMA_SP, b.NAMA_BRG, b.Jenis_brg, b.Stock_brg, a.QTY_ORDER, a.QTY_TERIMA, b.Satuan, a.HARGA_PO, a.TOT_HARGA FROM purchased_order a LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP WHERE NO_PO = :No_po"/":No_po1"/":No_po2"/":No_po3');
-
-    $this->db->bind('No_po', $No_po);
-    $this->db->bind('No_po1', $No_po1);
-    $this->db->bind('No_po2', $No_po2);
-    $this->db->bind('No_po3', $No_po3);
-    // echo $No_po ."/". $No_po1. "/" .$No_po2. "/" .$No_po3;
-
-    return $this->db->resultSet();
   }
 
   public function getAllDataTmp($page) {
@@ -86,9 +66,9 @@ class Surat_request_model {
     $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
     $query = "SELECT a.NO_SR, a.TGL_SR, a.PEMINTA, a.KODE_SP, b.NAMA_SP , a.KODEF, c.NMDEF
                       FROM surat_request_tmp a
-                      INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP
-                      INNER JOIN tarif c ON a.KODEF = c.KODEF
-                      WHERE NO_SR LIKE :key AND status != 1 AND a.KODEF = :kodef ORDER BY NO_SR
+                      LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP
+                      LEFT JOIN tarif c ON a.KODEF = c.KODEF
+                      WHERE NO_SR LIKE :key AND a.status != 1 AND a.KODEF = :kodef ORDER BY NO_SR
                       LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
     $this->db->bind('key', "%$key%");
@@ -101,12 +81,6 @@ class Surat_request_model {
     );
 
     return $dt;
-  }
-
-  public function getDataSpl() {
-    $query = "SELECT * FROM supplier";
-    $this->db->query($query);
-    return $this->db->resultSet();
   }
 
   public function getDataBrg() {
@@ -129,15 +103,14 @@ class Surat_request_model {
   public function tambahData($data) {
     $query = "INSERT INTO surat_request_tmp (NO_SR, TGL_SR, PEMINTA, KODEF, KODE_SP, status)
                 VALUES
-                (:noSr, :tanggal_sr, :peminta, :kodef, :sp, DEFAULT)";
+                (CONCAT((SELECT LPAD(sr + 1, 3, 000)FROM counter), '/', :initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tanggal_sr, :peminta, :kodef, NULL, DEFAULT)";
     // var_dump($query);
     // echo $query;
     $this->db->query($query);
-    $this->db->bind('noSr', $data['noSr']);
+    $this->db->bind('initial', $_SESSION['login']['Initial']);
     $this->db->bind('tanggal_sr', $data['tanggal_sr']);
     $this->db->bind('peminta', $data['peminta']);
     $this->db->bind('kodef', $_SESSION['login']['KODEF']);
-    $this->db->bind('sp', $data['sp']);
     $this->db->execute();
 
     return $this->db->rowCount();
@@ -158,11 +131,11 @@ class Surat_request_model {
       } else {
         $query = "INSERT INTO surat_request (NO_SR, TGL_SR, PEMINTA, KODEF, KODE_SP, KODE_BRG, QTY_MINTA, HARGA_SR, TOT_HARGA, QTY_TERIMA, status)
                     VALUES
-                    (:noSr, :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", :harga" .$i. ", NULL, DEFAULT, DEFAULT)";
+                    (CONCAT((SELECT LPAD(sr + 1, 3, 000)FROM counter), '/', :Initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", :harga" .$i. ", NULL, DEFAULT, DEFAULT)";
         // var_dump($query);
         // echo $query;
         $this->db->query($query);
-        $this->db->bind('noSr', $data['noSr']);
+        $this->db->bind('Initial', $_SESSION['login']['Initial']);
         $this->db->bind('tanggal_sr', $data['tanggal_sr']);
         $this->db->bind('peminta', $data['peminta']);
         $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -230,13 +203,13 @@ class Surat_request_model {
       $query = "UPDATE surat_request SET
                   QTY_MINTA = :qty" .$i. ",
                   HARGA_SR = :hrg" .$i. "
-                WHERE NO_SR = :Sr AND KODE_BRG = :brg" .$i. "";
+                WHERE NO_SR = :hdnSr AND KODE_BRG = :brg" .$i. "";
 
       $this->db->query($query);
       $this->db->bind('brg' .$i, $data['brg'][$i]);
       $this->db->bind('qty' .$i, $data['qty'][$i]);
       $this->db->bind('hrg' .$i, $data['hrg'][$i]);
-      $this->db->bind('Sr', $data['Sr']);
+      $this->db->bind('hdnSr', $data['hdnSr']);
 
       $this->db->execute();
 

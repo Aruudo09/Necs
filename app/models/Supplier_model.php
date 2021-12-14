@@ -6,13 +6,39 @@ class Supplier_model {
 
     public function __construct() {
       $this->db = new Database;
+      $this->dbh = new Database;
     }
 
-    public function getAllSupplier() {
-      $query = "SELECT * FROM supplier";
+    public function getAllSupplier($page) {
+      $key = $_SESSION['cari'];
+      $query = "SELECT * FROM supplier WHERE status != 1 AND NAMA_SP LIKE :key";
+      $this->dbh->query($query);
+      $this->dbh->bind('key', "%$key%");
+      $this->dbh->execute();
 
-      $this->db->query($query);
-      return $this->db->resultSet();
+      $banyakDataPerHal = 7;
+      $banyakData = $this->dbh->rowCount();
+      $banyakHal = ceil($banyakData/$banyakDataPerHal);
+
+      if ( $page >= 1) {
+        $halamanAktif = $page;
+      } else {
+        $halamanAktif = 1;
+      }
+
+      $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
+
+      $query2 = "SELECT * FROM supplier WHERE status != 1 AND NAMA_SP LIKE :key LIMIT $dataAwal, $banyakDataPerHal";
+      $this->db->query($query2);
+      $this->db->bind('key', "%$key%");
+
+      $dt = array(
+        "data" => $this->db->resultSet(),
+        "banyakHal" => $banyakHal,
+        "halamanAktif" => $halamanAktif
+      );
+
+      return $dt;
     }
 
     public function tambahSupplier($data) {
@@ -38,7 +64,7 @@ class Supplier_model {
     }
 
     public function hapusSupplier($data) {
-      $query = "DELETE FROM supplier WHERE KODE_SP=:KODE_SP";
+      $query = "UPDATE supplier SET status = 1 WHERE KODE_SP = :KODE_SP";
 
       $this->db->query($query);
       $this->db->bind('KODE_SP', $data);
@@ -77,15 +103,6 @@ class Supplier_model {
     $this->db->execute();
 
     return $this->db->rowCount();
-
-  }
-
-  public function cariData() {
-    $keyword = $_POST['keyword'];
-    $query = "SELECT * FROM supplier WHERE NAMA_SP LIKE :keyword";
-    $this->db->query($query);
-    $this->db->bind('keyword', "%$keyword%");
-    return $this->db->resultSet();
   }
 
 }

@@ -56,34 +56,33 @@
 
 
       public function tambah() {
-        var_dump($_POST);
       if( $this->model('Barang_masuk_model')->cekOrder($_POST) == true) {
         if ( $this->model('Barang_masuk_model')->tambahBrgMskTmp($_POST) > 0 && $this->model('Barang_masuk_model')->tambahBrgMsk($_POST) == true && $this->model('Barang_masuk_model')->updateorder($_POST) == true ) {
             $this->model('Barang_masuk_model')->updateCounter();
             Flasher::setFlash('Berita Acara', 'berhasil', 'ditambahkan', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
+            header('Location: ' . BASEURL . '/barang_masuk/1');
             exit;
         } else {
           Flasher::setFlash('Berita Acara', 'gagal', 'ditambahkan', 'danger');
-          header('Location: ' . BASEURL . '/barang_masuk');
+          header('Location: ' . BASEURL . '/barang_masuk/1');
           exit;
         }
       }
       else {
-        echo "<script type='text/javascript'>alert('Kuantitas Melibihi Order!');</script>";
-        // header('Location: ' . BASEURL . '/barang_masuk');
-        // exit;
+        Flasher::setFlash('Kuantitas', 'Melebihi', 'Order', 'warning');
+        header('Location: ' . BASEURL . '/barang_masuk/1');
+        exit;
         }
       }
 
-      public function hapus() {
-        if ($this->model('Barang_masuk_model')->hpsBcra($_POST) > 0 && $this->model('Barang_masuk_model')->ubahStat($_POST) > 0 ) {
+      public function hapus($data) {
+        if ($this->model('Barang_masuk_model')->hpsBcra(str_replace('F', '/', $data)) > 0 && $this->model('Barang_masuk_model')->ubahStat(str_replace('F', '/', $data)) > 0 ) {
           Flasher::setFlash('Berita Acara', 'Berhasil', 'diubah', 'success');
-          header('Location: ' . BASEURL . '/barang_masuk');
+          header('Location: ' . BASEURL . '/barang_masuk/1');
           exit;
         } else {
           Flasher::setFlash('Berita Acara', 'Gagal', 'diubah', 'danger');
-          header('Location: ' . BASEURL . '/barang_masuk');
+          header('Location: ' . BASEURL . '/barang_masuk/1');
           exit;
         }
 
@@ -113,11 +112,11 @@
       public function ubahDtl() {
         if ( $this->model('Barang_masuk_model')->ubahBrgMskDtl($_POST) == true ) {
             Flasher::setFlash('Berita Acara', 'berhasil', 'diubah', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
+            header('Location: ' . BASEURL . '/barang_masuk/1');
             exit;
         } else {
             Flasher::setFlash('Berita Acara', 'gagal', 'diubah', 'danger');
-            header('Location: ' . BASEURL . '/barang_masuk');
+            header('Location: ' . BASEURL . '/barang_masuk/1');
             exit;
         }
       }
@@ -125,11 +124,11 @@
       public function ubahTmp() {
         if ( $this->model('Barang_masuk_model')->ubahBrgMskTmp($_POST) > 0) {
             Flasher::setFlash('Berita Acara', 'berhasil', 'diubah', 'success');
-            header('Location: ' . BASEURL . '/barang_masuk');
+            header('Location: ' . BASEURL . '/barang_masuk/1');
             exit;
         } else {
             Flasher::setFlash('Berita Acara', 'gagal', 'diubah', 'danger');
-            header('Location: ' . BASEURL . '/barang_masuk');
+            header('Location: ' . BASEURL . '/barang_masuk/1');
             exit;
         }
       }

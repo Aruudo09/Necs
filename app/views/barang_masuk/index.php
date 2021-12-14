@@ -15,8 +15,8 @@
           <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
             <div class="d-flex justify-content-around">
               <h3>FORM INPUT BERITA ACARA</h3>
-              <a href="<?php echo BASEURL; ?>/barang_masuk/detail/1">
-                <button type="button" class="btn btn-warning" id="detail" name="button">View Table</button>
+              <a href="<?php echo BASEURL; ?>/barang_masuk/detail/1/">
+                <button type="button" class="btn btn-warning" id="detail" name="button">View Purchased Order</button>
               </a>
             </div>
             <hr>
@@ -80,6 +80,9 @@
                             <th style="display:none">Kode Barang</th>
                           </tr>
                         </thead>
+                        <tbody>
+                          <!--GENERATE DAFTAR BARANG-->
+                        </tbody>
                       </table>
                   </div>
               <hr>
@@ -132,7 +135,7 @@
                   <!--EDIT DETAIL BARANG MASUK-->
                       <a class="btn btn-primary edit" data-bs-toggle="modal" data-bs-target="#modalBrgMsk" data-id="<?php echo $brgM['NO_BCRA'] ?>"><i class="fa fa-pen"></i></a>
                     <!--HAPUS DETAIL BARANG MASUK-->
-                      <a href="<?php echo BASEURL; ?>/barang_masuk/hapus/<?php echo $brgM['NO_BCRA'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
+                      <a href="<?php echo BASEURL; ?>/barang_masuk/hapus/<?php echo str_replace('/', 'F', $brgM['NO_BCRA']) ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?')"><i class="fa fa-trash"></i></a>
                 </div>
               </td>
             </tr>
@@ -189,7 +192,7 @@
             </div>
             <div class="modal-body">
               <form class="" action="<?php echo BASEURL; ?>/barang_masuk/ubahDtl" method="post">
-                <table class="table table-borderless">
+                <table class="table table-bordered">
                   <tr>
                     <th class="table-warning col-3">No Masuk</th>
                     <td class="table-info" id="nomsk"></td>
@@ -255,7 +258,7 @@
                  <div class="modal-body">
                    <form class="" action="<?php echo BASEURL; ?>/barang_masuk/ubahTmp" method="post">
                     <!--HIDDEN INPUT NOMOR BCRA-->
-                     <input type="text" name="nobcra" id="nobcra" value="">
+                     <input type="hidden" name="nobcra" id="nobcra" value="">
                       <!--INPUT NOMOR SURAT JALAN-->
                        <div class="row mb-3">
                            <div class="form-group">

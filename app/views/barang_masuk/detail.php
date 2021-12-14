@@ -8,7 +8,7 @@
     </div>
 
     <!--BUTTON BACK-->
-    <a href="<?php echo BASEURL; ?>/barang_masuk/1">
+    <a href="<?php echo BASEURL; ?>/barang_masuk/1/">
       <button type="button" class="btn btn-success" name="button"><i class="fa fa-arrow-left"> <b>Kembali</b></i></button>
     </a>
 
@@ -26,7 +26,7 @@
               <table class="table table-bordered table-striped table-responsive text-center table-hover tbPo2">
                 <h3 class="mb-3">LIST PURCHASED ORDER</h3>
                     <thead>
-                      <tr class="table-warning ">
+                      <tr class="table-warning">
                         <th class="col">No. PO</th>
                         <th class="col">Supplier</th>
                         <th class="col">Pemesan</th>
@@ -42,14 +42,10 @@
                     <td><?php print $mhs['NAMA_SP']; ?></td>
                     <td><?php print $mhs['PEMESAN']; ?></td>
                     <td><?php print $mhs['NMDEF']; ?></td>
-                    <td><?php print $mhs['TGL_BCRA']; ?></td>
+                    <td><?php print $mhs['TGL_PO']; ?></td>
                     <td>
                       <!--DETAIL-->
-                        <button type="button" class="btn btn-success" name="button"><i class="fa fa-file"></i></button>
-                      <!--EDIT-->
-                        <button type="button" class="btn btn-primary" name="button"><i class="fa fa-pen"></i></button>
-                      <!--HAPUS-->
-                        <button type="button" class="btn btn-danger" name="button"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-success dtl" name="button" data-bs-toggle="modal" data-bs-target="#DtlPo" data-id="<?php echo $mhs['NO_PO'] ?>"><i class="fa fa-file"> Detail</i></button>
                     </td>
                     </tr>
                     <?php endforeach; ?>
@@ -94,5 +90,60 @@
           </div>
         </div>
     </div>
+
+    <!--MODAL VIEW DETAL PO-->
+      <div class="modal fade" id="DtlPo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">View Detail Purchased Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th class="table-warning col-2">Nomor PO</th>
+                  <td class="table-info" id="Po"></td>
+                  <td style="display:none"><input type="hidden" name="Po" id="hdnPo" value=""></td>
+                </tr>
+                <tr>
+                  <th class="table-warning col-2">Pemesan</th>
+                  <td class="table-info" id="tbPmsn"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning col-2">Departement</th>
+                  <td class="table-info" id="tbDept"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning col-2">Supplier</th>
+                  <td class="table-info" id="tbSpr"></td>
+                </tr>
+                <tr>
+                  <th class="table-warning" col-2>Tanggal PO</th>
+                  <td class="table-info" id="tbTgl"></td>
+                </tr>
+              </table>
+              <h4>DETAIL PURCHASED ORDER</h4>
+              <div class="overflow-auto">
+              <table class="table table-bordered text-center" id="myTabs">
+                <thead class="table-info">
+                  <tr>
+                    <th class="col">Nama Barang</th>
+                    <th class="col-2">Quantity</th>
+                    <th class="col">Terima</th>
+                    <th class="col">Satuan</th>
+                    <th class="col">Harga</th>
+                    <th class="col">Total</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 </div>

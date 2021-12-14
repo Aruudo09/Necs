@@ -32,16 +32,6 @@
                         <label for="tanggal_sr" class="form-label">Tanggal SR :</label>
                         <input type="date" class="form-control" id="tanggal_sr" name="tanggal_sr" value="<?php echo $newDate; ?>">
                     </div>
-                <!--INPUT SUPPLIER-->
-                    <div class="mb-3">
-                        <label for="sp" class="form-label">Supplier :</label>
-                        <select id="sp" name="sp" class="form-select">
-                          <option value="" selected readonly disabled>Choose...</option>
-                        <?php foreach ( $data['sp'] as $brg) : ?>
-                          <option value="<?php echo $brg['KODE_SP'] ?>"><?php echo $brg['NAMA_SP'] ?></option>
-                        <?php endforeach; ?>
-                        </select>
-                    </div>
                     <div class="mb-3">
                       <h5>Input Barang</h5>
                         <div class="row">
@@ -87,9 +77,8 @@
                         <th class="col">Nomor SR</th>
                         <th class="col">Peminta</th>
                         <th class="col">Departement</th>
-                        <th class="col">Supplier</th>
                         <th class="col">Tanggal SR</th>
-                        <th class="col">Fitur</th>
+                        <th class="col-2">Fitur</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -98,7 +87,6 @@
                           <td><?php print $tmp['NO_SR'] ?></td>
                           <td><?php print $tmp['PEMINTA'] ?></td>
                           <td><?php print $tmp['NMDEF'] ?></td>
-                          <td><?php print $tmp['NAMA_SP'] ?></td>
                           <td><?php print $tmp['TGL_SR'] ?></td>
                           <td class="d-flex justify-content-evenly">
                             <!--BUTTON DETAIL-->
@@ -106,7 +94,7 @@
                             <!--BUTTON EDIT-->
                               <button type="button" class="btn btn-primary edtSr" data-id="<?php echo $tmp['NO_SR'] ?>" data-bs-toggle="modal" data-bs-target="#modalEdtSr" name="button"><i class="fa fa-pen"></i></button>
                             <!--BUTTON HAPUS-->
-                              <a href="<?php echo BASEURL; ?>/Surat_request/hapus/<?php echo str_replace('/', '-f' ,($tmp['NO_SR'])) ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                              <a href="<?php echo BASEURL; ?>/Surat_request/hapus/<?php echo str_replace('/', '-f' ,($tmp['NO_SR'])) ?>" class="btn btn-danger" onclick="confirm('Apa anda yakin?')"><i class="fa fa-trash"></i></a>
                           </td>
                         </tr>
                       <?php endforeach; ?>
@@ -169,26 +157,37 @@
                     </div>
                     <div class="modal-body">
                      <form class="" action="<?php echo BASEURL; ?>/Surat_request/ubah" method="post">
-                      <table class="table table-borderless">
+                      <table class="table table-bordered">
                         <tr>
                           <th class="table-warning col-2">Nomor SR</th>
-                          <td class="table-info"><input type="text" class="form-control" id="Sr" name="Sr" value="" readonly></td>
+                          <td class="table-info" id="Sr"></td>
+                          <td style="display:none">
+                            <input type="hidden" id="hdnSr" name="hdnSr" value="">
+                          </td>
                         </tr>
                         <tr>
-                          <th class="table-warning col-2">Peminta</th>
-                          <td class="table-info"><input type="text" class="form-control" id="tbPmnt" name="pmnt" value="" readonly></td>
+                          <th class="table-warning">Nomor PR</th>
+                          <td class="table-info" id="Pr"></td>
                         </tr>
                         <tr>
-                          <th class="table-warning col-2">Departement</th>
-                          <td class="table-info"><input type="text" class="form-control" id="tbDept" name="Dept" value="" readonly></td>
+                          <th class="table-warning">Nomor PO</th>
+                          <td class="table-info" id="Po"></td>
                         </tr>
                         <tr>
                           <th class="table-warning col-2">Supplier</th>
-                          <td class="table-info"><input type="text" class="form-control" id="tbSpr" name="Sp" value="" readonly></td>
+                          <td class="table-info" id="tbSpr"></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning col-2">Peminta</th>
+                          <td class="table-info" id="tbPmnt"></td>
+                        </tr>
+                        <tr>
+                          <th class="table-warning col-2">Departement</th>
+                          <td class="table-info" id="tbDept"></td>
                         </tr>
                         <tr>
                           <th class="table-warning" col-2>Tanggal SR</th>
-                          <td class="table-info"><input type="text" class="form-control" id="tbTgl" name="tgl" value="" readonly></td>
+                          <td class="table-info" id="tbTgl"></td>
                         </tr>
                       </table>
                         <h4>DAFTAR BARANG</h4>

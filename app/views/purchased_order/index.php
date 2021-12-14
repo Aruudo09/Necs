@@ -1,5 +1,11 @@
 <div class="container-fluid px-4">
 
+  <!--MENAMPILKAN FLASH MESSAGE-->
+    <div class="row my-2">
+       <div class="col-lg-6">
+          <?php FLASHER::flash(); ?>
+       </div>
+    </div>
 
     <!--FORM INPUT PURCHASED ORDER-->
       <div class="border border-dark rounded-3 p-3 m-3">
@@ -42,8 +48,12 @@
           <div class="row mb-3">
             <div class="col">
               <label for="sp">Supplier</label>
-              <input type="text" class="form-control" name="" id="sp" value="">
-              <input type="hidden" name="hdnSp" id="hdnSp" value="">
+              <select class="form-select" name="Sp" required>
+                <option value="" selected disabled>Choose...</option>
+                <?php foreach ( $data['sp'] as $sp ) : ?>
+                  <option value="<?php echo $sp['KODE_SP'] ?>"><?php echo $sp['NAMA_SP'] ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
           </div>
           <div class="row mb-3">

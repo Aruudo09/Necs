@@ -16,7 +16,6 @@ class Surat_request extends Controller {
 
     $data['po'] = $this->model('Surat_request_model')->getAllDataSr();
     $data['tmp'] = $this->model('Surat_request_model')->getAllDataTmp($page);
-    $data['sp'] = $this->model('Surat_request_model')->getDataSpl();
     $data['brg'] = $this->model('Surat_request_model')->getDataBrg();
     $data['counter'] = $this->model('Surat_request_model')->counter_sr();
 
@@ -29,12 +28,6 @@ class Surat_request extends Controller {
   //-------FUNGSI GET NOMOR SURAT DETAIL---------//
   public function getSr() {
     echo json_encode($this->model('Surat_request_model')->getDataSr($_POST));
-  }
-
-
-//---------FUNGSI GET OBJECT ARRAY DETAIL SR----------//
-  public function getUbahDtl() {
-    echo json_encode($this->model('Surat_request_model')->getDataSrDtl($_POST));
   }
 
 //---------FUNGSI MENAMPILKAN REPORT SR----------//

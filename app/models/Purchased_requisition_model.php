@@ -16,14 +16,14 @@
     }
 
     public function getSr() {
-      $query = "SELECT * FROM surat_request_tmp WHERE NO_PR IS NULL";
+      $query = "SELECT * FROM surat_request_tmp WHERE NO_PR IS NULL AND status != 1";
       $this->db->query($query);
       return $this->db->resultSet();
     }
 
     public function getPr($page) {
       $key = $_SESSION['cari'];
-      $this->dbh->query('SELECT * FROM purchased_requisition WHERE NO_PR LIKE :key');
+      $this->dbh->query('SELECT * FROM purchased_requisition WHERE NO_PR LIKE :key AND status != 1');
       $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
 
@@ -41,9 +41,9 @@
 
       $query = "SELECT a.NO_PR, a.USER, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP, a.TGL_PR
                 FROM purchased_requisition a
-                INNER JOIN tarif b ON a.KODEF = b.KODEF
-                INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE a.NO_PR LIKE :key AND status != '1'
+                LEFT JOIN tarif b ON a.KODEF = b.KODEF
+                LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                WHERE a.NO_PR LIKE :key AND a.status != '1'
                 ORDER BY a.NO_PR
                 LIMIT $dataAwal, $banyakDataPerHal";
 
@@ -76,18 +76,9 @@
       return $this->db->resultSet();
     }
 
-    public function getSp($data) {
-      $query = "SELECT a.KODE_SP, b.NAMA_SP FROM surat_request_tmp a INNER JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NO_SR = :id";
-
-      $this->db->query($query);
-      $this->db->bind('id', $data['id']);
-      $this->db->execute();
-      return $this->db->single();
-    }
-
     public function getAllSr($page) {
       $key = $_SESSION['cari'];
-      $query2 = "SELECT *FROM surat_request_tmp WHERE NO_SR LIKE :key";
+      $query2 = "SELECT *FROM surat_request_tmp WHERE NO_SR LIKE :key AND status != 1 AND NO_PR IS NULL";
       $this->dbh->query($query2);
       $this->dbh->bind('key', "%$key%");
       $this->dbh->execute();
@@ -108,7 +99,7 @@
                 FROM surat_request_tmp a
                 INNER JOIN tarif b ON a.KODEF = b.KODEF
                 INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE NO_SR LIKE :key AND status != '1' AND a.NO_PR IS NULL
+                WHERE NO_SR LIKE :key AND a.status != '1' AND a.NO_PR IS NULL
                 ORDER BY NO_SR
                 LIMIT $dataAwal, $banyakDataPerHal";
       $this->db->query($query);
@@ -203,6 +194,16 @@
       $this->db->query($query);
       $this->db->bind('id', $data);
       $this->db->execute();
+      return $this->db->rowCount();
+    }
+
+    public function ubah($data) {
+      $query = "UPDATE purchased_requisition SET USER = :usr, TGL_PR = :tgl_pr";
+      $this->db->query($query);
+      $this->db->bind('usr', $data['usr']);
+      $this->db->bind('tgl_pr', $data['tgl_pr']);
+      $this->db->execute();
+
       return $this->db->rowCount();
     }
 

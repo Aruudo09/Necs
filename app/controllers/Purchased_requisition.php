@@ -58,6 +58,18 @@
       }
     }
 
+    public function ubah() {
+      if ($this->model('Purchased_requisition_model')->ubah($_POST) > 0 ) {
+        Flasher::setFlash('Purchased Requisition', 'Berhasil', 'diubah', 'success');
+        header('Location: ' . BASEURL . '/purchased_requisition/detail/1');
+        exit;
+      } else {
+        Flasher::setFlash('Purchased Requisition', 'Gagal', 'diubah', 'danger');
+        header('Location: ' . BASEURL . '/purchased_requisition/detail/1');
+        exit;
+      }
+    }
+
     public function hapus($data) {
         if ( $this->model('Purchased_requisition_model')->hapus(str_replace('-F', '/', $data)) > 0 ) {
           Flasher::setFlash('Purchased Requisition', 'berhasil', 'dihapus', 'success');
@@ -82,10 +94,6 @@
 
     public function dtlSr() {
       echo json_encode($this->model('Purchased_requisition_model')->getDtlSr($_POST));
-    }
-
-    public function supplier() {
-      echo json_encode($this->model('Purchased_requisition_model')->getSp($_POST));
     }
 
     public function getDtlPr() {

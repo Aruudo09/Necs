@@ -4,6 +4,7 @@
 
     public function index() {
       $data['pr'] = $this->model('Purchased_order_model')->getPr();
+      $data['sp'] = $this->model('Purchased_order_model')->getSp();
       $data['counter'] = $this->model('Purchased_order_model')->getCounter();
 
       $this->view('templates/header', $data);
@@ -57,6 +58,18 @@
       } else {
         Flasher::setFlash('Purchased Order', 'Gagal', 'ditambahkan', 'danger');
         header('Location: ' . BASEURL . '/purchased_order');
+        exit;
+      }
+    }
+
+    public function ubah() {
+      if ($this->model('Purchased_order_model')->ubah($_POST) > 0 ) {
+        Flasher::setFlash('Purchased Order', 'Berhasil', 'diubah', 'success');
+        header('Location: ' . BASEURL . '/purchased_order/detail/1');
+        exit;
+      } else {
+        Flasher::setFlash('Purchased Order', 'Gagal', 'diubah', 'danger');
+        header('Location: ' . BASEURL . '/purchased_order/detail/1');
         exit;
       }
     }
