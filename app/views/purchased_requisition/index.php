@@ -34,7 +34,8 @@
               <div class="col">
                 <label for="noPr">Nomor PR :</label>
                 <input type="text" class="form-control" id="noPr" name="noPr" value="" readonly>
-                <input type="hidden" name="" id="hdnPr" value="<?php echo $_SESSION['login']['Initial']; ?>">
+                <input type="hidden" name="" id="init" value="<?php echo $_SESSION['login']['Initial'] ?>">
+                <input type="hidden" name="hdnPr" id="hdnPr" value="">
               </div>
             </div>
             <div class="row mb-3">
@@ -126,11 +127,11 @@
                       <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $data['sr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
                   <?php } ?>
                 <!--TOMBOL PAGE-->
-                  <?php for ($i=1; $i < $data['sr']['banyakHal']; $i++) { ?>
+                  <?php for ($i=1; $i <= $data['sr']['banyakHal']; $i++) { ?>
                     <?php if ( $data['sr']['halamanAktif'] == $i ) { ?>
-                      <li class="page-item active"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+                      <li class="page-item active"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link"><?php echo $i; ?></a></li>
                     <?php } else { ?>
-                      <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link pgNum"><?php echo $i; ?></a></li>
+                      <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/<?php echo $i; ?>" class="page-link"><?php echo $i; ?></a></li>
                     <?php } ?>
                   <?php } ?>
                 <!--TOMBOL NEXT-->

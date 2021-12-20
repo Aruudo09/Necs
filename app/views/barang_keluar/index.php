@@ -9,7 +9,6 @@
 
     <!--DATA KELUAR BARANG-->
 
-
       <div class="border border-dark rounded-3 bg-gradient p-3 mt-3">
         <h3>FORM INPUT PENGEBONAN BARANG</h3>
         <hr>
@@ -92,7 +91,7 @@
 
 <div class="border border-dark rounded-3 bg-white mt-4 mb-4 p-3">
   <h3 class="fs-4 mb-3">Daftar Barang Keluar</h3>
-  <form class="" action="<?php echo BASEURL; ?>/barang_keluar/cari/1" method="post">
+  <form class="" action="<?php echo BASEURL; ?>/barang_keluar/1" method="post">
     <div class="d-flex mt-2 mb-2">
       <input type="text" class="form-control" name="keyword" style="width:30%" value="">
       <button type="submit" class="btn btn-success" name="srchbtn" style="width:6%"><i class="fa fa-search"></i></button>
@@ -262,8 +261,8 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"> Edit</i></button>
-                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"> Cetak</i></button>
+                <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"></i> EDIT</button>
+                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"></i> CETAK</button>
               </div>
             </form>
           </div>

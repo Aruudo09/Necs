@@ -18,7 +18,7 @@ class Barang_model {
   public function getAllBarang($page) {
     $key = $_SESSION['cari'];
 
-    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key');
+    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key AND status != 1');
     $this->dbh->bind('key', "%$key%");
     $this->dbh->execute();
 
@@ -34,7 +34,7 @@ class Barang_model {
 
     $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-    $query = "SELECT KODE_BRG, b.NAMA_SP, NAMA_BRG, Jenis_brg, Stock_brg, Satuan, a.Tanggal_beli, Harga FROM barang a JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE NAMA_BRG LIKE :key ORDER BY NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
+    $query = "SELECT a.KODE_BRG, b.NAMA_SP, a.NAMA_BRG, a.Jenis_brg, a.Stock_brg, a.Satuan, a.Tanggal_beli, a.Harga FROM barang a LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE a.NAMA_BRG LIKE :key AND a.status != 1 ORDER BY a.NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
     $this->db->bind('key', "%$key%");
 
@@ -77,7 +77,7 @@ class Barang_model {
   }
 
   public function hapusDataBrg($Kode_brg) {
-    $query = "DELETE FROM barang WHERE KODE_BRG=:Kode_brg";
+    $query = "UPDATE barang SET status = 1 WHERE KODE_BRG = :Kode_brg";
     $this->db->query($query);
     $this->db->bind('Kode_brg', $Kode_brg);
 

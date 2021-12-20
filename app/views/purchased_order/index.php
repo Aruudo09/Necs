@@ -77,6 +77,9 @@
                   <td class="col">Total</td>
                 </tr>
               </thead>
+              <tbody>
+                <!--GENERATE DAFTAR BARANG-->
+              </tbody>
             </table>
           </div>
           <hr>

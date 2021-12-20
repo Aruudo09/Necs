@@ -175,8 +175,8 @@
               </div>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="edt" name="button" disabled><i class="fa fa-pen">Edit</i></button>
-                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print">Cetak</i></button>
+                <button type="submit" class="btn btn-primary" id="edt" name="button" disabled><i class="fa fa-pen"></i> EDIT</button>
+                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"></i> CETAK</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
               </form>

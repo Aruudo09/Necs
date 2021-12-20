@@ -44,7 +44,7 @@ class Supplier_model {
     public function tambahSupplier($data) {
       $query = "INSERT INTO supplier
                   VALUES
-                  (:inputNoSpl, :inputNmSpl, :alamatSpl, :telepon, :email, :hubungan, :npwp, :tanggalInput, '', :qtyBln)";
+                  (:inputNoSpl, :inputNmSpl, :alamatSpl, :telepon, :email, :hubungan, :npwp, :tanggalInput, '', :qtyBln, DEFAULT)";
 
       $this->db->query($query);
 

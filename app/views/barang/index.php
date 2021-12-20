@@ -7,7 +7,6 @@
          </div>
       </div>
 
-<!-- <div class="border border-dark rounded-3 bg-gradient mt-4 p-3"> -->
     <!--Data Barang-->
       <!-- Button trigger modal -->
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-barang">
@@ -55,7 +54,9 @@
                         <td><?php print $brg['NAMA_SP'] ?></td>
                         <td>
                           <div class="d-flex justify-content-evenly">
-                            <a href="#" class="btn btn-info btnUpdateBrg" data-bs-toggle="modal" data-bs-target="#modalBarang" data-id="<?php echo $brg['KODE_BRG'] ?>"><i class="fas fa-pen"></i></a>
+                            <!--TOMBOL EDIT-->
+                            <a href="#" class="btn btn-primary btnUpdateBrg" data-bs-toggle="modal" data-bs-target="#modalBarang" data-id="<?php echo $brg['KODE_BRG'] ?>"><i class="fas fa-pen"></i></a>
+                            <!--TOMBOL HAPUS-->
                             <a href="<?php echo BASEURL; ?>/barang/hapus/<?php echo $brg['KODE_BRG'] ?>" class="btn btn-danger" onclick="return confirm('apa anda yakin?');"><i class="fas fa-trash"></i></a>
                           </div>
                         </td>
@@ -122,7 +123,7 @@
                             <div class="col">
                                 <label for="inputSpl" class="form-label">Nama Supplier :</label>
                                 <select id="inputSpl" class="form-select" name="inputSpl" required>
-                                  <option selected>Choose...</option>
+                                  <option value="" selected disabled>Choose...</option>
                                   <?php foreach ( $data['optionSpl'] as $spl ) : ?>
                                   <option value="<?php echo $spl['KODE_SP']; ?>"><?php echo $spl['NAMA_SP']; ?></option>
                                   <?php endforeach; ?>

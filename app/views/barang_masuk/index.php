@@ -40,7 +40,7 @@
                         <label for="inputNoMsk">No Masuk :</label>
                         <?php foreach( $data['counter'] as $ct) : ?>
                         <script>
-                            var kod = <?php echo json_encode($ct['ba'], JSON_HEX_TAG); ?>;
+                            var kod = <?php echo json_encode($ct['ba'] + 1, JSON_HEX_TAG); ?>;
                             var kod1 = <?php echo json_encode(date("y"), JSON_HEX_TAG); ?>;
                         </script>
                         <?php endforeach; ?>

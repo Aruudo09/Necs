@@ -9,7 +9,10 @@
 
   <!--REGISTRASI FORM-->
     <div class="border border-dark rounded-3 bg-gradient mx-auto mt-3 p-4" style="width:50%">
-      <h3 class="mb-2 d-flex justify-content-center">REGISTRASI</h3>
+      <div class="d-flex justify-content-around">
+        <h3>REGISTRASI</h3>
+        <a href="<?php echo BASEURL; ?>/account/detail/1" class="btn btn-warning">View Table</a>
+      </div>
       <hr>
       <form action="<?php echo BASEURL; ?>/account/tambah" method="post">
         <div class="row mb-2 d-flex justify-content-center">

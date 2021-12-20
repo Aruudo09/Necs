@@ -147,9 +147,11 @@
                       </div>
                     <!--INPUT TANGGAL INPUT-->
                       <div class="row mb-3">
+                        <?php $date = date("Y/m/d");
+                        $newDate = date("Y-m-d", strtotime($date)); ?>
                           <div class="form-group col">
                               <label for="tanggalInput">Tanggal Input :</label>
-                              <input type="date" name="tanggalInput" id="tanggalInput" class="form-control">
+                              <input type="date" name="tanggalInput" id="tanggalInput" class="form-control" value="<?php echo $newDate; ?>">
                           </div>
                       </div>
                     <!--INPUT TANGGAL UPDATE-->

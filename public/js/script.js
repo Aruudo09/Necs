@@ -17,37 +17,25 @@ if (window.location.href.indexOf('/Necs/public/surat_request') > -1 ) {
     var nama = $(".inptBrgSr option:selected").text();
 
 
-    var new_row = parseInt($('#num_row').val()) + 1;
-    console.log(new_row);
-    var new_input = "<div class='row'><div class='col-5'><label for='nmBrg' id='lblNamaBrg" + new_row + "'>Barang :</label><input type='text' name='nmBrg[]' id='nmBrg" + new_row + "' class='form-control' value='" + nama +"'></div>";
+    var new_input = "<tr><td><input type='text' name='nmBrg[]' class='form-control' value='" + nama +"'></td>";
 
-    var new_input1 = "<div class='col-3'><label for='qty' id='lblQtyOrder" + new_row + "'>Order :</label><input type='number' placeholder='Quantity...' name='qty[]' id='qty" + new_row + "' class='form-control'></div>";
+    var new_input1 = "<td><input type='number' placeholder='Quantity...' name='qty[]' class='form-control'></td>";
 
-    var new_input2 = "<div class='col-4'><label for='harga' id='lblHarga" + new_row + "'>Harga :</label><input type='number' placeholder='Harga...' name='harga[]' id='harga" + new_row + "' class='form-control'></div>";
+    var new_input2 = "<td><input type='number' placeholder='Harga...' name='harga[]' class='form-control'></td>";
 
-    var new_input3 = "<div class='col-3'><input type='hidden' placeholder='Kode Barang...' name='kdBrg[]' id='kdBrg" + new_row + "' class='form-control' value='" + value +"'></div></div>";
+    var new_input3 = "<td><button type='button' class='btn btn-danger remove'><i class='fa fa-trash'></i></button></td>"
+
+    var new_input4 = "<td style='display:none'><input type='hidden' placeholder='Kode Barang...' name='kdBrg[]' class='form-control' value='" + value +"'></td></tr>";
 
 
-     $('#add_row').append(new_input + new_input1 + new_input2 + new_input3);
+     $('#tabInpt').append(new_input + new_input1 + new_input2 + new_input3 + new_input4);
 
-     $('#num_row').val(new_row);
+
   });
 
   //-----MENGURANGI FIELD BARANG DI SR-----//
-  $('.remove').click(function() {
-    var old_row = $('#num_row').val();
-    console.log(old_row);
-
-     if (old_row > 0) {
-       $('#nmBrg' + old_row).remove();
-       $('#qty' + old_row).remove();
-       $('#harga' + old_row).remove();
-       $('#kdBrg' + old_row).remove();
-       $('#lblNamaBrg' + old_row).remove();
-       $('#lblQtyOrder' + old_row).remove();
-       $('#lblHarga' + old_row).remove();
-       $('#num_row').val(old_row - 1);
-     }
+  $(document).on('click', '#tabInpt .remove',function() {
+    $(this).parent('td').parent('tr').remove();
   });
 
   //----mengupdate atau edit NOMOR SR-------//
@@ -123,6 +111,8 @@ if (window.location.href.indexOf('/Necs/public/surat_request') > -1 ) {
       success: function(data) {
         if ( data.length == 0) {
           alert("DATA DETAIL KOSONG");
+        } else if ( data[0].NO_PR != null ) {
+          alert("SR sudah di approved");
         } else {
 
           for (var i = 0; i < data.length; i++) {
@@ -187,12 +177,14 @@ if (window.location.href.indexOf('/Necs/public/purchased_requisition') > -1 && w
     const id = $(this).val();
     $('.dftrRow').remove();
     var sr = document.getElementById('noSr').value;
-    var init = document.getElementById('hdnPr').value;
+    var init = document.getElementById('init').value;
 
     if ( sr.substring(0,7).endsWith('/')) {
       $('#noPr').val(sr.substring(0,6) + '-' + init + sr.substring(6));
+      $('#hdnPr').val(sr.substring(0,6));
     } else {
       $('#noPr').val(sr.substring(0,7) + '-' + init + sr.substring(7));
+      $('#hdnPr').val(sr.substring(0,7));
     }
 
     $.ajax({
@@ -232,10 +224,15 @@ if (window.location.href.indexOf('/Necs/public/purchased_requisition') > -1 && w
           if (data.length == 0 ) {
             alert("Detail Data Kosong");
           } else {
+
+            if ( data[0].NAMA_SP == undefined ) {
+              $('#tbSpr').text('Belum Tersedia');
+            } else {
+              $('#tbSpr').text(data[0].NAMA_SP)
+            }
             $('#tbSr').text(data[0].NO_SR);
             $('#tbPmnt').text(data[0].PEMINTA);
             $('#tbDept').text(data[0].NMDEF);
-            $('#tbSpr').text(data[0].NAMA_SP);
 
           for (var i = 0; i < data.length; i++) {
             var row = "<tbody><tr class='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
@@ -296,10 +293,15 @@ if (window.location.href.indexOf('/Necs/public/purchased_requisition/detail') > 
         if (data.length == 0 ) {
           alert("Detail Data Kosong");
         } else {
+
+          if (data[0].NAMA_SP == undefined) {
+            $('#tbSpr').text('Belum Tersedia');
+          } else {
+            $('#tbSpr').text(data[0].NAMA_SP);
+          }
           $('#tbSr').text(data[0].NO_PR);
           $('#tbPmnt').text(data[0].PEMINTA);
           $('#tbDept').text(data[0].NMDEF);
-          $('#tbSpr').text(data[0].NAMA_SP);
 
         for (var i = 0; i < data.length; i++) {
           var row = "<tbody><tr class='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
@@ -348,9 +350,10 @@ if (window.location.href.indexOf('/purchased_order') > 0 && window.location.href
     $('#noPr').select2();
   });
 
+  //--------GENERATE DAFTAR BARANG--------//
   $('#noPr').change(function(){
     var id = document.getElementById('noPr').value;
-    $('#numRow').remove();
+    $('.numRow').remove();
 
     $.ajax({
       url: 'http://localhost/Necs/public/Purchased_order/getSp',
@@ -371,12 +374,12 @@ if (window.location.href.indexOf('/purchased_order') > 0 && window.location.href
       success: function(data) {
         console.log(data);
         for (var i = 0; i < data.length; i++) {
-          var row = "<tbody><tr id='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
+          var row = "<tr class='numRow'><td>"+ data[i].NAMA_BRG +"</td>";
           var row0 = "<td style='display:none'><input type='text' name='kd[]' value='"+ data[i].KODE_BRG +"'></td>";
           var row1 = "<td><input type='number' style='width:40%' name='qty[]' value='"+ data[i].QTY_MINTA +"'></td>";
           var row2 = "<td>"+ data[i].Satuan +"</td>";
           var row3 = "<td><input type='number' style='width:60%' name='hrg[]' value='"+ data[i].HARGA_SR +"' readonly></td>";
-          var row4 = "<td>"+ data[i].TOT_HARGA +"</td></tr></tbody></table>";
+          var row4 = "<td>"+ data[i].TOT_HARGA +"</td></tr>";
 
           $('#tbPr').append(row + row0 + row1 + row2 + row3 + row4);
         }
@@ -476,7 +479,7 @@ if ( window.location.href.indexOf('/Necs/public/purchased_order/detail') > -1 ) 
 
 //BARANG
 
-if (window.location.href.indexOf('/Necs/public/barang') > 0 && window.location.href.indexOf('cari') == -1 ) {
+if (window.location.href.indexOf('/Necs/public/barang') > -1 ) {
 
   //-----------TAMBAH BARANG BARU-----------//
   $('#tambahBarang').on('click', function() {
@@ -490,6 +493,8 @@ if (window.location.href.indexOf('/Necs/public/barang') > 0 && window.location.h
       $('#inputNamaBrg').val('');
       $('#inputJnsBrg').val('');
       $('#stockBrg').val('');
+      $('#stckMin').val('');
+      $('#stckMax').val('');
       $('#satuan').val('');
       $('#harga').val('');
   });
@@ -751,7 +756,7 @@ if (window.location.href.indexOf('/Necs/public/barang_masuk/detail') > -1 ) {
 
 //BARANG KELUAR
 
-if (window.location.href.indexOf('/Necs/public/barang_keluar') > 0 ) {
+if (window.location.href.indexOf('/Necs/public/barang_keluar') > -1 ) {
 
   //------COMBOBOX BARANG-------//
   $(document).ready(function() {
@@ -808,26 +813,6 @@ if (window.location.href.indexOf('/Necs/public/barang_keluar') > 0 ) {
     });
   });
 
-  //-------HAPUS BARANG KELUAR----------//
-  $('.hps').click(function(){
-    var id = $(this).data('id');
-    var brg = $(this).data('brg');
-
-    $.ajax({
-      url: 'http://localhost/Necs/public/Barang_keluar/hapus',
-      data: {id : id, brg : brg},
-      method: 'post',
-      success: function() {
-        alert("DATA BERHASIL DIHAPUS");
-        window.location.replace("http://localhost/Necs/public/Barang_keluar");
-      },
-      error: function(xhr, status, error) {
-        var errorMessage = xhr.status + ': ' + xhr.statusText
-        alert("DATA GAGAL DIHAPUS " + errorMessage);
-      }
-    });
-  });
-
   //------MENAMPILKAN DETAIL BARANG KELUAR------//
   $('.detail').click(function(){
     const id = $(this).data('id');
@@ -861,10 +846,36 @@ if (window.location.href.indexOf('/Necs/public/barang_keluar') > 0 ) {
           var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value=" +data[i].KODE_BRG+ "></td>";
           var row1 = "<td><input type='number' class='form-control qty' name='qty[]' value='" +data[i].QUANTITY_MINTA+ "'></td>";
           var row2 = "<td>" +data[i].satuan+ "</td>";
-          var row3 = "<td><button type='button' class='btn btn-danger delete'><i class='fa fa-trash'></i></button></td>";
+          var row3 = "<td><button type='button' class='btn btn-danger delete' data-id="+data[i].NOMOR_SLIP+" data-kd="+data[i].KODE_BRG+"><i class='fa fa-trash'></i></button></td>";
 
           $('#tabDtl').append(row + row0 + row1 + row2 + row3);
         }
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("Data Kosong");
+      }
+    });
+  });
+
+  //-------HAPUS BARANG KELUAR----------//
+  $(document).on('click', '#tabDtl .delete', function(){
+    var id = $(this).data('id');
+    var kd = $(this).data('kd');
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/Barang_keluar/hapusDtl',
+      data: {id : id, kd : kd},
+      method: 'post',
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        alert("DATA BERHASIL DIHAPUS");
+        // window.location.replace("http://localhost/Necs/public/Barang_keluar");
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert("DATA GAGAL DIHAPUS " + errorMessage);
       }
     });
   });
@@ -873,20 +884,6 @@ if (window.location.href.indexOf('/Necs/public/barang_keluar') > 0 ) {
   $('#tabDtl').on('click', '.qty', function(){
     $('#editDtl').prop("disabled", false);
   });
-
-  //-------PAGINATION FOR CARI--------//
-  if ( window.location.href.indexOf('/cari') > 0 ) {
-    alert("Hallo");
-    $('.page').click(function(){
-      var page = $('.pgNum').text();
-      var prev = page - 1;
-      var next = page + 1;
-      console.log(page);
-      $('.pgNum').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +page+ "");
-      $('.pgPrev').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +prev+ "");
-      $('.pgNext').attr("href", "http://localhost/Necs/public/barang_keluar/cari/" +next+ "");
-    });
-  }
 
 }
 
@@ -902,7 +899,6 @@ if ( window.location.href.indexOf('/Necs/public/supplier') > -1 ) {
     $('#inputNoSpl').val('');
     $('#inputNmSpl').val('');
     $('#alamatSpl').val('');
-    $('#tanggalInput').val('');
     $('#keterangan').val('');
     $('#tanggalUpdate').hide();
 
@@ -943,10 +939,10 @@ if ( window.location.href.indexOf('/Necs/public/supplier') > -1 ) {
         method: 'post',
         dataType: 'json',
         success: function(data) {
-          console.log(data);
+
           $('#tanggalUpdate').show();
           $('#tanggalInput').hide();
-          $('#inputNoSpl').hide();
+          $('#inputNoSpl').val(data.KODE_SP);
           $('#inputNmSpl').val(data.NAMA_SP);
           $('#alamatSpl').val(data.ALAMAT_SP);
           $('#telepon').val(data.TELEPON);
@@ -958,6 +954,27 @@ if ( window.location.href.indexOf('/Necs/public/supplier') > -1 ) {
         }
     });
 
+  });
+}
+
+//ACCOUNT
+
+if ( window.location.href.indexOf('Necs/public/account/detail') > -1 ) {
+  $('.edt').click(function(){
+    const id = $(this).data('id');
+    $('#hdnID').val(id);
+
+    $.ajax({
+      url: 'http://localhost/Necs/public/account/getDtl',
+      type: 'post',
+      data: {id : id},
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        $('#usr').val(data.USERNAME);
+        $('#dept').val(data.KODEF);
+      }
+    });
   });
 }
 

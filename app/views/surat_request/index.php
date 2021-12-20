@@ -23,7 +23,7 @@
                 <!--INPUT PEMESAN-->
                     <div class="mb-3">
                       <label for="peminta">Peminta :</label>
-                      <input type="text" name="peminta" id="peminta" value="<?php echo $_SESSION['login']['USERNAME'] ?>" class="form-control" readonly>
+                      <input type="text" name="peminta" id="peminta" value="<?php echo $_SESSION['login']['USERNAME'] ?>" class="form-control">
                     </div>
                 <!--TANGGAL INPUT-->
                     <div class="mb-3">
@@ -33,9 +33,8 @@
                         <input type="date" class="form-control" id="tanggal_sr" name="tanggal_sr" value="<?php echo $newDate; ?>">
                     </div>
                     <div class="mb-3">
-                      <h5>Input Barang</h5>
-                        <div class="row">
-                          <div class="col-7">
+                      <h4>Input Barang</h4>
+                          <div class="col-4">
                             <select class="form-select inptBrgSr" name="inptBrgSr" id="inptBrgSr" onchange="">
                               <option selected readonly disabled>Choose...</option>
                               <?php foreach( $data['brg'] as $brg) : ?>
@@ -43,13 +42,18 @@
                               <?php endforeach; ?>
                             </select>
                           </div>
-                          <div class="col-2">
-                            <button type="button" name="button" class="btn btn-danger remove"><i class="fas fa-minus"></i></button>
-                          </div>
-                        </div>
                     </div>
-                    <div id="add_row" class="row mb-3"></div>
-                    <input type="hidden" value="0" id="num_row">
+                    <table class="table table-bordered text-center" id="tabInpt">
+                      <thead class="table-warning">
+                        <th class="col-3">Barang</th>
+                        <th class="col-3">Order</th>
+                        <th class="col-3">Quantity</th>
+                        <th class="col-1">Fitur</th>
+                      </thead>
+                      <tbody>
+                        <!--GENERATE FILED INPUT BARANG-->
+                      </tbody>
+                    </table>
                     <div class="row">
                       <hr>
                       <div class="col-12 text-end">
@@ -208,7 +212,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"> <b>Edit</b></i></button>
+                            <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"></i> EDIT</button>
                           </div>
                       </form>
                     </div>
@@ -243,15 +247,6 @@
                                 $newDate = date("Y-m-d", strtotime($date)); ?>
                                   <label for="tanggal_sr2" class="form-label">Tanggal SR :</label>
                                   <input type="date" class="form-control" id="tanggal_sr2" name="tanggal_sr2" value="<?php echo $newDate; ?>">
-                              </div>
-                          <!--INPUT SUPPLIER-->
-                              <div class="mb-3">
-                                  <label for="sp2" class="form-label">Supplier :</label>
-                                  <select id="sp2" name="sp2" class="form-select">
-                                  <?php foreach ( $data['sp'] as $brg) : ?>
-                                    <option value="<?php echo $brg['KODE_SP'] ?>"><?php echo $brg['NAMA_SP'] ?></option>
-                                  <?php endforeach; ?>
-                                  </select>
                               </div>
                           </div>
                           <div class="modal-footer">

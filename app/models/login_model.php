@@ -73,6 +73,19 @@
       }
     }
 
+    public function level($data) {
+      $query = "SELECT PASSWORD, level FROM user WHERE USERNAME = :usrName";
+      $this->db->query($query);
+      $this->db->bind('usrName', $data['usrName']);
+      $dt = $this->db->single();
+
+      if ($this->db->rowCount() == 1) {
+        if (password_verify($data['password'], $dt['PASSWORD'])) {
+          return $dt['level'];
+        }
+      }
+    }
+
   }
 
  ?>

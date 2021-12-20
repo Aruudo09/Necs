@@ -3,13 +3,20 @@
   class Purchased_order extends Controller {
 
     public function index() {
-      $data['pr'] = $this->model('Purchased_order_model')->getPr();
-      $data['sp'] = $this->model('Purchased_order_model')->getSp();
-      $data['counter'] = $this->model('Purchased_order_model')->getCounter();
 
-      $this->view('templates/header', $data);
-      $this->view('purchased_order/index', $data);
-      $this->view('templates/footer');
+      if ( $_SESSION['login']['KODEF'] != 10) {
+        header('Location:' . BASEURL . '/not_found');
+        exit;
+      } else {
+        $data['pr'] = $this->model('Purchased_order_model')->getPr();
+        $data['sp'] = $this->model('Purchased_order_model')->getSp();
+        $data['counter'] = $this->model('Purchased_order_model')->getCounter();
+
+        $this->akses();
+        $this->view('templates/header', $data);
+        $this->view('purchased_order/index', $data);
+        $this->view('templates/footer');
+      }
     }
 
     public function detail($page) {
@@ -27,6 +34,7 @@
 
       $data['po'] = $this->model('Purchased_order_model')->getAllPo($page);
 
+      $this->akses();
       $this->view('templates/header', $data);
       $this->view('purchased_order/detail', $data);
       $this->view('templates/footer');

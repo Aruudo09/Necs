@@ -9,7 +9,7 @@
 
     <!--BUTTON BACK-->
     <a href="<?php echo BASEURL; ?>/barang_masuk/1/">
-      <button type="button" class="btn btn-success" name="button"><i class="fa fa-arrow-left"> <b>Kembali</b></i></button>
+      <button type="button" class="btn btn-success" name="button"><i class="fa fa-arrow-left"></i> KEMBALI</button>
     </a>
 
     <!--TABLE VIEW LIST PURCHASED ORDER-->
@@ -24,7 +24,6 @@
             </form>
           <div class="overflow-auto">
               <table class="table table-bordered table-striped table-responsive text-center table-hover tbPo2">
-                <h3 class="mb-3">LIST PURCHASED ORDER</h3>
                     <thead>
                       <tr class="table-warning">
                         <th class="col">No. PO</th>
@@ -45,7 +44,7 @@
                     <td><?php print $mhs['TGL_PO']; ?></td>
                     <td>
                       <!--DETAIL-->
-                        <button type="button" class="btn btn-success dtl" name="button" data-bs-toggle="modal" data-bs-target="#DtlPo" data-id="<?php echo $mhs['NO_PO'] ?>"><i class="fa fa-file"> Detail</i></button>
+                        <button type="button" class="btn btn-success dtl" name="button" data-bs-toggle="modal" data-bs-target="#DtlPo" data-id="<?php echo $mhs['NO_PO'] ?>"><i class="fa fa-file"></i> DETAIL</button>
                     </td>
                     </tr>
                     <?php endforeach; ?>
@@ -140,7 +139,6 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>

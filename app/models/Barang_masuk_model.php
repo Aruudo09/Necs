@@ -62,7 +62,12 @@
 
         $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA LIKE :key AND status != 1 ORDER BY a.TGL_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
+        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN
+        FROM berita_acara a
+        LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
+        LEFT JOIN supplier c ON b.KODE_SP = c.KODE_SP
+        WHERE a.NO_BCRA LIKE :key AND a.status != 1 GROUP BY a.NO_BCRA
+        ORDER BY a.NO_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
 
         $this->db->query($query);
         $this->db->bind('key', "%$key%");
@@ -79,12 +84,13 @@
       public function getAllPoBcra($page) {
 
         $key = $_SESSION['cari'];
-        $query2 = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP
-                    FROM purchased_order_tmp a
-                    LEFT JOIN purchased_order b ON a.NO_PO = b.NO_PO
-                    LEFT JOIN tarif c ON a.KODEF = c.KODEF
-                    LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
-                    WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND b.status != '1'";
+        $query2 = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, d.NMDEF, a.KODE_SP, c.NAMA_SP
+                  FROM purchased_order_tmp a
+                  LEFT JOIN purchased_order b ON a.NO_PO = B.NO_PO
+                  LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                  LEFT JOIN tarif d ON a.KODEF = d.KODEF
+                  WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND a.status != 1
+                  GROUP BY a.NO_PO";
         $this->dbh->query($query2);
         $this->dbh->bind('key', "%$key%");
         $this->dbh->execute();
@@ -101,12 +107,13 @@
 
         $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-        $query = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP
-                    FROM purchased_order_tmp a
-                    LEFT JOIN purchased_order b ON a.NO_PO = b.NO_PO
-                    LEFT JOIN tarif c ON a.KODEF = c.KODEF
-                    LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
-                    WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND b.status != '1' ORDER BY a.NO_PO ASC";
+        $query = "SELECT a.NO_PO, a.TGL_PO, a.PEMESAN, a.KODEF, d.NMDEF, a.KODE_SP, c.NAMA_SP
+                  FROM purchased_order_tmp a
+                  LEFT JOIN purchased_order b ON a.NO_PO = B.NO_PO
+                  LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                  LEFT JOIN tarif d ON a.KODEF = d.KODEF
+                  WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND a.status != 1
+                  GROUP BY a.NO_PO";
         $this->db->query($query);
         $this->db->bind('key', "%$key%");
 
@@ -121,8 +128,9 @@
 
       public function getAllDataPo() {
         $this->db->query('SELECT a.NO_PO FROM purchased_order_tmp a
-        INNER JOIN purchased_order b ON a.NO_PO = b.NO_PO
-        WHERE B.QTY_ORDER > b.QTY_TERIMA');
+        LEFT JOIN purchased_order b ON a.NO_PO = b.NO_PO
+        WHERE b.QTY_ORDER > b.QTY_TERIMA
+        GROUP BY a.NO_PO');
         return $this->db->resultSet();
       }
 
@@ -199,7 +207,7 @@
 
       public function tambahBrgMskTmp($data) {
         $query = "INSERT INTO berita_acara_tmp (NO_BCRA, NO_PO, NO_SRJLN, KODE_SP, KODEF, TGL_BCRA, PENERIMA)
-                  SELECT CONCAT('GA-', (SELECT ba FROM counter), '/', DATE_FORMAT(NOW(), '$y')), :poBa, :noSRJLN, KODE_SP, :kodef, :tanggalTerima, :penerima FROM purchased_order_tmp WHERE NO_PO = :poBa";
+                  SELECT CONCAT('GA-', (SELECT ba FROM counter) + 1, '/', DATE_FORMAT(NOW(), '%y')), :poBa, :noSRJLN, KODE_SP, :kodef, :tanggalTerima, :penerima FROM purchased_order_tmp WHERE NO_PO = :poBa";
         $this->db->query($query);
         $this->db->bind('inputNoMsk', $data['inputNoMsk']);
         $this->db->bind('noSRJLN', $data['noSRJLN']);
@@ -226,7 +234,7 @@
           continue;
         } else {
           $query = "INSERT INTO berita_acara (NO_BCRA, PENERIMA, TGL_BCRA, NO_PO, KODEF, KODE_SP, KODE_BRG, HARGA_BL, QTY_TERIMA, NO_SRJLN)
-                    SELECT CONCAT('GA-', (SELECT ba FROM counter), '/', DATE_FORMAT(NOW(), '%y')), :penerima, :tanggalTerima, :poBa, :kodef, KODE_SP, :kdBrg" .$i. ", :hrgBl" .$i. ", :qty" .$i. ", :noSRJLN FROM purchased_order_tmp WHERE NO_PO = :poBa";
+                    SELECT CONCAT('GA-', (SELECT ba FROM counter) + 1, '/', DATE_FORMAT(NOW(), '%y')), :penerima, :tanggalTerima, :poBa, :kodef, KODE_SP, :kdBrg" .$i. ", :hrgBl" .$i. ", :qty" .$i. ", :noSRJLN FROM purchased_order_tmp WHERE NO_PO = :poBa";
 
           $this->db->query($query);
           $this->db->bind('inputNoMsk', $data['inputNoMsk']);

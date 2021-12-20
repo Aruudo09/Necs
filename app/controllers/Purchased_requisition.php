@@ -4,44 +4,57 @@
 
     public function index($page) {
 
-      $cek = $_SERVER['REQUEST_URI'];
-      if ( strpos($cek, '/purchased_requisition/1/') ) {
-        $_SESSION['cari'] = '';
+      if ( $_SESSION['login']['KODEF'] != 5 && $_SESSION['login']['KODEF'] != 6 && $_SESSION['login']['KODEF'] != 7) {
+        header('Location: ' . BASEURL . '/not_found');
+        exit;
       } else {
-        if ( isset($_POST['srchBtn']) ) {
-          $_SESSION['cari'] = $_POST['keyword'];
-        } elseif (empty($_SESSION['cari'])) {
+        $cek = $_SERVER['REQUEST_URI'];
+        if ( strpos($cek, '/purchased_requisition/1/') ) {
           $_SESSION['cari'] = '';
+        } else {
+          if ( isset($_POST['srchBtn']) ) {
+            $_SESSION['cari'] = $_POST['keyword'];
+          } elseif (empty($_SESSION['cari'])) {
+            $_SESSION['cari'] = '';
+          }
         }
+
+        $data['selectSr'] = $this->model('Purchased_requisition_model')->getSr();
+        $data['sr'] = $this->model('Purchased_requisition_model')->getAllSr($page);
+
+        $this->akses();
+        $this->view('templates/header', $data);
+        $this->view('purchased_requisition/index', $data);
+        $this->view('templates/footer');
       }
 
-      $data['selectSr'] = $this->model('Purchased_requisition_model')->getSr();
-      $data['sr'] = $this->model('Purchased_requisition_model')->getAllSr($page);
-
-      $this->akses();
-      $this->view('templates/header', $data);
-      $this->view('purchased_requisition/index', $data);
-      $this->view('templates/footer');
     }
 
     public function detail($page) {
 
-      $cek = $_SERVER['REQUEST_URI'];
-      if ( strpos($cek, '/purchased_requisition/detail/1/') ) {
-        $_SESSION['cari'] = '';
-      } else {
-        if ( isset($_POST['srchbtn']) ) {
-          $_SESSION['cari'] = $_POST['keyword'];
-        } elseif ( empty($_SESSION['cari']) ) {
-          $_SESSION['cari'] = '';
-        }
+      if ( $_SESSION['login']['KODEF'] != 5 && $_SESSION['login']['KODEF'] != 6 && $_SESSION['login']['KODEF'] != 7) {
+        header('Location: ' . BASEURL . '/purchased_order/1/');
+        exit;
       }
-      $data['pr'] = $this->model('Purchased_requisition_model')->getPr($page);
+      else {
+        $cek = $_SERVER['REQUEST_URI'];
+        if ( strpos($cek, '/purchased_requisition/detail/1/') ) {
+          $_SESSION['cari'] = '';
+        } else {
+          if ( isset($_POST['srchbtn']) ) {
+            $_SESSION['cari'] = $_POST['keyword'];
+          } elseif ( empty($_SESSION['cari']) ) {
+            $_SESSION['cari'] = '';
+          }
+        }
+        $data['pr'] = $this->model('Purchased_requisition_model')->getPr($page);
 
-      $this->akses();
-      $this->view('templates/header', $data);
-      $this->view('purchased_requisition/detail', $data);
-      $this->view('templates/footer');
+        $this->akses();
+        $this->view('templates/header', $data);
+        $this->view('purchased_requisition/detail', $data);
+        $this->view('templates/footer');
+      }
+
     }
 
     public function tambah() {

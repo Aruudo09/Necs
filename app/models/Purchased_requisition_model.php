@@ -97,10 +97,10 @@
 
       $query = "SELECT a.NO_SR, a.NO_PR, a.TGL_SR, a.PEMINTA, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
                 FROM surat_request_tmp a
-                INNER JOIN tarif b ON a.KODEF = b.KODEF
-                INNER JOIN supplier c ON a.KODE_SP = c.KODE_SP
-                WHERE NO_SR LIKE :key AND a.status != '1' AND a.NO_PR IS NULL
-                ORDER BY NO_SR
+                LEFT JOIN tarif b ON a.KODEF = b.KODEF
+                LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                WHERE a.NO_SR LIKE :key AND a.status != 1 AND a.NO_PR IS NULL
+                ORDER BY a.NO_SR
                 LIMIT $dataAwal, $banyakDataPerHal";
       $this->db->query($query);
       $this->db->bind('key', "%$key%");
@@ -164,10 +164,11 @@
 
     public function tambah($data) {
       $query = "INSERT INTO purchased_requisition (NO_PR, TGL_PR, USER, KODEF, KODE_SP)
-                VALUES (:noPr, :tgl_pr, :user, :kodef, :hdnSp)";
+                VALUES (CONCAT(:hdnPr, '-', :initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_pr, :user, :kodef, :hdnSp)";
 
       $this->db->query($query);
-      $this->db->bind('noPr', $data['noPr']);
+      $this->db->bind('hdnPr', $data['hdnPr']);
+      $this->db->bind('initial', $_SESSION['login']['Initial']);
       $this->db->bind('tgl_pr', $data['tgl_pr']);
       $this->db->bind('user', $data['user']);
       $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -178,10 +179,11 @@
     }
 
     public function tambahpr($data) {
-      $query = "UPDATE surat_request_tmp SET NO_PR = :noPr WHERE NO_SR = :noSr";
+      $query = "UPDATE surat_request_tmp SET NO_PR = CONCAT(:hdnPr, '-', :initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')) WHERE NO_SR = :noSr";
 
       $this->db->query($query);
-      $this->db->bind('noPr', $data['noPr']);
+      $this->db->bind('hdnPr', $data['hdnPr']);
+      $this->db->bind('initial', $_SESSION['login']['Initial']);
       $this->db->bind('noSr', $data['noSr']);
       $this->db->execute();
 

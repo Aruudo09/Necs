@@ -3,12 +3,42 @@
   class account extends Controller {
 
     public function index() {
-      $data['dept'] = $this->model('account_model')->getDept();
 
-      $this->akses();
-      $this->view('templates/header');
-      $this->view('account/index', $data);
-      $this->view('templates/footer');
+      if ( $_SESSION['login']['LEVEL'] != 'admin' ) {
+        header('Location: ' . BASEURL . '/not_found');
+        exit;
+      } else {
+        $data['dept'] = $this->model('account_model')->getDept();
+
+        $this->akses();
+        $this->view('templates/header');
+        $this->view('account/index', $data);
+        $this->view('templates/footer');
+      }
+
+    }
+
+    public function detail($page) {
+
+      if ( $_SESSION['login']['LEVEL'] != 'admin') {
+        header('Location: ' . BASEURL . '/not_found');
+        exit;
+      } else {
+        if ( isset($_POST['srchbtn'])) {
+          $_SESSION['cari'] = $_POST['keyword'];
+        } elseif ( empty($_SESSION['cari'])) {
+          $_SESSION['cari'] = '';
+        }
+
+        $data['usr'] = $this->model('account_model')->getUser($page);
+        $data['dept'] = $this->model('account_model')->getDept();
+
+        $this->akses();
+        $this->view('templates/header');
+        $this->view('account/detail', $data);
+        $this->view('templates/footer');
+      }
+
     }
 
     //-------MENAMBAHKAN AKUN BARU------//
@@ -29,6 +59,23 @@
           exit;
         }
       }
+    }
+
+    //----------EDIT ACCOUNT----------//
+    public function edit() {
+      if ( $this->model('account_model')->edit($_POST) > 0 ) {
+        Flasher::setFlash('Account', 'Berhasil', 'Diubah', 'success');
+        header('Location: ' . BASEURL . '/account/detail/1');
+        exit;
+      } else {
+        Flasher::setFlash('Account', 'Gagal', 'Ditambahkan', 'danger');
+        header('Location: ' . BASEURL . '/account/detail/1');
+        exit;
+      }
+    }
+
+    public function getDtl() {
+      echo json_encode($this->model('account_model')->getDtl($_POST));
     }
 
   }

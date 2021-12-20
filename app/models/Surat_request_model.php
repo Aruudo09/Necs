@@ -28,7 +28,7 @@ class Surat_request_model {
       LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
       LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
       WHERE a.KODEF = :kodef AND a.status != "1" AND a.QTY_MINTA > a.QTY_TERIMA
-      ORDER BY a.NO_SR DESC;');
+      ORDER BY a.NO_SR DESC');
 
     $this->db->bind('kodef', $_SESSION['login']['KODEF']);
     return $this->db->resultSet();
@@ -68,7 +68,7 @@ class Surat_request_model {
                       FROM surat_request_tmp a
                       LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP
                       LEFT JOIN tarif c ON a.KODEF = c.KODEF
-                      WHERE NO_SR LIKE :key AND a.status != 1 AND a.KODEF = :kodef ORDER BY NO_SR
+                      WHERE NO_SR LIKE :key AND a.status != 1 AND a.KODEF = :kodef ORDER BY NO_SR DESC
                       LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
     $this->db->bind('key', "%$key%");
@@ -90,11 +90,12 @@ class Surat_request_model {
   }
 
   public function getDataSrDtl($data) {
-      $this->db->query('SELECT a.NO_SR, a.TGL_SR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, c.NMDEF, a.KODE_BRG, b.NAMA_BRG, b.Satuan, QTY_MINTA, HARGA_SR, TOT_HARGA
+      $this->db->query('SELECT a.NO_SR, a.TGL_SR, e.NO_PR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, c.NMDEF, a.KODE_BRG, b.NAMA_BRG, b.Satuan, QTY_MINTA, HARGA_SR, TOT_HARGA
                         FROM surat_request a
                         LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
                         LEFT JOIN tarif c ON a.KODEF = c.KODEF
                         LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
+                        LEFT JOIN surat_request_tmp e ON a.NO_SR = e.NO_SR
                         WHERE a.NO_SR = :id');
       $this->db->bind('id', $data['id']);
       return $this->db->resultSet();

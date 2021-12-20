@@ -3,7 +3,10 @@
   class Barang_masuk extends Controller {
 
       public function index($page) {
-
+        $this->akses();
+        if ( $_SESSION['login']['KODEF'] != 6 && $_SESSION['login']['KODEF'] != 7 && $_SESSION['login']['KODEF'] != 5 ) {
+          header('Location: ' . BASEURL . '/not_found');
+        } else {
           $cek = $_SERVER['REQUEST_URI'];
           if ( strpos($cek, '/barang_masuk/1/') ) {
             $_SESSION['cari'] = '';
@@ -13,6 +16,8 @@
             } elseif ( empty($_SESSION['cari'])) {
               $_SESSION['cari'] = '';
             }
+        }
+
           }
 
           $data['barangMsk'] = $this->model('Barang_masuk_model')->getAllBarangMsk($page);
@@ -22,7 +27,6 @@
           // $data['opsiBrg'] = $this->model('Barang_masuk_model')->getOptionBrg();
           $data['counter'] = $this->model('Barang_masuk_model')->counter_po();
 
-          $this->akses();
           $this->view('templates/header', $data);
           $this->view('barang_masuk/index', $data);
           $this->view('templates/footer');

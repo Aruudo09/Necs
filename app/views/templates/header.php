@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="<?php echo BASEURL; ?>/css/bootstrap.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="<?php echo BASEURL; ?>/fontawesome-6.0.0-web/css/all.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo BASEURL; ?>/select2-4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo BASEURL; ?>/DataTables/datatables.css" />
     <title>BMC</title>
 </head>
@@ -17,7 +17,7 @@
           <!--NAVBAR-->
           <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
               <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" href="#">BMC</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
@@ -47,7 +47,7 @@
                       </ul>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="<?php echo BASEURL; ?>/supplier">Supplier</a>
+                      <a class="nav-link" href="<?php echo BASEURL; ?>/supplier/1/">Supplier</a>
                     </li>
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">

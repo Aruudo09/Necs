@@ -103,12 +103,11 @@
     }
 
     public function tmbhPo($data) {
+      var_dump($data);
       $query = "INSERT INTO purchased_order_tmp (NO_PO, TGL_PO, PEMESAN, KODEF, KODE_SP, status)
-                VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', :initial, '/'. DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_po, :pmsn, :kodef, :Sp, DEFAULT)";
+                VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', 'PROC-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_po, :pmsn, :kodef, :Sp, DEFAULT)";
 
       $this->db->query($query);
-      $this->db->bind('noPo', $data['noPo']);
-      $this->db->bind('initial', $data['login']['Initial']);
       $this->db->bind('tgl_po', $data['tgl_po']);
       $this->db->bind('pmsn', $data['pmsn']);
       $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -131,12 +130,9 @@
             continue;
           }
         } else {
-          $query = "INSERT INTO purchased_order (NO_PO, PEMESAN, TGL_PO, KODEF, KODE_SP, KODE_BRG, QTY_ORDER, HARGA_PO, TOT_HARGA, QTY_TERIMA, status)
-                    VALUES
-                    (:noPo, :pmsn, :tgl_po, :kodef, :Sp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
+          $query = "INSERT INTO purchased_order (NO_PO, PEMESAN, TGL_PO, KODEF, KODE_SP, KODE_BRG, QTY_ORDER, HARGA_PO, TOT_HARGA, QTY_TERIMA, status) VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', 'PROC-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :pmsn, :tgl_po, :kodef, :Sp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
 
           $this->db->query($query);
-          $this->db->bind('noPo', $data['noPo']);
           $this->db->bind('pmsn', $data['pmsn']);
           $this->db->bind('tgl_po', $data['tgl_po']);
           $this->db->bind('kodef', $_SESSION['login']['KODEF']);
