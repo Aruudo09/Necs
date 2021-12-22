@@ -233,12 +233,15 @@
                       <th>Fitur</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    <!--GENERATE ROW-->
+                  </tbody>
                 </table>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"> Edit</i></button>
-                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"> Cetak</i></button>
+                <button type="submit" class="btn btn-primary" id="editDtl"><i class="fa fa-pen"></i> EDIT</button>
+                <a href="" class="btn btn-success" id="btnCtk"><i class="fa fa-print"></i> CETAK</a>
               </div>
               </form>
           </div>

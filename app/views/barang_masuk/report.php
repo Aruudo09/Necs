@@ -23,22 +23,22 @@
 
         <div class="row">
           <div class="col-10">
-            <?php foreach ( $data['detail'] as $bm ) : ?>
+            <?php foreach ( $data['rptBa'] as $bm ) : ?>
             <p>Ref. PO BMC. No                    : <?php echo $bm['NO_PO']; ?></p>
             <p>Pada hari ini tanggal              : <?php echo $bm['TGL_BCRA']; ?></p>
             <br>
             <p>Nama Supplier                      : <?php echo $bm['NAMA_SP']; ?></p>
-            <p>Delivery Order No.                 : <?php echo $bm['NO_SRJLN']; break; ?></p>
-            <p>Jatuh Tempo Pembayaran             : <?php  ?></p>
+            <p>Delivery Order No.                 : <?php echo $bm['NO_SRJLN']; ?></p>
+            <p>Jatuh Tempo Pembayaran             : </p>
           <?php endforeach; ?>
           </div>
 
           <br>
 
           <div class="col">
-            <?php foreach( $data['detail'] as $bm) : ?>
+            <?php foreach( $data['rptBa'] as $bm) : ?>
               <p>Nomor    : <?php echo $bm['NO_BCRA']; ?></p>
-              <p>No PR    : <?php break; ?></p>
+              <p>No PR    : <?php echo $bm['NO_PR']; ?></p>
             <?php endforeach; ?>
           </div>
         </div>
@@ -57,7 +57,7 @@
 
               <tbody>
                 <?php $total = 0; ?>
-                <?php $i=1; foreach( $data['detail'] as $bm) : ?>
+                <?php $i=1; foreach( $data['rptDtlBa'] as $bm) : ?>
                 <tr>
                   <td style="width:5%"><?php echo $i++ ?></td>
                   <td style="width:40%"><?php echo $bm['NAMA_BRG']; ?></td>

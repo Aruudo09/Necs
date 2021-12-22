@@ -32,8 +32,9 @@
           $this->view('templates/footer');
       }
 
-      public function report($NO_BCRA, $bcra) {
-        $data['detail'] = $this->model('Barang_masuk_model')->getDataByBcra($NO_BCRA, $bcra);
+      public function report($id) {
+        $data['rptBa'] = $this->model('Barang_masuk_model')->getBcra(str_replace('F', '/', $id));
+        $data['rptDtlBa'] = $this->model('Barang_masuk_model')->getDtlBcra(str_replace('F', '/', $id));
 
         $this->view('barang_masuk/report', $data);
       }

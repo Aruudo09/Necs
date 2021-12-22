@@ -2,8 +2,8 @@
 
 $(function() {
 
-//SURAT REQUEST
 
+//SURAT REQUEST
 if (window.location.href.indexOf('/Necs/public/surat_request') > -1 ) {
 
   //-----SELECT2() OPTION BARANG------//
@@ -112,15 +112,25 @@ if (window.location.href.indexOf('/Necs/public/surat_request') > -1 ) {
         if ( data.length == 0) {
           alert("DATA DETAIL KOSONG");
         } else if ( data[0].NO_PR != null ) {
-          alert("SR sudah di approved");
+          for (var i = 0; i < data.length; i++) {
+            var row = "<tbody><tr class='numRow'><td>" +data[i].NAMA_BRG+ "</td>";
+            var row0 = "<td style='display:none'>" +data[i].KODE_BRG+ "</td>";
+            var row1 = "<td>" +data[i].QTY_MINTA+ "</td>";
+            var row2 = "<td>" +data[i].Satuan+ "</td>";
+            var row3 = "<td>" +data[i].HARGA_SR+ "</td>";
+            var row4 = "<td>" +data[i].TOT_HARGA+ "</td>";
+            var row5 = "<td><button disabled type='button' class='btn btn-danger hpsDtl' data-id='" +data[i].NO_SR+ "' data-kd='" +data[i].KODE_BRG+ "'><i class='fa fa-trash'></i></button></td></tr></tbody>";
+
+          $('#myTabs').append(row + row0 + row1 + row2 + row3 + row4 + row5 );
+         }
         } else {
 
           for (var i = 0; i < data.length; i++) {
             var row = "<tbody><tr class='numRow'><td>" +data[i].NAMA_BRG+ "</td>";
             var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value='" +data[i].KODE_BRG+ "'></td>";
-            var row1 = "<td><input type='number' name='qty[]' value='" +data[i].QTY_MINTA+ "'></td>";
+            var row1 = "<td><input type='number' name='qty[]' class='qty' value='" +data[i].QTY_MINTA+ "'></td>";
             var row2 = "<td>" +data[i].Satuan+ "</td>";
-            var row3 = "<td><input type='number' name='hrg[]' value='" +data[i].HARGA_SR+ "'></td>";
+            var row3 = "<td><input type='number' name='hrg[]' class='hrg' value='" +data[i].HARGA_SR+ "'></td>";
             var row4 = "<td>" +data[i].TOT_HARGA+ "</td>";
             var row5 = "<td><button type='button' class='btn btn-danger hpsDtl' data-id='" +data[i].NO_SR+ "' data-kd='" +data[i].KODE_BRG+ "'><i class='fa fa-trash'></i></button></td></tr></tbody>";
 
@@ -132,7 +142,11 @@ if (window.location.href.indexOf('/Necs/public/surat_request') > -1 ) {
   });
 
     //-------EDIT DETAIL SR---------//
-    $(document).on('click keypress', '.numRow', function(){
+    $(document).on('click keypress', '.numRow .qty', function(){
+      $('#editDtl').prop('disabled', false);
+    });
+
+    $(document).on('click keypress', '.numRow .hrg', function(){
       $('#editDtl').prop('disabled', false);
     });
 
@@ -646,13 +660,16 @@ if (window.location.href.indexOf('/Necs/public/barang_masuk') > -1 ) {
         $('#sp').text(data[0].NAMA_SP);
         $('#tgltrm').text(data[0].TGL_BCRA);
 
+var sr = data[0].NO_BCRA.replace('/', 'F');
+          $('#btnCtk').attr("href", "http://localhost/Necs/public/barang_masuk/report/"+sr+"");
+
         for (var i = 0; i < data.length; i++) {
-          var row = "<tbody class='data'><tr><td>" +data[i].NAMA_BRG+ "</td>";
+          var row = "<tr class='data'><td>" +data[i].NAMA_BRG+ "</td>";
           var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value='" +data[i].KODE_BRG+ "''></td>";
           var row1 = "<td><input type='number' class='form-control qty' name='qty[]' value='" +data[i].QTY_TERIMA+ "'></td>";
           var row2 = "<td>" +data[i].satuan+ "</td>";
           var row3 = "<td>" +data[i].HARGA_BL+ "</td>";
-          var row4 = "<td><button type='button' class='btn btn-danger hps' data-id='" +data[i].NO_BCRA+ "' data-kd='" +data[i].KODE_BRG+ "' ><i class='fa fa-trash'></i></button></td></tr></tbody>";
+          var row4 = "<td><button type='button' class='btn btn-danger hps' data-id='" +data[i].NO_BCRA+ "' data-kd='" +data[i].KODE_BRG+ "' ><i class='fa fa-trash'></i></button></td></tr>";
 
           $('#tabBa').append(row + row0 + row1 + row2 + row3 + row4);
         }
@@ -832,23 +849,28 @@ if (window.location.href.indexOf('/Necs/public/barang_keluar') > -1 ) {
       data: {id : id},
       dataType: 'json',
       success: function(data) {
-        $('#noslip').text(data[0].NOMOR_SLIP);
-        $('#hdnnoslip').val(data[0].NOMOR_SLIP);
-        $('#namaDtl').text(data[0].NAMA_USER);
-        $('#dept').text(data[0].NMDEF);
-        $('#shiftDtl').text(data[0].SHIFT);
-        $('#post').text(data[0].POSTING);
-        $('#noref').text(data[0].NO_REF);
-        $('#tgl').text(data[0].TANGGAL_OUT);
+        if (data.length == '') {
+          alert("Data Kosong");
+        } else {
+          $('#noslip').text(data[0].NOMOR_SLIP);
+          $('#hdnnoslip').val(data[0].NOMOR_SLIP);
+          $('#namaDtl').text(data[0].NAMA_USER);
+          $('#dept').text(data[0].NMDEF);
+          $('#shiftDtl').text(data[0].SHIFT);
+          $('#post').text(data[0].POSTING);
+          $('#noref').text(data[0].NO_REF);
+          $('#tgl').text(data[0].TANGGAL_OUT);
 
-        for (var i = 0; i < data.length; i++) {
-          var row = "<tbody class='rowDtl'><tr><td>" +data[i].NAMA_BRG+ "</td>";
-          var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value=" +data[i].KODE_BRG+ "></td>";
-          var row1 = "<td><input type='number' class='form-control qty' name='qty[]' value='" +data[i].QUANTITY_MINTA+ "'></td>";
-          var row2 = "<td>" +data[i].satuan+ "</td>";
-          var row3 = "<td><button type='button' class='btn btn-danger delete' data-id="+data[i].NOMOR_SLIP+" data-kd="+data[i].KODE_BRG+"><i class='fa fa-trash'></i></button></td>";
+          for (var i = 0; i < data.length; i++) {
+            var row = "<tbody class='rowDtl'><tr><td>" +data[i].NAMA_BRG+ "</td>";
+            var row0 = "<td style='display:none'><input type='hidden' name='brg[]' value=" +data[i].KODE_BRG+ "></td>";
+            var row1 = "<td><input type='number' class='form-control qty' name='qty[]' value='" +data[i].QUANTITY_MINTA+ "'></td>";
+            var row2 = "<td>" +data[i].satuan+ "</td>";
+            var row3 = "<td><button type='button' class='btn btn-danger delete' data-id="+data[i].NOMOR_SLIP+" data-kd="+data[i].KODE_BRG+"><i class='fa fa-trash'></i></button></td>";
 
-          $('#tabDtl').append(row + row0 + row1 + row2 + row3);
+            $('#tabDtl').append(row + row0 + row1 + row2 + row3);s
+        }
+
         }
       },
       error: function(xhr, status, error) {

@@ -134,11 +134,28 @@
         return $this->db->resultSet();
       }
 
-      public function getDataByBcra($NO_BCRA, $bcra) {
-        $this->db->query('SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN FROM berita_acara a JOIN barang b ON a.KODE_BRG = b.KODE_BRG JOIN supplier c ON b.KODE_SP = c.KODE_SP WHERE a.NO_BCRA = :NO_BCRA"/":bcra');
-        $this->db->bind('NO_BCRA', $NO_BCRA);
-        $this->db->bind('bcra', $bcra);
+      public function getBcra($data) {
+        $query = "SELECT a.NO_BCRA, a.NO_PO, b.NO_PR, a.NO_SRJLN, a.KODE_SP, c.NAMA_SP, a.TGL_BCRA, a.PENERIMA
+                  FROM berita_acara_tmp a
+                  LEFT JOIN surat_request_tmp b ON a.NO_PO = b.NO_PO
+                  LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                  WHERE a.NO_BCRA = :data";
+        $this->db->query($query);
+        $this->db->bind('data', $data);
         // var_dump($this->db->resultSet());
+        return $this->db->resultSet();
+      }
+
+      public function getDtlBcra($data) {
+        $query = "SELECT a.KODE_SP, b.NAMA_SP, a.KODE_BRG, c.NAMA_BRG, a.HARGA_BL, a.QTY_TERIMA, c.Satuan, a.NO_SRJLN
+                  FROM berita_acara a
+                  LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP
+                  LEFT JOIN barang c ON a.KODE_BRG = c.KODE_BRG
+                  WHERE a.NO_BCRA = :data ";
+
+        $this->db->query($query);
+        $this->db->bind('data', $data);
+
         return $this->db->resultSet();
       }
 
