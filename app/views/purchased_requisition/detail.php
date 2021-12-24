@@ -57,9 +57,9 @@
           <ul class="pagination justify-content-center">
             <!--TOMBOL PREVIOUS-->
               <?php if ( $data['pr']['halamanAktif'] <= 1 ) { ?>
-                  <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail<?php echo $data['pr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+                  <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail/<?php echo $data['pr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
               <?php } else { ?>
-                  <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail<?php echo $data['pr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
+                  <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail/<?php echo $data['pr']['halamanAktif'] - 1; ?>" class="page-link">Prev</a></li>
               <?php } ?>
             <!--TOMBOL PAGE-->
               <?php for ($i=1; $i <= $data['pr']['banyakHal']; $i++) { ?>
@@ -71,9 +71,9 @@
               <?php } ?>
             <!--TOMBOL NEXT-->
               <?php if ( $data['pr']['halamanAktif'] >= $data['pr']['banyakHal'] ) { ?>
-                <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail<?php echo $data['pr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+                <li class="page-item disabled"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail/<?php echo $data['pr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
               <?php } else { ?>
-                <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail<?php echo $data['pr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
+                <li class="page-item"><a href="<?php echo BASEURL; ?>/purchased_requisition/detail/<?php echo $data['pr']['halamanAktif'] + 1; ?>" class="page-link">Next</a></li>
               <?php } ?>
           </ul>
         </nav>
@@ -115,10 +115,11 @@
                   <th class="col">Nama Barang</th>
                   <th class="col">Quantity</th>
                   <th class="col">Satuan</th>
-                  <th class="col">Harga</th>
-                  <th class="col">Total</th>
                 </tr>
               </thead>
+              <tbody>
+
+              </tbody>
             </table>
           </div>
         </div>

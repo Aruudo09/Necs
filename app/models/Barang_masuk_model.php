@@ -22,10 +22,10 @@
       }
 
       public function getOptionBrg($opt) {
-        $this->db->query('SELECT a.KODE_BRG, b.NAMA_BRG, a.HARGA_PO, b.NAMA_BRG
+        $this->db->query('SELECT a.KODE_BRG, b.NAMA_BRG, a.HARGA_PO, b.NAMA_BRG, a.QTY_TERIMA, a.QTY_ORDER
                           FROM purchased_order a
                           LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
-                          WHERE NO_PO = :opt AND QTY_ORDER > QTY_TERIMA;');
+                          WHERE NO_PO = :opt AND QTY_ORDER > QTY_TERIMA');
         $this->db->bind('opt', $opt);
         return $this->db->resultSet();
       }
@@ -62,10 +62,9 @@
 
         $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Stock_brg, a.QTY_TERIMA, b.Satuan, a.NO_SRJLN
-        FROM berita_acara a
-        LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
-        LEFT JOIN supplier c ON b.KODE_SP = c.KODE_SP
+        $query = "SELECT a.NO_BCRA, a.PENERIMA, a.TGL_BCRA, a.NO_PO, a.KODE_SP, c.NAMA_SP, a.NO_SRJLN
+        FROM berita_acara_tmp a
+        LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
         WHERE a.NO_BCRA LIKE :key AND a.status != 1 GROUP BY a.NO_BCRA
         ORDER BY a.NO_BCRA DESC LIMIT $dataAwal, $banyakDataPerHal";
 
@@ -113,7 +112,8 @@
                   LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
                   LEFT JOIN tarif d ON a.KODEF = d.KODEF
                   WHERE a.NO_PO LIKE :key AND b.QTY_ORDER > b.QTY_TERIMA AND a.status != 1
-                  GROUP BY a.NO_PO";
+                  GROUP BY a.NO_PO
+                  ORDER BY a.NO_PO DESC";
         $this->db->query($query);
         $this->db->bind('key', "%$key%");
 
@@ -172,7 +172,10 @@
       }
 
       public function getBrgMskUbah($data) {
-        $query = "SELECT a.NO_BCRA, a.NO_PO, a.NO_SRJLN, a.KODE_SP, d.NAMA_SP, a.TGL_BCRA, a.PENERIMA, c.KODE_BRG, e.NAMA_BRG FROM berita_acara_tmp a RIGHT JOIN purchased_order_tmp b ON a.NO_PO = b.NO_PO RIGHT JOIN purchased_order c ON b.NO_PO = c.NO_PO LEFT JOIN supplier d ON c.KODE_SP = d.KODE_SP LEFT JOIN barang e ON c.KODE_BRG = e.KODE_BRG WHERE a.NO_BCRA = :id";
+        $query = "SELECT a.NO_BCRA, a.NO_PO, a.NO_SRJLN, a.KODE_SP, d.NAMA_SP, a.TGL_BCRA, a.PENERIMA
+                  FROM berita_acara_tmp a
+                  LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP
+                  WHERE a.NO_BCRA = :id";
         $this->db->query($query);
         $this->db->bind('id', $data['id']);
         return $this->db->single();
@@ -278,7 +281,6 @@
       }
 
       public function hpsBcra($data) {
-        var_dump($data);
         $query = "UPDATE berita_acara_tmp SET status = '1' WHERE NO_BCRA = :id";
         $this->db->query($query);
         $this->db->bind('id', $data);
@@ -293,7 +295,6 @@
         $this->db->bind('id', $data);
 
         $this->db->execute();
-        return $this->db->rowCount();
       }
 
       public function hpsDtlBcra($data) {

@@ -23,7 +23,7 @@ class Surat_request_model {
   }
 
   public function getAllDataSr() {
-    $this->db->query('SELECT a.NO_SR, a.PEMINTA, a.TGL_SR, a.KODE_SP, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Jenis_brg, b.Stock_brg, a.QTY_MINTA, a.QTY_TERIMA, b.Satuan, a.HARGA_SR, a.TOT_HARGA
+    $this->db->query('SELECT a.NO_SR, a.PEMINTA, a.TGL_SR, a.KODE_SP, c.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, b.Jenis_brg, b.Stock_brg, a.QTY_MINTA, a.QTY_TERIMA, b.Satuan
       FROM surat_request a
       LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
       LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
@@ -90,7 +90,7 @@ class Surat_request_model {
   }
 
   public function getDataSrDtl($data) {
-      $this->db->query('SELECT a.NO_SR, a.TGL_SR, e.NO_PR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, c.NMDEF, a.KODE_BRG, b.NAMA_BRG, b.Satuan, QTY_MINTA, HARGA_SR, TOT_HARGA
+      $this->db->query('SELECT a.NO_SR, a.TGL_SR, e.NO_PR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, c.NMDEF, a.KODE_BRG, b.NAMA_BRG, b.Satuan, a.QTY_MINTA
                         FROM surat_request a
                         LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
                         LEFT JOIN tarif c ON a.KODEF = c.KODEF
@@ -130,9 +130,9 @@ class Surat_request_model {
           continue;
         }
       } else {
-        $query = "INSERT INTO surat_request (NO_SR, TGL_SR, PEMINTA, KODEF, KODE_SP, KODE_BRG, QTY_MINTA, HARGA_SR, TOT_HARGA, QTY_TERIMA, status)
+        $query = "INSERT INTO surat_request (NO_SR, TGL_SR, PEMINTA, KODEF, KODE_SP, KODE_BRG, QTY_MINTA, QTY_TERIMA, status)
                     VALUES
-                    (CONCAT((SELECT LPAD(sr + 1, 3, 000)FROM counter), '/', :Initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", :harga" .$i. ", NULL, DEFAULT, DEFAULT)";
+                    (CONCAT((SELECT LPAD(sr + 1, 3, 000)FROM counter), '/', :Initial, '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tanggal_sr, :peminta, :kodef, :sp, :kdBrg" .$i. ", :qty" .$i. ", DEFAULT)";
         // var_dump($query);
         // echo $query;
         $this->db->query($query);
@@ -143,7 +143,6 @@ class Surat_request_model {
         $this->db->bind('sp', $data['sp']);
         $this->db->bind('kdBrg' .$i, $data['kdBrg'][$i]);
         $this->db->bind('qty' .$i, $data['qty'][$i]);
-        $this->db->bind('harga' .$i, $data['harga'][$i]);
         $this->db->execute();
 
         if ( $y == count($data['nmBrg'])) {

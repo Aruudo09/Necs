@@ -18,7 +18,7 @@ class Barang_model {
   public function getAllBarang($page) {
     $key = $_SESSION['cari'];
 
-    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key AND status != 1');
+    $this->dbh->query('SELECT * FROM barang WHERE NAMA_BRG LIKE :key OR KODE_BRG LIKE :key AND status != 1');
     $this->dbh->bind('key', "%$key%");
     $this->dbh->execute();
 
@@ -34,7 +34,7 @@ class Barang_model {
 
     $dataAwal = ($halamanAktif*$banyakDataPerHal) - $banyakDataPerHal;
 
-    $query = "SELECT a.KODE_BRG, b.NAMA_SP, a.NAMA_BRG, a.Jenis_brg, a.Stock_brg, a.Satuan, a.Tanggal_beli, a.Harga FROM barang a LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE a.NAMA_BRG LIKE :key AND a.status != 1 ORDER BY a.NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
+    $query = "SELECT a.KODE_BRG, b.NAMA_SP, a.NAMA_BRG, a.Jenis_brg, a.Stock_brg, a.Satuan, a.Tanggal_beli, a.Harga FROM barang a LEFT JOIN supplier b ON a.KODE_SP = b.KODE_SP WHERE a.NAMA_BRG LIKE :key OR KODE_BRG LIKE :key AND a.status != 1 ORDER BY a.NAMA_BRG ASC LIMIT $dataAwal, $banyakDataPerHal";
     $this->db->query($query);
     $this->db->bind('key', "%$key%");
 

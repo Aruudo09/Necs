@@ -46,7 +46,6 @@
                     <table class="table table-bordered text-center" id="tabInpt">
                       <thead class="table-warning">
                         <th class="col-3">Barang</th>
-                        <th class="col-3">Order</th>
                         <th class="col-3">Quantity</th>
                         <th class="col-1">Fitur</th>
                       </thead>
@@ -65,6 +64,7 @@
             </div>
 
 
+          <!--VIEW TABLE SR-->
             <div class="row mx-auto">
               <div class="border border-dark rounded-3 bg-gradient p-3 m-2">
               <div class="overflow-auto">
@@ -109,11 +109,11 @@
                       <!--TOMBOL PREV-->
                         <?php if ( $data['tmp']['halamanAktif'] <= 1 ) { ?>
                           <li class="page-item disabled">
-                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
                           </li>
                         <?php } else { ?>
                           <li class="page-item">
-                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $data['tmp']['halamanAktif'] - 1  ?>" class="page-link">Prev</a>
                           </li>
                         <?php } ?>
                       <!--TOMBOL PAGE-->
@@ -136,11 +136,11 @@
                       <!--TOMBOL NEXT-->
                         <?php if ( $data['tmp']['halamanAktif'] == $data['tmp']['banyakHal'] ) { ?>
                           <li class="page-item disabled">
-                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
                           </li>
                         <?php } else { ?>
                           <li class="page-item">
-                            <a href="<?php echo BASEURL; ?>/surat_request/<?php $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
+                            <a href="<?php echo BASEURL; ?>/surat_request/<?php echo $data['tmp']['halamanAktif'] + 1 ?>" class="page-link">Next</a>
                           </li>
                         <?php } ?>
                     </ul>
@@ -202,11 +202,12 @@
                                   <th class="col">Nama Barang</th>
                                   <th class="col">Quantity</th>
                                   <th class="col">Satuan</th>
-                                  <th class="col">Harga</th>
-                                  <th class="col">Total</th>
                                   <th class="col">Fitur</th>
                                 </tr>
                               </thead>
+                              <tbody>
+                                <!--GENERATE ROW-->
+                              </tbody>
                             </table>
                           </div>
                           </div>

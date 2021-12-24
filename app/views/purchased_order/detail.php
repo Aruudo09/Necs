@@ -66,7 +66,7 @@
               <?php } ?>
             <!--TOMBOL NUMBER-->
               <?php for ($i=1; $i <= $data['po']['banyakHal']; $i++) { ?>
-                <?php if ( $data['po']['halamanAktif'] = $i ) { ?>
+                <?php if ( $data['po']['halamanAktif'] == $i ) { ?>
                   <li class="page-item active">
                     <a href="<?php echo BASEURL; ?>/purchased_order/detail/<?php echo $i; ?>" class="page-link"><?php echo $i ?></a>
                   </li>
@@ -176,7 +176,7 @@
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="edt" name="button" disabled><i class="fa fa-pen"></i> EDIT</button>
-                <button type="button" class="btn btn-success" name="button"><i class="fa fa-print"></i> CETAK</button>
+                <a href="#" class="btn btn-success" id="ctk"><i class="fa fa-print"></i> CETAK</a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
               </form>

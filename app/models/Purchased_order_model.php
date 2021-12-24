@@ -50,7 +50,7 @@
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
                 WHERE a.NO_PO LIKE :key AND a.status != 1
-                ORDER BY a.NO_PO
+                ORDER BY a.NO_PO DESC
                 LIMIT $dataAwal, $banyakDataPerHal";
 
       $this->db->query($query);
@@ -72,7 +72,7 @@
     }
 
     public function getBrg($data) {
-      $query = "SELECT a.KODE_BRG, c.NAMA_BRG, a.QTY_MINTA, c.Satuan, a.HARGA_SR, a.TOT_HARGA FROM surat_request a LEFT JOIN surat_request_tmp b ON a.NO_SR = b.NO_SR LEFT JOIN barang c ON a.KODE_BRG = c.KODE_BRG WHERE b.NO_PR = :id";
+      $query = "SELECT a.KODE_BRG, c.NAMA_BRG, a.QTY_MINTA, c.Satuan FROM surat_request a LEFT JOIN surat_request_tmp b ON a.NO_SR = b.NO_SR LEFT JOIN barang c ON a.KODE_BRG = c.KODE_BRG WHERE b.NO_PR = :id";
 
       $this->db->query($query);
       $this->db->bind('id', $data['id']);
@@ -103,11 +103,11 @@
     }
 
     public function tmbhPo($data) {
-      var_dump($data);
       $query = "INSERT INTO purchased_order_tmp (NO_PO, TGL_PO, PEMESAN, KODEF, KODE_SP, status)
-                VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', 'PROC-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_po, :pmsn, :kodef, :Sp, DEFAULT)";
+                VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', :initial, '-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :tgl_po, :pmsn, :kodef, :Sp, DEFAULT)";
 
       $this->db->query($query);
+      $this->db->bind('initial', $_SESSION['login']['Initial']);
       $this->db->bind('tgl_po', $data['tgl_po']);
       $this->db->bind('pmsn', $data['pmsn']);
       $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -121,7 +121,7 @@
       $i = 0;
       $y = 1;
       foreach( $data['qty'] as $dt) {
-        if ( $data['qty'][$i] == 0 || is_null($data['qty'][$i]) ) {
+        if ( $data['hrg'][$i] == '' || is_null($data['hrg'][$i]) ) {
           if ($y == count($data['qty'])) {
             return true;
           } else {
@@ -130,9 +130,10 @@
             continue;
           }
         } else {
-          $query = "INSERT INTO purchased_order (NO_PO, PEMESAN, TGL_PO, KODEF, KODE_SP, KODE_BRG, QTY_ORDER, HARGA_PO, TOT_HARGA, QTY_TERIMA, status) VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', 'PROC-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :pmsn, :tgl_po, :kodef, :Sp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
+          $query = "INSERT INTO purchased_order (NO_PO, PEMESAN, TGL_PO, KODEF, KODE_SP, KODE_BRG, QTY_ORDER, HARGA_PO, TOT_HARGA, QTY_TERIMA, status) VALUES (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', :initial, '-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y')), :pmsn, :tgl_po, :kodef, :Sp, :kd" .$i. ", :qty" .$i. ", :hrg" .$i. ", NULL, DEFAULT, DEFAULT)";
 
           $this->db->query($query);
+          $this->db->bind('initial', $_SESSION['login']['Initial']);
           $this->db->bind('pmsn', $data['pmsn']);
           $this->db->bind('tgl_po', $data['tgl_po']);
           $this->db->bind('kodef', $_SESSION['login']['KODEF']);
@@ -186,10 +187,11 @@
     }
 
     public function setPo($data) {
-      $query = "UPDATE surat_request_tmp SET NO_PO = :noPo, KODE_SP = :Sp WHERE NO_PR = :noPr";
+      var_dump($data['noPr']);
+      $query = "UPDATE surat_request_tmp SET NO_PO = (CONCAT(LPAD((SELECT po FROM counter) + 1, 3, 000), '/', :initial, '-U', '/', DATE_FORMAT(NOW(), '%m'), '/', DATE_FORMAT(NOW(), '%y'))), KODE_SP = :Sp WHERE NO_PR = :noPr";
 
       $this->db->query($query);
-      $this->db->bind('noPo', $data['noPo']);
+      $this->db->bind('initial', $_SESSION['login']['Initial']);
       $this->db->bind('Sp', $data['Sp']);
       $this->db->bind('noPr', $data['noPr']);
       $this->db->execute();
@@ -203,6 +205,25 @@
       $this->db->execute();
 
       return $this->db->rowCount();
+    }
+
+    public function getReport($id) {
+      $query = "SELECT * FROM purchased_order_tmp WHERE NO_PO = :id";
+      $this->db->query($query);
+      $this->db->bind('id', $id);
+
+      return $this->db->resultSet();
+    }
+
+    public function getDtlRpt($id) {
+      $query = "SELECT a.KODE_BRG, b.NAMA_BRG, a.QTY_ORDER, a.HARGA_PO, a.TOT_HARGA, b.Satuan, a.QTY_TERIMA
+                FROM purchased_order a
+                LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
+                WHERE a.NO_PO = :id";
+      $this->db->query($query);
+      $this->db->bind('id', $id);
+
+      return $this->db->resultSet();
     }
 
   }

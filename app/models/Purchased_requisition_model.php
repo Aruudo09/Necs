@@ -8,7 +8,11 @@
     }
 
     public function setpr($data) {
-      $query = "SELECT * FROM purchased_requisition WHERE NO_PR = :id";
+      $query = "SELECT a.NO_PR, a.TGL_PR, a.USER, a.KODEF, b.NMDEF, a.KODE_SP, c.NAMA_SP
+                FROM purchased_requisition a
+                LEFT JOIN tarif b ON a.KODEF = b.KODEF
+                LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
+                WHERE a.NO_PR = :id";
 
       $this->db->query($query);
       $this->db->bind('id', $data['id']);
@@ -44,7 +48,7 @@
                 LEFT JOIN tarif b ON a.KODEF = b.KODEF
                 LEFT JOIN supplier c ON a.KODE_SP = c.KODE_SP
                 WHERE a.NO_PR LIKE :key AND a.status != '1'
-                ORDER BY a.NO_PR
+                ORDER BY a.NO_PR DESC
                 LIMIT $dataAwal, $banyakDataPerHal";
 
       $this->db->query($query);
@@ -60,7 +64,7 @@
     }
 
     public function getDtlPr($data) {
-      $query = "SELECT e.NO_PR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, a.QTY_MINTA, a.HARGA_SR, a.TOT_HARGA, a.QTY_TERIMA, b.Satuan
+      $query = "SELECT e.NO_PR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, a.QTY_MINTA, a.QTY_TERIMA, b.Satuan
                 FROM surat_request a
                 LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
                 LEFT JOIN tarif c ON a.KODEF = c.KODEF
@@ -154,7 +158,7 @@
     }
 
     public function getDtlSr($data) {
-      $query = "SELECT a.NO_SR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, a.QTY_MINTA, a.HARGA_SR, a.TOT_HARGA, a.QTY_TERIMA, b.Satuan FROM surat_request a LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
+      $query = "SELECT a.NO_SR, a.PEMINTA, a.KODEF, c.NMDEF, a.KODE_SP, d.NAMA_SP, a.KODE_BRG, b.NAMA_BRG, a.QTY_MINTA, a.QTY_TERIMA, b.Satuan FROM surat_request a LEFT JOIN barang b ON a.KODE_BRG = b.KODE_BRG
       LEFT JOIN tarif c ON a.KODEF = c.KODEF LEFT JOIN supplier d ON a.KODE_SP = d.KODE_SP WHERE NO_SR = :id";
 
       $this->db->query($query);

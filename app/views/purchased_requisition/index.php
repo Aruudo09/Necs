@@ -62,11 +62,9 @@
               <h3>Info Barang</h3>
               <table class="table table-bordered text-center" id="dftrBrg">
                 <thead class="table-warning">
-                  <th class="col-3">Nama Barang</th>
+                  <th class="col-5">Nama Barang</th>
                   <th class="col">Quantity</th>
                   <th class="col">Satuan</th>
-                  <th class="col">Harga</th>
-                  <th class="col">Total</th>
                 </thead>
                 <tbody>
                   <!--GENERATE ROW TABLE DATA-->

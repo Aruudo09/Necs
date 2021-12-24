@@ -51,7 +51,7 @@
                 <div class="row mb-3">
                     <div class="col-4">
                         <label for="noSRJLN">No. Surat Jalan :</label>
-                        <input type="text" name="noSRJLN" id="noSRJLN" class="form-control">
+                        <input type="text" name="noSRJLN" id="noSRJLN" class="form-control" required>
                     </div>
                     <!--INPUT TANGGAL TERIMA-->
                      <?php $date = date("Y/m/d");
@@ -71,11 +71,12 @@
                 <h3>DAFTAR BARANG</h3>
                   <div class="overflow-auto">
                       <table class="table table-bordered text-center" id="tbBa">
-                        <thead class="table-info">
+                        <thead class="table-warning">
                           <tr>
                             <th class="col-4">Barang</th>
-                            <th class="col-4">Harga</th>
-                            <th class="col-4">Quantity</th>
+                            <th class="col-2">Order</th>
+                            <th class="col-3">Quantity</th>
+                            <th class="col-3">Harga</th>
                             <th class="col-2">Hapus</th>
                             <th style="display:none">Kode Barang</th>
                           </tr>

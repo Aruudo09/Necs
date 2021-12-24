@@ -69,12 +69,12 @@
             <table class="table" id="tbPr">
               <thead class="table-info">
                 <tr>
-                  <td class="col">Nama Barang</td>
-                  <td style="display:none">Kode Barang</td>
-                  <td class="col-3">Quantity</td>
-                  <td class="col-3">Satuan</td>
-                  <td class="col-3">Harga</td>
-                  <td class="col">Total</td>
+                  <th class="col">Nama Barang</th>
+                  <th style="display:none">Kode Barang</th>
+                  <th class="col-3">Quantity</th>
+                  <th class="col-3">Satuan</th>
+                  <th class="col-3">Harga</th>
+                  <th class="col">Fitur</th>
                 </tr>
               </thead>
               <tbody>

@@ -81,7 +81,8 @@
       }
 
       public function hapus($data) {
-        if ($this->model('Barang_masuk_model')->hpsBcra(str_replace('F', '/', $data)) > 0 && $this->model('Barang_masuk_model')->ubahStat(str_replace('F', '/', $data)) > 0 ) {
+        if ($this->model('Barang_masuk_model')->hpsBcra(str_replace('F', '/', $data)) > 0 ) {
+          $this->model('Barang_masuk_model')->ubahStat(str_replace('F', '/', $data));
           Flasher::setFlash('Berita Acara', 'Berhasil', 'diubah', 'success');
           header('Location: ' . BASEURL . '/barang_masuk/1');
           exit;

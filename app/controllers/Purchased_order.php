@@ -40,6 +40,13 @@
       $this->view('templates/footer');
     }
 
+    public function report($id) {
+      $data['report'] = $this->model('Purchased_order_model')->getReport(str_replace('F', '/', $id));
+      $data['dtlReport'] = $this->model('Purchased_order_model')->getDtlRpt(str_replace('F', '/', $id));
+
+      $this->view('purchased_order/report', $data);
+    }
+
     public function getSp() {
       echo json_encode($this->model('Purchased_order_model')->getSp($_POST));
     }
