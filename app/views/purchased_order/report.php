@@ -9,43 +9,48 @@
     <title>Berita Acara</title>
   </head>
   <body>
-    <div class="container">
-      <header>
-          <div class="d-flex justify-content-center">
-              <h2 class="text-center">PURCHASE ORDER<br></h2>
-          </div>
-      </header>
+    <div class="container-fluid">
       <hr>
 
       <div class="d-flex justify-content-around">
-        <div class="col-9">
+        <div class="col">
         <div class="p-3">
           <?php foreach( $data['report'] as $dt) : ?>
            <table>
             <tr>
-              <th class="text-center" style="border:1px solid black"><b>SHIP TO</b></th>
+              <th class="text-center" style="border:1px solid black"><b>OFFICE/FACTORY</b></th>
             </tr>
             <tr>
-              <td>PT BRAJA MUKTI CAKRA<br>
+              <td style="font-size: 15px">PT BRAJA MUKTI CAKRA<br>
               Jln Desa Harapan Kita No 4 Bekasi Utara<br>
-              Kodya Bekasi Jawa Barat<br>
-              Up.Bapak Hartoto</td>
+              Kota Bekasi Jawa Barat<br>
+              PO. BOX. 210 BKS <br>
+              Telp : (021) 8871836 <br>
+              Fax  : (021) 8878 949, (021) 8871835</td>
             </tr>
           </table>
               </div>
             </div>
       <!---END TOMBOL TAMBAH NOMOR PO-->
 
+      <div class="col text-center">
+          <img src="<?php echo BASEURL; ?>/BMC/bmc_bg2.jpg" alt="" width="100" height="100">
+          <h5>PT BRAJA MUKTI CAKRA</h5>
+            <h6>THE PRECISION VALUE</h6>
+            <br>
+          <h5>PURCHASE ORDER<br></h5>
+      </div>
+
           <div class="col">
             <div class="p-3">
-              <table class=" table-bordered text-center">
+              <table class=" table-bordered text-center" style="font-size: 13px">
                 <tr>
                   <th class="col-3">DATE</th>
                   <td class="col-3"><?php print $dt['TGL_PO']; ?></td>
                 </tr>
                 <tr>
                   <th class="">PO</th>
-                  <td><?php print substr($dt['NO_PO'],0 , 3); ?></td>
+                  <td><?php print $dt['NO_PO']; ?></td>
                 </tr>
               </table>
               <?php endforeach; ?>
